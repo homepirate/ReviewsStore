@@ -1,9 +1,6 @@
 package com.example.CarSale;
 
-import com.example.CarSale.Dtos.ModelDto;
-import com.example.CarSale.Dtos.OfferDto;
-import com.example.CarSale.Dtos.UserDto;
-import com.example.CarSale.Dtos.UserRoleDto;
+import com.example.CarSale.Dtos.*;
 import com.example.CarSale.Models.Brand;
 import com.example.CarSale.Models.Enums.Category;
 import com.example.CarSale.Models.Enums.Engine;
@@ -18,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -87,22 +85,54 @@ public class DataInitializer implements CommandLineRunner {
         String[] carBrands = {"Toyota", "BMW", "Mercedes-Benz", "Ford", "Volkswagen", "Audi"};
         for (String brand : carBrands) {
             Brand br = new Brand(brand);
-            if (brand.equals("BMW")){
+            brandRepository.save(br);
+
+            if (brand.equals("BMW")) {
                 Model model1 = new Model("3 Series", Category.CAR, "https://example.com/bmw3series.jpg", 2018, 2022, br);
-                brandRepository.save(br);
-                modelRepositiry.save(model1);
+                Model model2 = new Model("X5", Category.CAR, "https://example.com/bmwx5.jpg", 2019, 2022, br);
+                Model model3 = new Model("7 Series", Category.CAR, "https://example.com/bmw7series.jpg", 2017, 2022, br);
+                Model model4 = new Model("i8", Category.CAR, "https://example.com/bmwi8.jpg", 2014, 2021, br);
+                Model model5 = new Model("X3", Category.CAR, "https://example.com/bmwx3.jpg", 2010, 2022, br);
+                modelRepositiry.saveAll(Arrays.asList(model1, model2, model3, model4, model5));
             } else if (brand.equals("Audi")) {
-                Model model3 = new Model("A5", Category.CAR, "https://example.com/audia5.jpg", 2016, 2022, br);
-                brandRepository.save(br);
-                modelRepositiry.save(model3);
+                Model model6 = new Model("A4", Category.CAR, "https://example.com/audia4.jpg", 2015, 2022, br);
+                Model model7 = new Model("Q5", Category.CAR, "https://example.com/audiq5.jpg", 2016, 2022, br);
+                Model model8 = new Model("A7", Category.CAR, "https://example.com/audia7.jpg", 2018, 2022, br);
+                Model model9 = new Model("Q3", Category.CAR, "https://example.com/audiq3.jpg", 2011, 2022, br);
+                Model model10 = new Model("R8", Category.CAR, "https://example.com/audir8.jpg", 2010, 2022, br);
+                modelRepositiry.saveAll(Arrays.asList(model6, model7, model8, model9, model10));
             } else if (brand.equals("Mercedes-Benz")) {
-                Model model2 = new Model("Actros", Category.TRUCK, "https://example.com/actros.jpg", 2022, 2023, br);
-                brandRepository.save(br);
-                modelRepositiry.save(model2);
-            } else {
-                brandRepository.save(br);
+                Model model11 = new Model("C-Class", Category.CAR, "https://example.com/mercedesc.jpg", 2014, 2022, br);
+                Model model12 = new Model("E-Class", Category.CAR, "https://example.com/mercedese.jpg", 2016, 2022, br);
+                Model model13 = new Model("S-Class", Category.CAR, "https://example.com/mercedess.jpg", 2017, 2022, br);
+                Model model14 = new Model("GLE", Category.CAR, "https://example.com/mercedesgle.jpg", 2019, 2022, br);
+                Model model15 = new Model("GLA", Category.CAR, "https://example.com/mercedesgla.jpg", 2015, 2022, br);
+                modelRepositiry.saveAll(Arrays.asList(model11, model12, model13, model14, model15));
+            } else if (brand.equals("Toyota")) {
+                Model model16 = new Model("Camry", Category.CAR, "https://example.com/toyotacamry.jpg", 2017, 2022, br);
+                Model model17 = new Model("Corolla", Category.CAR, "https://example.com/toyotacorolla.jpg", 2018, 2022, br);
+                Model model18 = new Model("RAV4", Category.CAR, "https://example.com/toyotarav4.jpg", 2016, 2022, br);
+                Model model19 = new Model("Highlander", Category.CAR, "https://example.com/toyotahighlander.jpg", 2019, 2022, br);
+                Model model20 = new Model("Tacoma", Category.TRUCK, "https://example.com/toyotatacoma.jpg", 2022, 2023, br);
+                modelRepositiry.saveAll(Arrays.asList(model16, model17, model18, model19, model20));
+            } else if (brand.equals("Ford")) {
+                Model model21 = new Model("Mustang", Category.CAR, "https://example.com/fordmustang.jpg", 2015, 2022, br);
+                Model model22 = new Model("F-150", Category.TRUCK, "https://example.com/fordf150.jpg", 2018, 2022, br);
+                Model model23 = new Model("Explorer", Category.CAR, "https://example.com/fordexplorer.jpg", 2019, 2022, br);
+                Model model24 = new Model("Edge", Category.CAR, "https://example.com/fordedge.jpg", 2016, 2022, br);
+                Model model25 = new Model("Escape", Category.CAR, "https://example.com/fordescape.jpg", 2017, 2022, br);
+                modelRepositiry.saveAll(Arrays.asList(model21, model22, model23, model24, model25));
+            } else if (brand.equals("Volkswagen")) {
+                Model model26 = new Model("Golf", Category.CAR, "https://example.com/vwgolf.jpg", 2014, 2022, br);
+                Model model27 = new Model("Passat", Category.CAR, "https://example.com/vwpassat.jpg", 2016, 2022, br);
+                Model model28 = new Model("Tiguan", Category.CAR, "https://example.co m/vwtiguan.jpg", 2017, 2022, br);
+                Model model29 = new Model("Polo", Category.CAR, "https://example.com/vwpolo.jpg", 2018, 2022, br);
+                Model model30 = new Model("Arteon", Category.CAR, "https://example.com/vwarteon.jpg", 2019, 2022, br);
+                modelRepositiry.saveAll(Arrays.asList(model26, model27, model28, model29, model30));
             }
         }
+
+
         List<ModelDto> models =modelService.getAll();
         List<ModelDto> brand_models = brandService.getBrandModels("BMW");
         System.out.println("ALL Brand MODELS: " + brand_models.toString());
@@ -126,5 +156,25 @@ public class DataInitializer implements CommandLineRunner {
 
         List<OfferDto> some_user_offers = userService.getUserOffers(list_users.get(0).getId());
         System.out.println("User OFFERS: " + some_user_offers.size());
+
+
+        System.out.println(offerService.getOfferByEngine("GASOLINE"));
+        System.out.println(modelService.getModelByCategory("car"));
+
+        System.out.println(offerService.getOfferByTransmission("manual"));
+
+
+        List<AllOffersWithBrandDto> offers_all_info = offerService.getAllOffersInfo();
+        System.out.println(offers_all_info.size());
+        for (AllOffersWithBrandDto offer : offers_all_info){
+            System.out.println(offer);
+        }
+
+
+//        List<UserDto> userDtos = userService.getAll();
+//
+//        for (UserDto usr: userDtos){
+//            userService.deleteUser(usr.getId());
+//        }
     }
 }

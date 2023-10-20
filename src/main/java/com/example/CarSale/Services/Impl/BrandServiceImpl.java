@@ -1,9 +1,9 @@
 package com.example.CarSale.Services.Impl;
 
+import com.example.CarSale.Dtos.BrandDto;
 import com.example.CarSale.Dtos.ModelDto;
-import com.example.CarSale.Dtos.OfferDto;
+import com.example.CarSale.Models.Brand;
 import com.example.CarSale.Repositories.BrandRepository;
-import com.example.CarSale.Repositories.UserRepository;
 import com.example.CarSale.Services.BrandService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,4 +24,15 @@ public class BrandServiceImpl implements BrandService {
             return brandRepository.findModelsByBrandName(name)
                     .stream().map((model) -> modelMapper.map(model, ModelDto.class)).collect(Collectors.toList());
         }
+
+    @Override
+    public BrandDto createBrand(BrandDto brandDto) {
+        Brand brand_model = modelMapper.map(brandDto, Brand.class);
+        return modelMapper.map(brandRepository.save(brand_model), BrandDto.class);
+    }
+
+    @Override
+    public void deleteBrand(UUID branId) {
+        brandRepository.deleteById(branId);
+    }
 }

@@ -38,6 +38,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void deleteUser(UUID userId) {
+        userRepository.deleteById(userId);
+    }
+
+    @Override
     public List<UserDto> getAll() {
         return userRepository.findAll()
                 .stream().map((user) -> modelMapper.map(user, UserDto.class)).collect(Collectors.toList());
