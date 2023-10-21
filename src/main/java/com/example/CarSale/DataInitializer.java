@@ -15,37 +15,41 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 
 @Component
 public class DataInitializer implements CommandLineRunner {
-    @Autowired
     private UserRepository userRepository;
-    @Autowired
     private UserService userService;
 
-    @Autowired
     private UserRoleRepository userRoleRepository;
-    @Autowired
     private UserRoleService userRoleService;
-
-    @Autowired
     private BrandRepository brandRepository;
-    @Autowired
     private BrandService brandService;
 
-    @Autowired
     private ModelRepositiry modelRepositiry;
-    @Autowired
     private ModelService modelService;
 
-    @Autowired
     private OfferRepository offerRepository;
-    @Autowired
     private OfferService offerService;
+
+    public DataInitializer(UserRepository userRepository, UserService userService, UserRoleRepository userRoleRepository, UserRoleService userRoleService, BrandRepository brandRepository, BrandService brandService, ModelRepositiry modelRepositiry, ModelService modelService, OfferRepository offerRepository, OfferService offerService) {
+        this.userRepository = userRepository;
+        this.userService = userService;
+        this.userRoleRepository = userRoleRepository;
+        this.userRoleService = userRoleService;
+        this.brandRepository = brandRepository;
+        this.brandService = brandService;
+        this.modelRepositiry = modelRepositiry;
+        this.modelService = modelService;
+        this.offerRepository = offerRepository;
+        this.offerService = offerService;
+    }
 
     @Override
     public void run(String... args) throws Exception {
@@ -170,6 +174,16 @@ public class DataInitializer implements CommandLineRunner {
             System.out.println(offer);
         }
 
+        UserDto user = (UserDto) userService.changeImgUrl(list_users.get(0).getId(), faker.internet().image());
+        System.out.println(list_users.get(0).getImageUrl() + " changed: " + user);
+
+
+        List<OfferDto> offers = offerService.getAll();
+        Map<String, LocalDateTime> offerCMInfo1 = offerService.getCreatedandModifiedInfo(offers.get(1).getId());
+
+        offerService.changeImgUrl(offers.get(0).getId(), faker.internet().image());
+        Map<String, LocalDateTime> offerCMInfo0 = offerService.getCreatedandModifiedInfo(offers.get(0).getId());
+        System.out.println(offerCMInfo1 + " " + offerCMInfo0);
 
 //        List<UserDto> userDtos = userService.getAll();
 //

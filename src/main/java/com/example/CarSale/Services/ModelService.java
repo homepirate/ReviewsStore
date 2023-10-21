@@ -5,7 +5,7 @@ import com.example.CarSale.Dtos.ModelDto;
 import java.util.List;
 import java.util.UUID;
 
-public interface ModelService {
+public interface ModelService extends GeneralSevice{
 
     List<ModelDto> getAll();
 
@@ -14,4 +14,5 @@ public interface ModelService {
     ModelDto createModel(ModelDto modelDto);
 
     void deleteModel(UUID modelId);
+
 }

@@ -11,15 +11,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
-    @Autowired
     private UserRepository userRepository;
-    @Autowired
     private ModelMapper modelMapper;
+
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
+        this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
+    }
+
     @Override
     public UserDto createUser(UserDto user) {
         User user_model = modelMapper.map(user, User.class);
@@ -52,5 +57,31 @@ public class UserServiceImpl implements UserService {
     public List<OfferDto> getUserOffers(UUID userId) {
         return userRepository.getOffersByUserId(userId)
                 .stream().map((offer) -> modelMapper.map(offer, OfferDto.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public UserDto changePassword(UUID userId, String newPass) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()){
+            User user = userOptional.get();
+            user.setPassword(newPass);
+            return modelMapper.map(userRepository.save(user), UserDto.class);
+        }
+        else {
+            return null;
+        }
+    }
+
+    @Override
+    public UserDto changeImgUrl(UUID id, String newUrl) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()){
+            User user = userOptional.get();
+            user.setImageUrl(newUrl);
+            return modelMapper.map(userRepository.save(user), UserDto.class);
+        }
+        else {
+            return null;
+        }
     }
 }

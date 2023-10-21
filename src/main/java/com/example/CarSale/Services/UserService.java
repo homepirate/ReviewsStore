@@ -7,7 +7,7 @@ import com.example.CarSale.Models.User;
 import java.util.List;
 import java.util.UUID;
 
-public interface UserService {
+public interface UserService extends GeneralSevice{
     UserDto createUser(UserDto user);
 
     List<UserDto> findAllByRole(String role);
@@ -17,4 +17,6 @@ public interface UserService {
     List<UserDto> getAll();
 
     List<OfferDto> getUserOffers(UUID userId);
+
+    UserDto changePassword(UUID userId, String newPass);
 }

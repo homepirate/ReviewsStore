@@ -11,15 +11,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class ModelServiceImpl  implements ModelService {
-    @Autowired
     private ModelRepositiry modelRepositiry;
-    @Autowired
     private ModelMapper modelMapper;
+
+    public ModelServiceImpl(ModelRepositiry modelRepositiry, ModelMapper modelMapper) {
+        this.modelRepositiry = modelRepositiry;
+        this.modelMapper = modelMapper;
+    }
 
     @Override
     public List<ModelDto> getAll() {
@@ -43,5 +47,18 @@ public class ModelServiceImpl  implements ModelService {
     @Override
     public void deleteModel(UUID modelId) {
         modelRepositiry.deleteById(modelId);
+    }
+
+    @Override
+    public ModelDto changeImgUrl(UUID id, String newUrl) {
+        Optional<Model> modelOptional = modelRepositiry.findById(id);
+        if (modelOptional.isPresent()){
+            Model model = modelOptional.get();
+            model.setImageUrl(newUrl);
+            return modelMapper.map(modelRepositiry.save(model), ModelDto.class);
+        }
+        else {
+            return null;
+        }
     }
 }

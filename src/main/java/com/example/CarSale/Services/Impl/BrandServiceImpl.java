@@ -15,10 +15,14 @@ import java.util.stream.Collectors;
 
 @Service
 public class BrandServiceImpl implements BrandService {
-    @Autowired
     private BrandRepository brandRepository;
-    @Autowired
     private ModelMapper modelMapper;
+
+    public BrandServiceImpl(BrandRepository brandRepository, ModelMapper modelMapper) {
+        this.brandRepository = brandRepository;
+        this.modelMapper = modelMapper;
+    }
+
     @Override
     public List<ModelDto> getBrandModels(String name) {
             return brandRepository.findModelsByBrandName(name)
