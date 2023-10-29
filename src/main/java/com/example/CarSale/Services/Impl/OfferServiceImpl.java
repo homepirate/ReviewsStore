@@ -4,7 +4,7 @@ import com.example.CarSale.Services.BrandService;
 import com.example.CarSale.Services.Dtos.*;
 import com.example.CarSale.Services.ModelService;
 import com.example.CarSale.Services.UserService;
-import com.example.CarSale.Views.AllOffersWithBrandDto;
+import com.example.CarSale.Views.AllOffersWithBrandView;
 import com.example.CarSale.constants.Enums.Engine;
 import com.example.CarSale.constants.Enums.Transmission;
 import com.example.CarSale.Models.Offer;
@@ -102,7 +102,7 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public List<AllOffersWithBrandDto> getAllOffersInfo() {
+    public List<AllOffersWithBrandView> getAllOffersInfo() {
         return offerRepository.getAllOffersWithInfo();
     }
 
@@ -138,7 +138,7 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public AllOffersWithBrandDto createOfferByUser(CreateOfferFromUser offerModel){
+    public AllOffersWithBrandView createOfferByUser(CreateOfferFromUser offerModel){
         UserDto userDto = userService.getByUserName(offerModel.getUserName());
         ModelDto modelDto = modelService.getModelByName(offerModel.getModelName());
         OfferDto offerDto = new OfferDto();

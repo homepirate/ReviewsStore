@@ -1,8 +1,7 @@
 package com.example.CarSale.web.controllers;
 
-import com.example.CarSale.Views.AllOffersWithBrandDto;
+import com.example.CarSale.Views.AllOffersWithBrandView;
 import com.example.CarSale.Services.Dtos.CreateOfferFromUser;
-import com.example.CarSale.Services.Dtos.OfferDto;
 import com.example.CarSale.Services.OfferService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,13 +22,13 @@ public class OfferController {
     }
 
     @PostMapping("/create-offer")
-    public ResponseEntity<AllOffersWithBrandDto> createOffer(@RequestBody CreateOfferFromUser offerInput){
-        AllOffersWithBrandDto createdOffer = offerService.createOfferByUser(offerInput);
+    public ResponseEntity<AllOffersWithBrandView> createOffer(@RequestBody CreateOfferFromUser offerInput){
+        AllOffersWithBrandView createdOffer = offerService.createOfferByUser(offerInput);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdOffer);
     }
 
     @GetMapping("")
-    public ResponseEntity<List<AllOffersWithBrandDto>> getAllInfoOffers(){
+    public ResponseEntity<List<AllOffersWithBrandView>> getAllInfoOffers(){
         return ResponseEntity.status(HttpStatus.OK).body(offerService.getAllOffersInfo());
     }
 //    @GetMapping("/get-all")

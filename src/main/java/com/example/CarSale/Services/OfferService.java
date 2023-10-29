@@ -1,6 +1,6 @@
 package com.example.CarSale.Services;
 
-import com.example.CarSale.Views.AllOffersWithBrandDto;
+import com.example.CarSale.Views.AllOffersWithBrandView;
 import com.example.CarSale.Services.Dtos.CreateOfferFromUser;
 import com.example.CarSale.Services.Dtos.OfferDto;
 
@@ -21,11 +21,11 @@ public interface OfferService  extends GeneralSevice{
     List<OfferDto> getOfferByEngine(String engine);
     List<OfferDto> getOfferByTransmission(String transmission);
 
-    List<AllOffersWithBrandDto> getAllOffersInfo();
+    List<AllOffersWithBrandView> getAllOffersInfo();
 
     OfferDto changePrice(UUID offerId, int newPrice);
 
     Map<String, LocalDateTime> getCreatedandModifiedInfo(UUID offerId);
-    AllOffersWithBrandDto createOfferByUser(CreateOfferFromUser offerModel);
+    AllOffersWithBrandView createOfferByUser(CreateOfferFromUser offerModel);
 
 }

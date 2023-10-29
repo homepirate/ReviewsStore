@@ -2,7 +2,7 @@ package com.example.CarSale;
 
 import com.example.CarSale.Services.Dtos.*;
 import com.example.CarSale.Models.Brand;
-import com.example.CarSale.Views.AllOffersWithBrandDto;
+import com.example.CarSale.Views.AllOffersWithBrandView;
 import com.example.CarSale.constants.Enums.Category;
 import com.example.CarSale.constants.Enums.Engine;
 import com.example.CarSale.constants.Enums.Role;
@@ -168,9 +168,9 @@ public class DataInitializer implements CommandLineRunner {
         System.out.println(offerService.getOfferByTransmission("manual"));
 
 
-        List<AllOffersWithBrandDto> offers_all_info = offerService.getAllOffersInfo();
+        List<AllOffersWithBrandView> offers_all_info = offerService.getAllOffersInfo();
         System.out.println(offers_all_info.size());
-        for (AllOffersWithBrandDto offer : offers_all_info){
+        for (AllOffersWithBrandView offer : offers_all_info){
             System.out.println(offer);
         }
 
