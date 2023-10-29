@@ -1,4 +1,4 @@
-package com.example.CarSale.Models.Enums;
+package com.example.CarSale.constants.Enums;
 
 public enum Engine {
     GASOLINE(1),

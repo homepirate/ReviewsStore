@@ -1,17 +1,21 @@
 package com.example.CarSale.Services.Impl;
 
-import com.example.CarSale.Dtos.AllOffersWithBrandDto;
-import com.example.CarSale.Dtos.OfferDto;
-import com.example.CarSale.Dtos.UserDto;
-import com.example.CarSale.Models.Enums.Engine;
-import com.example.CarSale.Models.Enums.Transmission;
+import com.example.CarSale.Services.BrandService;
+import com.example.CarSale.Services.Dtos.*;
+import com.example.CarSale.Services.ModelService;
+import com.example.CarSale.Services.UserService;
+import com.example.CarSale.Views.AllOffersWithBrandDto;
+import com.example.CarSale.constants.Enums.Engine;
+import com.example.CarSale.constants.Enums.Transmission;
 import com.example.CarSale.Models.Offer;
-import com.example.CarSale.Models.User;
 import com.example.CarSale.Repositories.OfferRepository;
 import com.example.CarSale.Services.OfferService;
+import com.example.CarSale.utils.ValidationUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import jakarta.validation.ConstraintViolation;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,18 +27,53 @@ import java.util.stream.Collectors;
 @Service
 public class OfferServiceImpl implements OfferService {
     private OfferRepository offerRepository;
-
+    private BrandService brandService;
+    private UserService userService;
+    private ModelService modelService;
     private ModelMapper modelMapper;
+    private ValidationUtil validationUtil;
 
-    public OfferServiceImpl(OfferRepository offerRepository, ModelMapper modelMapper) {
-        this.offerRepository = offerRepository;
+
+    @Autowired
+    public OfferServiceImpl(ValidationUtil validationUtil, ModelMapper modelMapper) {
+        this.validationUtil = validationUtil;
+
         this.modelMapper = modelMapper;
+    }
+
+    @Autowired
+    public void setOfferRepository(OfferRepository offerRepository) {
+        this.offerRepository = offerRepository;
+    }
+
+    @Autowired
+    public void setBrandService(BrandService brandService) {
+        this.brandService = brandService;
+    }
+
+    @Autowired
+    public void setModelService(ModelService modelService) {
+        this.modelService = modelService;
+    }
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 
     @Override
     public OfferDto createOffer(OfferDto offerDto) {
-        Offer offer_model = modelMapper.map(offerDto, Offer.class);
-        return modelMapper.map(offerRepository.save(offer_model), OfferDto.class);
+        if (!this.validationUtil.isValid(offerDto)) {
+            this.validationUtil
+                    .violations(offerDto)
+                    .stream()
+                    .map(ConstraintViolation::getMessage)
+                    .forEach(System.out::println);
+        } else {
+            Offer offer_model = modelMapper.map(offerDto, Offer.class);
+            return modelMapper.map(offerRepository.save(offer_model), OfferDto.class);
+        }
+        return null;
     }
 
     @Override
@@ -96,5 +135,23 @@ public class OfferServiceImpl implements OfferService {
         else {
             return null;
         }
+    }
+
+    @Override
+    public AllOffersWithBrandDto createOfferByUser(CreateOfferFromUser offerModel){
+        UserDto userDto = userService.getByUserName(offerModel.getUserName());
+        ModelDto modelDto = modelService.getModelByName(offerModel.getModelName());
+        OfferDto offerDto = new OfferDto();
+        offerDto.setSeller(userDto);
+        offerDto.setModel(modelDto);
+        offerDto.setDescription(offerModel.getDescription());
+        offerDto.setEngine(Engine.valueOf(offerModel.getEngine().toUpperCase()));
+        offerDto.setMileage(offerModel.getMileage());
+        offerDto.setPrice(offerModel.getPrice());
+        offerDto.setImageUrl(offerModel.getImageUrl());
+        offerDto.setYear(offerModel.getYear());
+        offerDto.setTransmission(Transmission.valueOf(offerModel.getTransmission().toUpperCase()));
+        OfferDto offer = this.createOffer(offerDto);
+        return offerRepository.getALLInfoOneOffer(offer.getId());
     }
 }

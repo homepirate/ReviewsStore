@@ -1,6 +1,7 @@
 package com.example.CarSale.Services.Impl;
 
-import com.example.CarSale.Dtos.UserRoleDto;
+import com.example.CarSale.Services.Dtos.UserRoleDto;
+import com.example.CarSale.constants.Enums.Role;
 import com.example.CarSale.Models.UserRole;
 import com.example.CarSale.Repositories.UserRoleRepository;
 import com.example.CarSale.Services.UserRoleService;
@@ -19,9 +20,13 @@ public class UserRoleServiceImpl implements UserRoleService {
     private UserRoleRepository userRoleRepository;
     private ModelMapper modelMapper;
 
-    public UserRoleServiceImpl(UserRoleRepository userRoleRepository, ModelMapper modelMapper) {
-        this.userRoleRepository = userRoleRepository;
+    @Autowired
+    public UserRoleServiceImpl(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
+    }
+ @Autowired
+    public void setUserRoleRepository(UserRoleRepository userRoleRepository) {
+        this.userRoleRepository = userRoleRepository;
     }
 
     @Override
@@ -31,10 +36,16 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
-    public UserRoleDto createUserRole(UserRoleDto userRoleDto) {
-        UserRole userRole_model = modelMapper.map(userRoleDto, UserRole.class);
-        return modelMapper.map(userRoleRepository.save(userRole_model), UserRoleDto.class);
+    public UserRoleDto createUserRole(String roleName) {
+        try {
+            Role role = Role.valueOf(roleName.toUpperCase());
+            UserRole userRole_model = modelMapper.map(new UserRole(role), UserRole.class);
+            return modelMapper.map(userRoleRepository.save(userRole_model), UserRoleDto.class);
+        } catch (Exception e) {
+            return null;
+        }
     }
+
 
     @Override
     public void deleteUserRole(UUID userRoleId) {

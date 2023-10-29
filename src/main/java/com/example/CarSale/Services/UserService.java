@@ -1,8 +1,7 @@
 package com.example.CarSale.Services;
 
-import com.example.CarSale.Dtos.OfferDto;
-import com.example.CarSale.Dtos.UserDto;
-import com.example.CarSale.Models.User;
+import com.example.CarSale.Services.Dtos.OfferDto;
+import com.example.CarSale.Services.Dtos.UserDto;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,4 +18,6 @@ public interface UserService extends GeneralSevice{
     List<OfferDto> getUserOffers(UUID userId);
 
     UserDto changePassword(UUID userId, String newPass);
+
+    UserDto getByUserName(String username);
 }

@@ -4,36 +4,21 @@ import com.example.CarSale.Models.Base.BaseEntityCMU;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Cascade;
 
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
 public class User extends BaseEntityCMU {
 
-    @Column(name="username", nullable = false)
     private String username;
-
-    @Column(name="password", nullable = false)
     private String password;
-
-    @Column(name="first_name", nullable = false)
     private String firstName;
-
-
-    @Column(name="last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "is_active", nullable = false)
     private Boolean isActive;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
     private UserRole role;
 
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "seller")
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    private List<Offer> offers;
+    private Set<Offer> offers;
 
     public User(String username, String password, String firstName, String lastName, String imageUrl, Boolean isActive, UserRole role) {
         this.username = username;
@@ -48,6 +33,7 @@ public class User extends BaseEntityCMU {
     public User() {
     }
 
+    @Column(name="username", nullable = false)
     public String getUsername() {
         return username;
     }
@@ -55,6 +41,8 @@ public class User extends BaseEntityCMU {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    @Column(name="password", nullable = false)
 
     public String getPassword() {
         return password;
@@ -64,6 +52,8 @@ public class User extends BaseEntityCMU {
         this.password = password;
     }
 
+    @Column(name="first_name", nullable = false)
+
     public String getFirstName() {
         return firstName;
     }
@@ -71,6 +61,8 @@ public class User extends BaseEntityCMU {
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
+
+    @Column(name="last_name", nullable = false)
 
     public String getLastName() {
         return lastName;
@@ -80,6 +72,8 @@ public class User extends BaseEntityCMU {
         this.lastName = lastName;
     }
 
+    @Column(name = "is_active", nullable = false)
+
     public Boolean getActive() {
         return isActive;
     }
@@ -88,6 +82,9 @@ public class User extends BaseEntityCMU {
         isActive = active;
     }
 
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
     public UserRole getRole() {
         return role;
     }
@@ -96,11 +93,14 @@ public class User extends BaseEntityCMU {
         this.role = role;
     }
 
-    public List<Offer> getOffers() {
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "seller")
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    public Set<Offer> getOffers() {
         return offers;
     }
 
-    public void setOffers(List<Offer> offers) {
+    public void setOffers(Set<Offer> offers) {
         this.offers = offers;
     }
 

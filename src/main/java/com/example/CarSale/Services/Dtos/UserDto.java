@@ -1,6 +1,9 @@
-package com.example.CarSale.Dtos;
+package com.example.CarSale.Services.Dtos;
 
-import java.util.List;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Length;
+
 import java.util.UUID;
 
 public class UserDto {
@@ -50,6 +53,10 @@ public class UserDto {
         this.username = username;
     }
 
+
+    @NotNull
+    @NotEmpty
+    @Length(min = 2, message = "FirstName must be minimum two characters!")
     public String getFirstName() {
         return firstName;
     }
@@ -58,6 +65,10 @@ public class UserDto {
         this.firstName = firstName;
     }
 
+
+    @NotNull
+    @NotEmpty
+    @Length(min = 2, message = "FirstName must be minimum two characters!")
     public String getLastName() {
         return lastName;
     }
@@ -90,6 +101,9 @@ public class UserDto {
         this.imageUrl = imageUrl;
     }
 
+    @NotNull
+    @NotEmpty
+    @Length(min = 8, message = "Password must be minimum eight characters!")
     public String getPassword() {
         return password;
     }

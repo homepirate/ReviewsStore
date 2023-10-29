@@ -1,38 +1,22 @@
 package com.example.CarSale.Models;
 
 import com.example.CarSale.Models.Base.BaseEntityCMU;
-import com.example.CarSale.Models.Enums.Category;
+import com.example.CarSale.constants.Enums.Category;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Cascade;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "models")
 public class Model extends BaseEntityCMU {
-
-    @Column(name = "name", nullable = false)
     private String name;
-
-    @Enumerated(EnumType.ORDINAL)
-    @Column(name = "category", nullable = false)
     private Category category;
-
-
-
-    @Column(name="start_year", nullable = false)
     private int startYear;
-
-    @Column(name="end_year", nullable = false)
     private int endYear;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name="brand_id", referencedColumnName = "id", nullable = false)
     private Brand brand;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "model")
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    private List<Offer> offers;
+    private Set<Offer> offers;
 
     public Model(String name, Category category, String imageUrl, int startYear, int endYear, Brand brand) {
         this.name = name;
@@ -47,6 +31,7 @@ public class Model extends BaseEntityCMU {
     public Model() {
     }
 
+    @Column(name = "name", nullable = false)
     public String getName() {
         return name;
     }
@@ -55,6 +40,9 @@ public class Model extends BaseEntityCMU {
         this.name = name;
     }
 
+
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "category", nullable = false)
     public Category getCategory() {
         return category;
     }
@@ -63,6 +51,7 @@ public class Model extends BaseEntityCMU {
         this.category = category;
     }
 
+    @Column(name="start_year", nullable = false)
     public int getStartYear() {
         return startYear;
     }
@@ -71,6 +60,7 @@ public class Model extends BaseEntityCMU {
         this.startYear = startYear;
     }
 
+    @Column(name="end_year", nullable = false)
     public int getEndYear() {
         return endYear;
     }
@@ -79,6 +69,9 @@ public class Model extends BaseEntityCMU {
         this.endYear = endYear;
     }
 
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name="brand_id", referencedColumnName = "id", nullable = false)
     public Brand getBrand() {
         return brand;
     }
@@ -87,11 +80,14 @@ public class Model extends BaseEntityCMU {
         this.brand = brand;
     }
 
-    public List<Offer> getOffers() {
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "model")
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    public Set<Offer> getOffers() {
         return offers;
     }
 
-    public void setOffers(List<Offer> offers) {
+    public void setOffers(Set<Offer> offers) {
         this.offers = offers;
     }
 

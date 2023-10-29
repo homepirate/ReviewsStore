@@ -1,6 +1,6 @@
-package com.example.CarSale.Dtos;
+package com.example.CarSale.Services.Dtos;
 
-import com.example.CarSale.Models.Enums.Role;
+import com.example.CarSale.constants.Enums.Role;
 
 import java.util.UUID;
 

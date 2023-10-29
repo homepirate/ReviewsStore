@@ -1,7 +1,10 @@
-package com.example.CarSale.Dtos;
+package com.example.CarSale.Services.Dtos;
 
-import com.example.CarSale.Models.Enums.Engine;
-import com.example.CarSale.Models.Enums.Transmission;
+import com.example.CarSale.constants.Enums.Engine;
+import com.example.CarSale.constants.Enums.Transmission;
+import com.example.CarSale.utils.InfoForValid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 
 import java.util.UUID;
 
@@ -64,6 +67,8 @@ public class OfferDto {
         this.engine = engine;
     }
 
+    @Min(value=0, message = "Mileage must be > 0")
+
     public int getMileage() {
         return mileage;
     }
@@ -72,6 +77,7 @@ public class OfferDto {
         this.mileage = mileage;
     }
 
+    @Min(value=0, message = "Price must be > 0")
     public int getPrice() {
         return price;
     }
@@ -96,6 +102,8 @@ public class OfferDto {
         this.transmission = transmission;
     }
 
+    @Min(1800)
+    @Max(2023)
     public int getYear() {
         return year;
     }
@@ -135,6 +143,7 @@ public class OfferDto {
                 ", imageUrl='" + imageUrl + '\'' +
                 ", transmission=" + transmission +
                 ", year=" + year +
+                ", seller=" + seller +
                 ", model=" + model +
                 '}';
     }

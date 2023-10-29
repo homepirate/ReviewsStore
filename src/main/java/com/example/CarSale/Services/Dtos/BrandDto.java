@@ -1,4 +1,4 @@
-package com.example.CarSale.Dtos;
+package com.example.CarSale.Services.Dtos;
 
 import com.example.CarSale.Models.Model;
 

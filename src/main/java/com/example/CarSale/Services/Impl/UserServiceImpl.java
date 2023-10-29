@@ -1,14 +1,17 @@
 package com.example.CarSale.Services.Impl;
 
-import com.example.CarSale.Dtos.OfferDto;
-import com.example.CarSale.Dtos.UserDto;
-import com.example.CarSale.Models.Enums.Role;
+import com.example.CarSale.Services.Dtos.OfferDto;
+import com.example.CarSale.Services.Dtos.UserDto;
+import com.example.CarSale.constants.Enums.Role;
 import com.example.CarSale.Models.User;
 import com.example.CarSale.Repositories.UserRepository;
 import com.example.CarSale.Services.UserService;
+import com.example.CarSale.utils.ValidationUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import jakarta.validation.ConstraintViolation;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -19,16 +22,33 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private ModelMapper modelMapper;
+    private ValidationUtil validationUtil;
 
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
-        this.userRepository = userRepository;
+
+    @Autowired
+    public UserServiceImpl(ValidationUtil validationUtil, ModelMapper modelMapper) {
+        this.validationUtil = validationUtil;
         this.modelMapper = modelMapper;
+    }
+
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
     public UserDto createUser(UserDto user) {
-        User user_model = modelMapper.map(user, User.class);
-        return modelMapper.map(userRepository.save(user_model), UserDto.class);
+        if (!this.validationUtil.isValid(user)) {
+            this.validationUtil
+                    .violations(user)
+                    .stream()
+                    .map(ConstraintViolation::getMessage)
+                    .forEach(System.out::println);
+        } else {
+            User user_model = modelMapper.map(user, User.class);
+            return modelMapper.map(userRepository.save(user_model), UserDto.class);
+        }
+        return null;
     }
 
     @Override
@@ -70,6 +90,12 @@ public class UserServiceImpl implements UserService {
         else {
             return null;
         }
+    }
+
+    @Override
+    public UserDto getByUserName(String username) {
+        User user = userRepository.findByUsername(username);
+        return modelMapper.map(user, UserDto.class);
     }
 
     @Override

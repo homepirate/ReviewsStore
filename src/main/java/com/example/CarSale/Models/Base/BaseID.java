@@ -7,11 +7,12 @@ import java.util.UUID;
 @MappedSuperclass
 
 public class BaseID{
+
+    protected UUID id;
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
-    protected UUID id;
-
     public UUID getId() {
         return id;
     }

@@ -1,7 +1,7 @@
-package com.example.CarSale.Dtos;
+package com.example.CarSale.Views;
 
-import com.example.CarSale.Models.Enums.Engine;
-import com.example.CarSale.Models.Enums.Transmission;
+import com.example.CarSale.constants.Enums.Engine;
+import com.example.CarSale.constants.Enums.Transmission;
 
 public class AllOffersWithBrandDto {
     private String brandName;

@@ -1,17 +1,17 @@
 package com.example.CarSale;
 
-import com.example.CarSale.Dtos.*;
+import com.example.CarSale.Services.Dtos.*;
 import com.example.CarSale.Models.Brand;
-import com.example.CarSale.Models.Enums.Category;
-import com.example.CarSale.Models.Enums.Engine;
-import com.example.CarSale.Models.Enums.Role;
-import com.example.CarSale.Models.Enums.Transmission;
+import com.example.CarSale.Views.AllOffersWithBrandDto;
+import com.example.CarSale.constants.Enums.Category;
+import com.example.CarSale.constants.Enums.Engine;
+import com.example.CarSale.constants.Enums.Role;
+import com.example.CarSale.constants.Enums.Transmission;
 import com.example.CarSale.Models.Model;
 import com.example.CarSale.Models.UserRole;
 import com.example.CarSale.Repositories.*;
 import com.example.CarSale.Services.*;
 import com.github.javafaker.Faker;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -190,5 +190,13 @@ public class DataInitializer implements CommandLineRunner {
 //        for (UserDto usr: userDtos){
 //            userService.deleteUser(usr.getId());
 //        }
+
+//        List<ModelDto> modelDtos = modelService.getAll();
+//
+//        for (ModelDto mdl: modelDtos){
+//            modelService.deleteModel(mdl.getId());
+//        }
+        System.out.println(offerRepository.findAll().get(0));
+        System.out.println(offerService.getAll().get(0));
     }
 }

@@ -1,10 +1,13 @@
 package com.example.CarSale.Services.Impl;
 
-import com.example.CarSale.Dtos.BrandDto;
-import com.example.CarSale.Dtos.ModelDto;
+import com.example.CarSale.Services.Dtos.BrandDto;
+import com.example.CarSale.Services.Dtos.ModelDto;
 import com.example.CarSale.Models.Brand;
 import com.example.CarSale.Repositories.BrandRepository;
 import com.example.CarSale.Services.BrandService;
+import com.example.CarSale.Views.ModelBrandView;
+import com.example.CarSale.utils.ValidationUtil;
+import jakarta.validation.Validation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,10 +20,29 @@ import java.util.stream.Collectors;
 public class BrandServiceImpl implements BrandService {
     private BrandRepository brandRepository;
     private ModelMapper modelMapper;
+    private ValidationUtil validationUtil;
 
-    public BrandServiceImpl(BrandRepository brandRepository, ModelMapper modelMapper) {
-        this.brandRepository = brandRepository;
+    @Autowired
+    public BrandServiceImpl(ValidationUtil validationUtil, ModelMapper modelMapper) {
+        this.validationUtil = validationUtil;
         this.modelMapper = modelMapper;
+    }
+
+    @Autowired
+    public void setBrandRepository(BrandRepository brandRepository) {
+        this.brandRepository = brandRepository;
+    }
+
+    @Override
+    public BrandDto getBrandByName(String name){
+        Brand brand = brandRepository.findByName(name);
+        return modelMapper.map(brand, BrandDto.class);
+    }
+
+    @Override
+    public List<ModelBrandView> getBrandModelsToUser(String brandName) {
+        return this.getBrandModels(brandName).stream()
+                .map((model) -> modelMapper.map(model, ModelBrandView.class)).collect(Collectors.toList());
     }
 
     @Override

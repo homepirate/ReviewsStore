@@ -1,23 +1,19 @@
 package com.example.CarSale.Models;
 
 import com.example.CarSale.Models.Base.BaseID;
-import com.example.CarSale.Models.Enums.Role;
+import com.example.CarSale.constants.Enums.Role;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Cascade;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.Set;
+
 @Entity
 @Table(name = "roles")
 public class UserRole extends BaseID {
 
-    @Enumerated(EnumType.ORDINAL)
-    @Column(name = "name", nullable = false)
     private Role role;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "role")
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    private List<User> users;
+    private Set<User> users;
 
     public UserRole(Role role) {
         this.role = role;
@@ -26,11 +22,19 @@ public class UserRole extends BaseID {
     public UserRole() {
     }
 
-    public List<User> getUsers() {
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "role")
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    public Set<User> getUsers() {
         return users;
     }
 
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
 
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "name", nullable = false)
     public Role getRole() {
         return role;
     }

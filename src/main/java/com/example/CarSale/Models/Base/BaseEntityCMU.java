@@ -6,8 +6,9 @@ import jakarta.persistence.MappedSuperclass;
 @MappedSuperclass
 public class BaseEntityCMU extends BaseEntityCM{
 
-    @Column(name="image_url", nullable = false)
     protected String imageUrl;
+
+    @Column(name="image_url", nullable = false)
 
     public String getImageUrl() {
         return imageUrl;

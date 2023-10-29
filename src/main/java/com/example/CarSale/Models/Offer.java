@@ -1,41 +1,21 @@
 package com.example.CarSale.Models;
 
 import com.example.CarSale.Models.Base.BaseEntityCMU;
-import com.example.CarSale.Models.Enums.Engine;
-import com.example.CarSale.Models.Enums.Transmission;
+import com.example.CarSale.constants.Enums.Engine;
+import com.example.CarSale.constants.Enums.Transmission;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "offers")
 public class Offer extends BaseEntityCMU {
-
-    @Column(name="description", columnDefinition = "TEXT")
     private String description;
-
-    @Enumerated(EnumType.ORDINAL)
-    @Column(name="engine", nullable = false)
     private Engine engine;
-
-    @Column(name="mileage", nullable = false)
     private int mileage;
-
-    @Column(name="price", nullable = false)
     private int price;
-
-    @Enumerated(EnumType.ORDINAL)
-    @Column(name = "transmission", nullable = false)
     private Transmission transmission;
-
-    @Column(name="year", nullable = false)
     private int year;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name="seller_id", referencedColumnName = "id", nullable = false)
     private User seller;
 
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "model_id", referencedColumnName = "id", nullable = false)
     private Model model;
 
     public Offer(String description, Engine engine, int mileage, int price, String url, Transmission transmission, int year, User seller, Model model) {
@@ -53,6 +33,8 @@ public class Offer extends BaseEntityCMU {
     public Offer() {
     }
 
+    @Column(name="description", columnDefinition = "TEXT")
+
     public String getDescription() {
         return description;
     }
@@ -61,6 +43,9 @@ public class Offer extends BaseEntityCMU {
         this.description = description;
     }
 
+
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name="engine", nullable = false)
     public Engine getEngine() {
         return engine;
     }
@@ -69,6 +54,7 @@ public class Offer extends BaseEntityCMU {
         this.engine = engine;
     }
 
+    @Column(name="mileage", nullable = false)
     public int getMileage() {
         return mileage;
     }
@@ -76,6 +62,8 @@ public class Offer extends BaseEntityCMU {
     public void setMileage(int mileage) {
         this.mileage = mileage;
     }
+
+    @Column(name="price", nullable = false)
 
     public int getPrice() {
         return price;
@@ -85,6 +73,9 @@ public class Offer extends BaseEntityCMU {
         this.price = price;
     }
 
+
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "transmission", nullable = false)
     public Transmission getTransmission() {
         return transmission;
     }
@@ -92,6 +83,8 @@ public class Offer extends BaseEntityCMU {
     public void setTransmission(Transmission transmission) {
         this.transmission = transmission;
     }
+
+    @Column(name="year", nullable = false)
 
     public int getYear() {
         return year;
@@ -101,6 +94,9 @@ public class Offer extends BaseEntityCMU {
         this.year = year;
     }
 
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name="seller_id", referencedColumnName = "id", nullable = false)
     public User getSeller() {
         return seller;
     }
@@ -109,6 +105,9 @@ public class Offer extends BaseEntityCMU {
         this.seller = seller;
     }
 
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "model_id", referencedColumnName = "id", nullable = false)
     public Model getModel() {
         return model;
     }

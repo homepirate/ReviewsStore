@@ -1,14 +1,15 @@
 package com.example.CarSale.Services.Impl;
 
-import com.example.CarSale.Dtos.ModelDto;
-import com.example.CarSale.Dtos.OfferDto;
-import com.example.CarSale.Models.Enums.Category;
+import com.example.CarSale.Services.Dtos.ModelDto;
+import com.example.CarSale.constants.Enums.Category;
 import com.example.CarSale.Models.Model;
 import com.example.CarSale.Repositories.ModelRepositiry;
 import com.example.CarSale.Services.ModelService;
+import com.example.CarSale.utils.ValidationUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import jakarta.validation.ConstraintViolation;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,10 +20,19 @@ import java.util.stream.Collectors;
 public class ModelServiceImpl  implements ModelService {
     private ModelRepositiry modelRepositiry;
     private ModelMapper modelMapper;
+    private ValidationUtil validationUtil;
 
-    public ModelServiceImpl(ModelRepositiry modelRepositiry, ModelMapper modelMapper) {
-        this.modelRepositiry = modelRepositiry;
+
+    @Autowired
+    public ModelServiceImpl(ValidationUtil validationUtil, ModelMapper modelMapper) {
+        this.validationUtil = validationUtil;
+
         this.modelMapper = modelMapper;
+    }
+
+    @Autowired
+    public void setModelRepositiry(ModelRepositiry modelRepositiry) {
+        this.modelRepositiry = modelRepositiry;
     }
 
     @Override
@@ -40,13 +50,29 @@ public class ModelServiceImpl  implements ModelService {
 
     @Override
     public ModelDto createModel(ModelDto modelDto) {
-        Model model_model = modelMapper.map(modelDto, Model.class);
-        return modelMapper.map(modelRepositiry.save(model_model), ModelDto.class);
+        if (!this.validationUtil.isValid(modelDto)) {
+            this.validationUtil
+                    .violations(modelDto)
+                    .stream()
+                    .map(ConstraintViolation::getMessage)
+                    .forEach(System.out::println);
+        }
+        else {
+            Model model_model = modelMapper.map(modelDto, Model.class);
+            return modelMapper.map(modelRepositiry.save(model_model), ModelDto.class);
+        }
+        return null;
     }
 
     @Override
     public void deleteModel(UUID modelId) {
         modelRepositiry.deleteById(modelId);
+    }
+
+    @Override
+    public ModelDto getModelByName(String name) {
+        Model model = modelRepositiry.findByName(name);
+        return modelMapper.map(model, ModelDto.class);
     }
 
     @Override

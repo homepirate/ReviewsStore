@@ -15,4 +15,5 @@ public interface BrandRepository extends JpaRepository<Brand, UUID> {
     @Query("SELECT b.models FROM Brand b WHERE b.name = :name")
     List<Model> findModelsByBrandName(@Param("name") String name);
 
+    Brand findByName(String name);
 }

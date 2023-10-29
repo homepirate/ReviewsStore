@@ -14,14 +14,13 @@ public class BaseEntityCM extends BaseID{
 
 
 
-    @CreationTimestamp
-    @Column(name="created", nullable = false)
     protected LocalDateTime created;
 
-    @UpdateTimestamp
-    @Column(name="modified", nullable = false)
     protected LocalDateTime modified;
 
+
+    @CreationTimestamp
+    @Column(name="created", nullable = false)
     public LocalDateTime getCreated() {
         return created;
     }
@@ -30,6 +29,9 @@ public class BaseEntityCM extends BaseID{
         this.created = created;
     }
 
+
+    @UpdateTimestamp
+    @Column(name="modified", nullable = false)
     public LocalDateTime getModified() {
         return modified;
     }

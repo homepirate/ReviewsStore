@@ -1,34 +1,23 @@
-package com.example.CarSale.Dtos;
+package com.example.CarSale.Views;
 
-import com.example.CarSale.Models.Enums.Category;
+import com.example.CarSale.constants.Enums.Category;
 
-import java.util.List;
-import java.util.UUID;
-
-public class ModelDto {
-    private UUID id;
+public class ModelBrandView {
     private String name;
     private Category category;
     private int startYear;
     private int endYear;
     private String imageUrl;
-    private BrandDto brand;
 
-    public ModelDto(UUID id, String name, Category category, int startYear, int endYear, String imageUrl, BrandDto brand) {
-        this.id = id;
+    public ModelBrandView(String name, Category category, int startYear, int endYear, String imageUrl) {
         this.name = name;
         this.category = category;
         this.startYear = startYear;
         this.endYear = endYear;
         this.imageUrl = imageUrl;
-        this.brand = brand;
     }
 
-    public ModelDto() {
-    }
-
-    public UUID getId() {
-        return id;
+    public ModelBrandView() {
     }
 
     public String getName() {
@@ -69,26 +58,5 @@ public class ModelDto {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public BrandDto getBrand() {
-        return brand;
-    }
-
-    public void setBrand(BrandDto brand) {
-        this.brand = brand;
-    }
-
-    @Override
-    public String toString() {
-        return "ModelDto{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", category=" + category +
-                ", startYear=" + startYear +
-                ", endYear=" + endYear +
-                ", imageUrl='" + imageUrl + '\'' +
-                ", brand=" + brand +
-                '}';
     }
 }

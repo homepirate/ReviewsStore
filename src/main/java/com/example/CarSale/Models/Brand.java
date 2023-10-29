@@ -5,16 +5,14 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.Cascade;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name="brands")
 public class Brand extends BaseEntityCM {
-    @Column(name="name", nullable = false, unique = true)
-    private String name;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "brand")
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    private List<Model> models;
+    private String name;
+    private Set<Model> models;
 
     public Brand(String name) {
         this.name = name;
@@ -23,6 +21,7 @@ public class Brand extends BaseEntityCM {
     public Brand() {
     }
 
+    @Column(name="name", nullable = false, unique = true)
     public String getName() {
         return name;
     }
@@ -31,11 +30,21 @@ public class Brand extends BaseEntityCM {
         this.name = name;
     }
 
-    public List<Model> getModels() {
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "brand")
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    public Set<Model> getModels() {
         return models;
     }
 
-    public void setModels(List<Model> models) {
+    public void setModels(Set<Model> models) {
         this.models = models;
+    }
+
+    @Override
+    public String toString() {
+        return "Brand{" +
+                "name='" + name + '\'' +
+                "} " + super.toString();
     }
 }
