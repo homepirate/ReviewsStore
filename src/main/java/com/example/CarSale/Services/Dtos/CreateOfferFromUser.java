@@ -13,7 +13,6 @@ public class CreateOfferFromUser {
 
     private String modelName;
 
-//    private String brandName;
     private String transmission;
 
     public CreateOfferFromUser(String userName, String description, String engine, int mileage, int price, String imageUrl, int year, String modelName, String transmission) {
@@ -25,7 +24,6 @@ public class CreateOfferFromUser {
         this.imageUrl = imageUrl;
         this.year = year;
         this.modelName = modelName;
-//        this.brandName = brandName;
         this.transmission = transmission;
     }
 

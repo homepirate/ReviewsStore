@@ -141,16 +141,18 @@ public class OfferServiceImpl implements OfferService {
     public AllOffersWithBrandView createOfferByUser(CreateOfferFromUser offerModel){
         UserDto userDto = userService.getByUserName(offerModel.getUserName());
         ModelDto modelDto = modelService.getModelByName(offerModel.getModelName());
-        OfferDto offerDto = new OfferDto();
+        OfferDto offerDto = modelMapper.map(offerModel, OfferDto.class);
+//        OfferDto offerDto = new OfferDto();
+//        offerDto.setDescription(offerModel.getDescription());
+//        offerDto.setEngine(Engine.valueOf(offerModel.getEngine().toUpperCase()));
+//        offerDto.setMileage(offerModel.getMileage());
+//        offerDto.setPrice(offerModel.getPrice());
+//        offerDto.setImageUrl(offerModel.getImageUrl());
+//        offerDto.setYear(offerModel.getYear());
+//        offerDto.setTransmission(Transmission.valueOf(offerModel.getTransmission().toUpperCase()));
+
         offerDto.setSeller(userDto);
         offerDto.setModel(modelDto);
-        offerDto.setDescription(offerModel.getDescription());
-        offerDto.setEngine(Engine.valueOf(offerModel.getEngine().toUpperCase()));
-        offerDto.setMileage(offerModel.getMileage());
-        offerDto.setPrice(offerModel.getPrice());
-        offerDto.setImageUrl(offerModel.getImageUrl());
-        offerDto.setYear(offerModel.getYear());
-        offerDto.setTransmission(Transmission.valueOf(offerModel.getTransmission().toUpperCase()));
         OfferDto offer = this.createOffer(offerDto);
         return offerRepository.getALLInfoOneOffer(offer.getId());
     }
