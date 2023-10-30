@@ -4,12 +4,10 @@ import com.example.CarSale.Services.BrandService;
 import com.example.CarSale.Views.ModelBrandView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.ui.Model;
 
 import java.util.List;
 
@@ -21,6 +19,14 @@ public class BrandController {
     @Autowired
     public void setBrandService(BrandService brandService) {
         this.brandService = brandService;
+    }
+
+    @GetMapping("/{brand}/models")
+    public @ResponseBody String getAllModelToUser(@PathVariable String brand, Model model){
+        List<ModelBrandView> models = brandService.getBrandModelsToUser(brand);
+        models.forEach(System.out::println);
+        model.addAttribute("Allmodels", models);
+        return "all-brand-models";
     }
 
     @GetMapping("/models")

@@ -1,12 +1,13 @@
 package com.example.CarSale.web.controllers;
 
-import com.example.CarSale.Views.AllOffersWithBrandView;
-import com.example.CarSale.Services.Dtos.CreateOfferFromUser;
+import com.example.CarSale.Views.AllOfferWithBrandView;
+import com.example.CarSale.Views.CreateOfferFromUser;
 import com.example.CarSale.Services.OfferService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,20 +22,41 @@ public class OfferController {
         this.offerService = offerService;
     }
 
+    @GetMapping("")
+    public @ResponseBody String getAll(Model model){
+        List<AllOfferWithBrandView> allOffers = offerService.getAllOffersInfo();
+        System.out.println("_____________________________________");
+        allOffers.forEach(System.out::println);
+        model.addAttribute("allOffers", allOffers);
+        return "all-offers";
+    }
+
+    @GetMapping("/transmissions/{transm}")
+    public @ResponseBody String getByTransmission(@PathVariable String transm, Model model){
+        List<AllOfferWithBrandView> allOfferByTransmission = offerService.getOfferByTransmissionToUser(transm);
+        System.out.println("___________________________________________________________________________");
+        allOfferByTransmission.forEach(System.out::println);
+        model.addAttribute("allOffersByTransmission", allOfferByTransmission);
+        return "all-offers-by-transmission";
+    }
+
+    @GetMapping("/engine/{eng}")
+    public @ResponseBody String getByEngine(@PathVariable String eng, Model model){
+        List<AllOfferWithBrandView> allOfferByEngine = offerService.getOfferByEngineToUser(eng);
+        allOfferByEngine.forEach(System.out::println);
+        model.addAttribute("allOffersByEngine", allOfferByEngine);
+        return "all-offers-by-engine";
+    }
+
     @PostMapping("/create-offer")
-    public ResponseEntity<AllOffersWithBrandView> createOffer(@RequestBody CreateOfferFromUser offerInput){
-        AllOffersWithBrandView createdOffer = offerService.createOfferByUser(offerInput);
+    public ResponseEntity<AllOfferWithBrandView> createOffer(@RequestBody CreateOfferFromUser offerInput){
+        AllOfferWithBrandView createdOffer = offerService.createOfferByUser(offerInput);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdOffer);
     }
 
-    @GetMapping("")
-    public ResponseEntity<List<AllOffersWithBrandView>> getAllInfoOffers(){
+    @GetMapping("/get-all")
+    public ResponseEntity<List<AllOfferWithBrandView>> getAllInfoOffers(){
         return ResponseEntity.status(HttpStatus.OK).body(offerService.getAllOffersInfo());
     }
-//    @GetMapping("/get-all")
-//    public ResponseEntity<List<OfferDto>> getAllOffers(){
-//        List<OfferDto> offerDtos = offerService.getAll();
-//        return ResponseEntity.status(HttpStatus.OK).body(offerDtos);
-//    }
 
 }

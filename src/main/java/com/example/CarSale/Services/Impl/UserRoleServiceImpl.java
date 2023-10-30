@@ -46,6 +46,10 @@ public class UserRoleServiceImpl implements UserRoleService {
         }
     }
 
+    @Override
+    public UserRoleDto getByRole(Role role) {
+        return modelMapper.map(userRoleRepository.findByRole(role), UserRoleDto.class);
+    }
 
     @Override
     public void deleteUserRole(UUID userRoleId) {

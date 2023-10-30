@@ -1,4 +1,4 @@
-package com.example.CarSale.Services.Dtos;
+package com.example.CarSale.Views;
 
 public class CreateOfferFromUser {
     private String userName;

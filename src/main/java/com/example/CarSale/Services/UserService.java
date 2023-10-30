@@ -2,6 +2,8 @@ package com.example.CarSale.Services;
 
 import com.example.CarSale.Services.Dtos.OfferDto;
 import com.example.CarSale.Services.Dtos.UserDto;
+import com.example.CarSale.Views.RegUserView;
+import com.example.CarSale.Views.UserView;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,4 +22,6 @@ public interface UserService extends GeneralSevice{
     UserDto changePassword(UUID userId, String newPass);
 
     UserDto getByUserName(String username);
+
+    UserView registrationNewUser(RegUserView regUserView);
 }

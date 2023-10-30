@@ -1,7 +1,7 @@
 package com.example.CarSale.Services;
 
-import com.example.CarSale.Views.AllOffersWithBrandView;
-import com.example.CarSale.Services.Dtos.CreateOfferFromUser;
+import com.example.CarSale.Views.AllOfferWithBrandView;
+import com.example.CarSale.Views.CreateOfferFromUser;
 import com.example.CarSale.Services.Dtos.OfferDto;
 
 import java.time.LocalDateTime;
@@ -21,11 +21,11 @@ public interface OfferService  extends GeneralSevice{
     List<OfferDto> getOfferByEngine(String engine);
     List<OfferDto> getOfferByTransmission(String transmission);
 
-    List<AllOffersWithBrandView> getAllOffersInfo();
-
     OfferDto changePrice(UUID offerId, int newPrice);
 
     Map<String, LocalDateTime> getCreatedandModifiedInfo(UUID offerId);
-    AllOffersWithBrandView createOfferByUser(CreateOfferFromUser offerModel);
-
+    AllOfferWithBrandView createOfferByUser(CreateOfferFromUser offerModel);
+    List<AllOfferWithBrandView> getAllOffersInfo();
+    List<AllOfferWithBrandView> getOfferByTransmissionToUser(String transmission);
+    List<AllOfferWithBrandView> getOfferByEngineToUser(String engine);
 }

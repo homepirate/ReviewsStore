@@ -1,7 +1,12 @@
 package com.example.CarSale.Services.Impl;
 
+import com.example.CarSale.Repositories.UserRoleRepository;
 import com.example.CarSale.Services.Dtos.OfferDto;
 import com.example.CarSale.Services.Dtos.UserDto;
+import com.example.CarSale.Services.Dtos.UserRoleDto;
+import com.example.CarSale.Services.UserRoleService;
+import com.example.CarSale.Views.RegUserView;
+import com.example.CarSale.Views.UserView;
 import com.example.CarSale.constants.Enums.Role;
 import com.example.CarSale.Models.User;
 import com.example.CarSale.Repositories.UserRepository;
@@ -21,6 +26,7 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
+    private UserRoleService userRoleService;
     private ModelMapper modelMapper;
     private ValidationUtil validationUtil;
 
@@ -29,6 +35,11 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(ValidationUtil validationUtil, ModelMapper modelMapper) {
         this.validationUtil = validationUtil;
         this.modelMapper = modelMapper;
+    }
+
+    @Autowired
+    public void setUserRoleService(UserRoleService userRoleService) {
+        this.userRoleService = userRoleService;
     }
 
     @Autowired
@@ -96,6 +107,16 @@ public class UserServiceImpl implements UserService {
     public UserDto getByUserName(String username) {
         User user = userRepository.findByUsername(username);
         return modelMapper.map(user, UserDto.class);
+    }
+
+    @Override
+    public UserView registrationNewUser(RegUserView regUserView) {
+        UserDto userDto = modelMapper.map(regUserView, UserDto.class);
+        userDto.setImageUrl("http:/baseimg.jpg");
+        userDto.setActive(Boolean.TRUE);
+        userDto.setRole(userRoleService.getByRole(Role.USER));
+        UserDto userDto_afterCreate = this.createUser(userDto);
+        return modelMapper.map(userDto_afterCreate, UserView.class);
     }
 
     @Override

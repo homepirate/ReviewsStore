@@ -4,7 +4,8 @@ import com.example.CarSale.Services.BrandService;
 import com.example.CarSale.Services.Dtos.*;
 import com.example.CarSale.Services.ModelService;
 import com.example.CarSale.Services.UserService;
-import com.example.CarSale.Views.AllOffersWithBrandView;
+import com.example.CarSale.Views.AllOfferWithBrandView;
+import com.example.CarSale.Views.CreateOfferFromUser;
 import com.example.CarSale.constants.Enums.Engine;
 import com.example.CarSale.constants.Enums.Transmission;
 import com.example.CarSale.Models.Offer;
@@ -102,7 +103,7 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public List<AllOffersWithBrandView> getAllOffersInfo() {
+    public List<AllOfferWithBrandView> getAllOffersInfo() {
         return offerRepository.getAllOffersWithInfo();
     }
 
@@ -138,22 +139,37 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public AllOffersWithBrandView createOfferByUser(CreateOfferFromUser offerModel){
+    public AllOfferWithBrandView createOfferByUser(CreateOfferFromUser offerModel){
         UserDto userDto = userService.getByUserName(offerModel.getUserName());
         ModelDto modelDto = modelService.getModelByName(offerModel.getModelName());
         OfferDto offerDto = modelMapper.map(offerModel, OfferDto.class);
-//        OfferDto offerDto = new OfferDto();
-//        offerDto.setDescription(offerModel.getDescription());
-//        offerDto.setEngine(Engine.valueOf(offerModel.getEngine().toUpperCase()));
-//        offerDto.setMileage(offerModel.getMileage());
-//        offerDto.setPrice(offerModel.getPrice());
-//        offerDto.setImageUrl(offerModel.getImageUrl());
-//        offerDto.setYear(offerModel.getYear());
-//        offerDto.setTransmission(Transmission.valueOf(offerModel.getTransmission().toUpperCase()));
-
         offerDto.setSeller(userDto);
         offerDto.setModel(modelDto);
         OfferDto offer = this.createOffer(offerDto);
         return offerRepository.getALLInfoOneOffer(offer.getId());
+    }
+
+    @Override
+    public List<AllOfferWithBrandView> getOfferByTransmissionToUser(String transmission) {
+        List<OfferDto> offerDtos = this.getOfferByTransmission(transmission);
+        List<AllOfferWithBrandView> allOfferWithBrandViews =  offerDtos.stream().map(offer -> modelMapper.map(offer, AllOfferWithBrandView.class)).collect(Collectors.toList());
+        for (int i=0; i< allOfferWithBrandViews.size(); i++ ){
+            allOfferWithBrandViews.get(i).setFirstName(offerDtos.get(i).getSeller().getFirstName());
+            allOfferWithBrandViews.get(i).setLastName(offerDtos.get(i).getSeller().getLastName());
+            allOfferWithBrandViews.get(i).setBrandName(offerDtos.get(i).getModel().getBrand().getName());
+        }
+        return allOfferWithBrandViews;
+    }
+
+
+    public List<AllOfferWithBrandView> getOfferByEngineToUser(String engine) {
+        List<OfferDto> offerDtos = this.getOfferByEngine(engine);
+        List<AllOfferWithBrandView> allOfferWithBrandViews =  offerDtos.stream().map(offer -> modelMapper.map(offer, AllOfferWithBrandView.class)).collect(Collectors.toList());
+        for (int i=0; i< allOfferWithBrandViews.size(); i++ ){
+            allOfferWithBrandViews.get(i).setFirstName(offerDtos.get(i).getSeller().getFirstName());
+            allOfferWithBrandViews.get(i).setLastName(offerDtos.get(i).getSeller().getLastName());
+            allOfferWithBrandViews.get(i).setBrandName(offerDtos.get(i).getModel().getBrand().getName());
+        }
+        return allOfferWithBrandViews;
     }
 }

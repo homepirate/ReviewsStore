@@ -1,6 +1,6 @@
 package com.example.CarSale.Repositories;
 
-import com.example.CarSale.Views.AllOffersWithBrandView;
+import com.example.CarSale.Views.AllOfferWithBrandView;
 import com.example.CarSale.constants.Enums.Engine;
 import com.example.CarSale.constants.Enums.Transmission;
 import com.example.CarSale.Models.Offer;
@@ -23,19 +23,19 @@ public interface OfferRepository extends JpaRepository<Offer, UUID> {
     List<Offer> findByTransmission(Transmission transmission);
 
 
-    @Query("SELECT new com.example.CarSale.Views.AllOffersWithBrandView(b.name, m.name, o.price, o.imageUrl, o.engine, o.mileage, o.year, o.transmission, u.firstName, u.lastName) " +
+    @Query("SELECT new com.example.CarSale.Views.AllOfferWithBrandView(b.name, m.name, o.price, o.imageUrl, o.engine, o.mileage, o.year, o.transmission, u.firstName, u.lastName) " +
             "FROM Offer o " +
             "JOIN o.model m " +
             "JOIN m.brand b " +
             "JOIN o.seller u")
-    List<AllOffersWithBrandView> getAllOffersWithInfo();
+    List<AllOfferWithBrandView> getAllOffersWithInfo();
 
-    @Query("SELECT new com.example.CarSale.Views.AllOffersWithBrandView(b.name, m.name, o.price, o.imageUrl, o.engine, o.mileage, o.year, o.transmission, u.firstName, u.lastName) " +
+    @Query("SELECT new com.example.CarSale.Views.AllOfferWithBrandView(b.name, m.name, o.price, o.imageUrl, o.engine, o.mileage, o.year, o.transmission, u.firstName, u.lastName) " +
             "FROM Offer o " +
             "JOIN o.model m " +
             "JOIN m.brand b " +
             "JOIN o.seller u WHERE o.id = :offerId")
-    AllOffersWithBrandView getALLInfoOneOffer(@Param("offerId") UUID offerId);
+    AllOfferWithBrandView getALLInfoOneOffer(@Param("offerId") UUID offerId);
 
 
     @Query("SELECT new map(o.created as created, o.modified as modified) FROM Offer o WHERE o.id = :offerId")

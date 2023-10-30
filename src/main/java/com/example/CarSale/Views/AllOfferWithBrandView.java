@@ -3,7 +3,7 @@ package com.example.CarSale.Views;
 import com.example.CarSale.constants.Enums.Engine;
 import com.example.CarSale.constants.Enums.Transmission;
 
-public class AllOffersWithBrandView {
+public class AllOfferWithBrandView {
     private String brandName;
     private String modelName;
     private int price;
@@ -15,7 +15,7 @@ public class AllOffersWithBrandView {
     private String firstName;
     private String lastName;
 
-    public AllOffersWithBrandView(String brandName, String modelName, int price, String imageUrl, Engine engine, int mileage, int year, Transmission transmission, String firstName, String lastName) {
+    public AllOfferWithBrandView(String brandName, String modelName, int price, String imageUrl, Engine engine, int mileage, int year, Transmission transmission, String firstName, String lastName) {
         this.brandName = brandName;
         this.modelName = modelName;
         this.price = price;
@@ -28,7 +28,7 @@ public class AllOffersWithBrandView {
         this.lastName = lastName;
     }
 
-    public AllOffersWithBrandView() {
+    public AllOfferWithBrandView() {
     }
 
     public String getBrandName() {
