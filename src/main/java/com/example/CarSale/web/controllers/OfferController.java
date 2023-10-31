@@ -49,9 +49,11 @@ public class OfferController {
     }
 
     @PostMapping("/create-offer")
-    public ResponseEntity<AllOfferWithBrandView> createOffer(@RequestBody CreateOfferFromUser offerInput){
+    public @ResponseBody String createOffer(@RequestBody CreateOfferFromUser offerInput, Model model){
         AllOfferWithBrandView createdOffer = offerService.createOfferByUser(offerInput);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdOffer);
+        System.out.println(createdOffer);
+        model.addAttribute("createdOffer", createdOffer);
+        return "offer-page";
     }
 
     @GetMapping("/get-all")
@@ -59,4 +61,13 @@ public class OfferController {
         return ResponseEntity.status(HttpStatus.OK).body(offerService.getAllOffersInfo());
     }
 
+
+
+
+//
+//    @PostMapping("/create-offer")
+//    public ResponseEntity<AllOfferWithBrandView> createOffer(@RequestBody CreateOfferFromUser offerInput){
+//        AllOfferWithBrandView createdOffer = offerService.createOfferByUser(offerInput);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(createdOffer);
+//    }
 }

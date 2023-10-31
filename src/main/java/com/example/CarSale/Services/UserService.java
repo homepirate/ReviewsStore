@@ -3,6 +3,7 @@ package com.example.CarSale.Services;
 import com.example.CarSale.Services.Dtos.OfferDto;
 import com.example.CarSale.Services.Dtos.UserDto;
 import com.example.CarSale.Views.RegUserView;
+import com.example.CarSale.Views.UserChange;
 import com.example.CarSale.Views.UserView;
 
 import java.util.List;
@@ -23,5 +24,11 @@ public interface UserService extends GeneralSevice{
 
     UserDto getByUserName(String username);
 
+    UserView changeImgByUser(UserChange userChange);
+
+    UserView changePassByUser(UserChange userChange);
+
     UserView registrationNewUser(RegUserView regUserView);
+
+    UserView deleteUserByUserName(String username);
 }

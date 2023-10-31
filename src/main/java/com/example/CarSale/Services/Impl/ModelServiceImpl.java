@@ -1,6 +1,7 @@
 package com.example.CarSale.Services.Impl;
 
 import com.example.CarSale.Services.Dtos.ModelDto;
+import com.example.CarSale.Views.ModelView;
 import com.example.CarSale.constants.Enums.Category;
 import com.example.CarSale.Models.Model;
 import com.example.CarSale.Repositories.ModelRepositiry;
@@ -73,6 +74,16 @@ public class ModelServiceImpl  implements ModelService {
     public ModelDto getModelByName(String name) {
         Model model = modelRepositiry.findByName(name);
         return modelMapper.map(model, ModelDto.class);
+    }
+
+    @Override
+    public List<ModelView> getModelsByCategoryToUser(String category) {
+        List<ModelDto> modelDtos = getModelByCategory(category);
+        List<ModelView> modelViews = modelDtos.stream().map(modelDto -> modelMapper.map(modelDto, ModelView.class)).collect(Collectors.toList());
+        for (int i=0; i< modelViews.size(); i++){
+            modelViews.get(i).setBrandName(modelDtos.get(i).getBrand().getName());
+        }
+        return modelViews;
     }
 
     @Override

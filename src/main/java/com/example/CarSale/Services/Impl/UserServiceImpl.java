@@ -6,6 +6,7 @@ import com.example.CarSale.Services.Dtos.UserDto;
 import com.example.CarSale.Services.Dtos.UserRoleDto;
 import com.example.CarSale.Services.UserRoleService;
 import com.example.CarSale.Views.RegUserView;
+import com.example.CarSale.Views.UserChange;
 import com.example.CarSale.Views.UserView;
 import com.example.CarSale.constants.Enums.Role;
 import com.example.CarSale.Models.User;
@@ -75,7 +76,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(UUID userId) {
-        userRepository.deleteById(userId);
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()){
+            User user = userOptional.get();
+            user.setActive(Boolean.FALSE);
+            userRepository.save(user);
+        }
     }
 
     @Override
@@ -110,6 +116,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserView changeImgByUser(UserChange userChange) {
+        UserDto userDto = this.getByUserName(userChange.getUsername());
+        UserDto userDto_afterChange = this.changeImgUrl(userDto.getId(), userChange.getValue());
+        return modelMapper.map(userDto_afterChange, UserView.class);
+    }
+
+    @Override
+    public UserView changePassByUser(UserChange userChange) {
+        UserDto userDto = this.getByUserName(userChange.getUsername());
+        UserDto userDto_afterChange = this.changePassword(userDto.getId(), userChange.getValue());
+        return modelMapper.map(userDto_afterChange, UserView.class);
+
+    }
+
+    @Override
     public UserView registrationNewUser(RegUserView regUserView) {
         UserDto userDto = modelMapper.map(regUserView, UserDto.class);
         userDto.setImageUrl("http:/baseimg.jpg");
@@ -117,6 +138,13 @@ public class UserServiceImpl implements UserService {
         userDto.setRole(userRoleService.getByRole(Role.USER));
         UserDto userDto_afterCreate = this.createUser(userDto);
         return modelMapper.map(userDto_afterCreate, UserView.class);
+    }
+
+    @Override
+    public UserView deleteUserByUserName(String username) {
+        UserDto userDto = this.getByUserName(username);
+        this.deleteUser(userDto.getId());
+        return modelMapper.map(this.getByUserName(username), UserView.class);
     }
 
     @Override

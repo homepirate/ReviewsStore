@@ -72,7 +72,7 @@ public class DataInitializer implements CommandLineRunner {
             user_dto.setPassword(faker.internet().password());
             user_dto.setFirstName(faker.name().firstName());
             user_dto.setLastName(faker.name().lastName());
-            user_dto.setActive(random.nextBoolean());
+            user_dto.setActive(Boolean.TRUE);
             user_dto.setImageUrl(faker.internet().image());
             user_dto.setRole(roles_dto.get(random.nextInt(2)));
 

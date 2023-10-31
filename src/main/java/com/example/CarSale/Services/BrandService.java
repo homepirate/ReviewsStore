@@ -2,6 +2,7 @@ package com.example.CarSale.Services;
 
 import com.example.CarSale.Services.Dtos.BrandDto;
 import com.example.CarSale.Services.Dtos.ModelDto;
+import com.example.CarSale.Views.BrandNameModelCountView;
 import com.example.CarSale.Views.ModelBrandView;
 
 import java.util.List;
@@ -16,4 +17,6 @@ public interface BrandService {
     BrandDto getBrandByName(String name);
 
     List<ModelBrandView> getBrandModelsToUser(String brandName);
+
+    List<BrandNameModelCountView> getBrandAndModelCount();
 }

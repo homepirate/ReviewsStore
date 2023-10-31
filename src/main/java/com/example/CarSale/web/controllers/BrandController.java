@@ -1,6 +1,7 @@
 package com.example.CarSale.web.controllers;
 
 import com.example.CarSale.Services.BrandService;
+import com.example.CarSale.Views.BrandNameModelCountView;
 import com.example.CarSale.Views.ModelBrandView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,10 +30,20 @@ public class BrandController {
         return "all-brand-models";
     }
 
-    @GetMapping("/models")
-    public ResponseEntity<List<ModelBrandView>> getAllModels(@RequestParam String brand){
-       List<ModelBrandView> models = brandService.getBrandModelsToUser(brand);
-       return ResponseEntity.status(HttpStatus.OK).body(models);
+    @GetMapping("")
+    public @ResponseBody String getBrandModelCount(Model model){
+        List<BrandNameModelCountView> brandsModelCount = brandService.getBrandAndModelCount();
+        model.addAttribute("brands", brandsModelCount);
+        brandsModelCount.forEach(System.out::println);
+        return "brands-page";
     }
+
+
+
+//    @GetMapping("/models")
+//    public ResponseEntity<List<ModelBrandView>> getAllModels(@RequestParam String brand){
+//       List<ModelBrandView> models = brandService.getBrandModelsToUser(brand);
+//       return ResponseEntity.status(HttpStatus.OK).body(models);
+//    }
 }
 
