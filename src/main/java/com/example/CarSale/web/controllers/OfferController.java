@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/offers")
@@ -25,27 +26,9 @@ public class OfferController {
     @GetMapping("")
     public @ResponseBody String getAll(Model model){
         List<AllOfferWithBrandView> allOffers = offerService.getAllOffersInfo();
-        System.out.println("_____________________________________");
         allOffers.forEach(System.out::println);
         model.addAttribute("allOffers", allOffers);
         return "all-offers";
-    }
-
-    @GetMapping("/transmissions/{transm}")
-    public @ResponseBody String getByTransmission(@PathVariable String transm, Model model){
-        List<AllOfferWithBrandView> allOfferByTransmission = offerService.getOfferByTransmissionToUser(transm);
-        System.out.println("___________________________________________________________________________");
-        allOfferByTransmission.forEach(System.out::println);
-        model.addAttribute("allOffersByTransmission", allOfferByTransmission);
-        return "all-offers-by-transmission";
-    }
-
-    @GetMapping("/engine/{eng}")
-    public @ResponseBody String getByEngine(@PathVariable String eng, Model model){
-        List<AllOfferWithBrandView> allOfferByEngine = offerService.getOfferByEngineToUser(eng);
-        allOfferByEngine.forEach(System.out::println);
-        model.addAttribute("allOffersByEngine", allOfferByEngine);
-        return "all-offers-by-engine";
     }
 
     @PostMapping("/create-offer")
@@ -61,6 +44,30 @@ public class OfferController {
         return ResponseEntity.status(HttpStatus.OK).body(offerService.getAllOffersInfo());
     }
 
+    @GetMapping("/filtered")
+    public @ResponseBody String filteredoffers(@RequestParam Optional<String> engine, @RequestParam Optional<String> transm, Model model) {
+        List<AllOfferWithBrandView> result = offerService.getFilteredOffers(engine, transm);
+        result.forEach(System.out::println);
+        model.addAttribute("offers", result);
+        return "all-offers";
+
+    }
+
+//    @GetMapping("/transmissions/{transm}")
+//    public @ResponseBody String getByTransmission(@PathVariable String transm, Model model){
+//        List<AllOfferWithBrandView> allOfferByTransmission = offerService.getOfferByTransmissionToUser(transm);
+//        allOfferByTransmission.forEach(System.out::println);
+//        model.addAttribute("allOffersByTransmission", allOfferByTransmission);
+//        return "all-offers-by-transmission";
+//    }
+//
+//    @GetMapping("/engine/{eng}")
+//    public @ResponseBody String getByEngine(@PathVariable String eng, Model model){
+//        List<AllOfferWithBrandView> allOfferByEngine = offerService.getOfferByEngineToUser(eng);
+//        allOfferByEngine.forEach(System.out::println);
+//        model.addAttribute("allOffersByEngine", allOfferByEngine);
+//        return "all-offers-by-engine";
+//    }
 
 
 

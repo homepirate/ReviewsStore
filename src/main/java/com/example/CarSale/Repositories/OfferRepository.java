@@ -38,6 +38,17 @@ public interface OfferRepository extends JpaRepository<Offer, UUID> {
     AllOfferWithBrandView getALLInfoOneOffer(@Param("offerId") UUID offerId);
 
 
+    @Query("SELECT new com.example.CarSale.Views.AllOfferWithBrandView(b.name, m.name, o.price, o.imageUrl, o.engine, o.mileage, o.year, o.transmission, u.firstName, u.lastName) FROM Offer o  " +
+            "JOIN o.model m " +
+            "JOIN m.brand b " +
+            "JOIN o.seller u "+
+            "WHERE (o.engine IN :engineFilter) AND " +
+            "(o.transmission IN :transmissionFilter)"
+            )
+    List<AllOfferWithBrandView> getFilteredOffers(@Param("engineFilter") List<Engine> engineFilter,
+                                  @Param("transmissionFilter") List<Transmission> transmissionFilter);
+
+
     @Query("SELECT new map(o.created as created, o.modified as modified) FROM Offer o WHERE o.id = :offerId")
     Map<String, LocalDateTime> findOfferDetailsById(@Param("offerId") UUID offerId);
 

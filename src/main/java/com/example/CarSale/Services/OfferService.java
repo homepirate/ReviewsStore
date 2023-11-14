@@ -7,6 +7,7 @@ import com.example.CarSale.Services.Dtos.OfferDto;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface OfferService  extends GeneralSevice{
@@ -28,4 +29,6 @@ public interface OfferService  extends GeneralSevice{
     List<AllOfferWithBrandView> getAllOffersInfo();
     List<AllOfferWithBrandView> getOfferByTransmissionToUser(String transmission);
     List<AllOfferWithBrandView> getOfferByEngineToUser(String engine);
-}
+     List<AllOfferWithBrandView> getFilteredOffers(Optional<String> engines, Optional<String> transmissions);
+
+    }

@@ -19,10 +19,7 @@ import jakarta.validation.ConstraintViolation;
 
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -172,4 +169,26 @@ public class OfferServiceImpl implements OfferService {
         }
         return allOfferWithBrandViews;
     }
+
+
+    public List<AllOfferWithBrandView> getFilteredOffers(Optional<String> engines, Optional<String> transmissions){
+        List<Engine> enginesFilters = new ArrayList<>();
+        if (engines.isPresent()){
+        for (String engine : engines.get().split("~")) {
+            enginesFilters.add(Engine.valueOf(engine));
+        }}
+        else {
+            enginesFilters = List.of(Engine.values());
+        }
+        List<Transmission> transmissionFilters = new ArrayList<>();
+        if (transmissions.isPresent()){
+        for (String transmission : transmissions.get().split("~")) {
+            transmissionFilters.add(Transmission.valueOf(transmission));
+        }}
+        else {
+            transmissionFilters = List.of(Transmission.values());
+        }
+        return offerRepository.getFilteredOffers(enginesFilters, transmissionFilters);
+    }
+
 }
