@@ -23,15 +23,15 @@ public class BrandController {
     }
 
     @GetMapping("/{brand}/models")
-    public @ResponseBody String getAllModelToUser(@PathVariable String brand, Model model){
+    public String getAllModelToUser(@PathVariable String brand, Model model){
         List<ModelBrandView> models = brandService.getBrandModelsToUser(brand);
         models.forEach(System.out::println);
         model.addAttribute("Allmodels", models);
-        return "all-brand-models";
+        return "all-brand-models.html";
     }
 
     @GetMapping("")
-    public @ResponseBody String getBrandModelCount(Model model){
+    public String getBrandModelCount(Model model){
         List<BrandNameModelCountView> brandsModelCount = brandService.getBrandAndModelCount();
         model.addAttribute("brands", brandsModelCount);
         brandsModelCount.forEach(System.out::println);

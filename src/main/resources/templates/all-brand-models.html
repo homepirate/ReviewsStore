@@ -1,10 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html lang="en" class="h-100" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head"/>
 <body>
-
+<div th:replace="fragments/navbar">Navbar</div>
+<main>
+    <h2>All Models</h2>
+    <div th:each="m : ${Allmodels}">
+        <img th:src="${m.imageUrl}" height="200px">
+        <a th:href="@{/models/{name}(name=${m.name})}"><h4 th:text="${m.name}"></h4></a>
+        <h4 th:text="${m.startYear} + ' ' + '-' + ' ' + ${m.endYear}"></h4>
+        <h4 th:text="${m.category}"></h4>
+    </div>
+</main>
+<footer th:replace="fragments/footer"/>
 </body>
 </html>

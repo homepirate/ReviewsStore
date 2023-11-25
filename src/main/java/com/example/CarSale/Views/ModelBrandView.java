@@ -59,4 +59,15 @@ public class ModelBrandView {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    @Override
+    public String toString() {
+        return "ModelBrandView{" +
+                "name='" + name + '\'' +
+                ", category=" + category +
+                ", startYear=" + startYear +
+                ", endYear=" + endYear +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
+    }
 }

@@ -113,11 +113,11 @@ public class DataInitializer implements CommandLineRunner {
                 Model model15 = new Model("GLA", Category.CAR, "https://example.com/mercedesgla.jpg", 2015, 2022, br);
                 modelRepositiry.saveAll(Arrays.asList(model11, model12, model13, model14, model15));
             } else if (brand.equals("Toyota")) {
-                Model model16 = new Model("Camry", Category.CAR, "https://example.com/toyotacamry.jpg", 2017, 2022, br);
-                Model model17 = new Model("Corolla", Category.CAR, "https://example.com/toyotacorolla.jpg", 2018, 2022, br);
-                Model model18 = new Model("RAV4", Category.CAR, "https://example.com/toyotarav4.jpg", 2016, 2022, br);
-                Model model19 = new Model("Highlander", Category.CAR, "https://example.com/toyotahighlander.jpg", 2019, 2022, br);
-                Model model20 = new Model("Tacoma", Category.TRUCK, "https://example.com/toyotatacoma.jpg", 2022, 2023, br);
+                Model model16 = new Model("Camry", Category.CAR, "/img/28652_medium.jpg", 2017, 2022, br);
+                Model model17 = new Model("Corolla", Category.CAR, "/img/500x_toyota_corolla_g999.jpg", 2018, 2022, br);
+                Model model18 = new Model("RAV4", Category.CAR, "/img/28657_medium.jpg", 2016, 2022, br);
+                Model model19 = new Model("Highlander", Category.CAR, "/img/28665_medium.jpg", 2019, 2022, br);
+                Model model20 = new Model("Tacoma", Category.TRUCK, "/img/toyota-tacoma-front1-mini.jpg", 2022, 2023, br);
                 modelRepositiry.saveAll(Arrays.asList(model16, model17, model18, model19, model20));
             } else if (brand.equals("Ford")) {
                 Model model21 = new Model("Mustang", Category.CAR, "https://example.com/fordmustang.jpg", 2015, 2022, br);
