@@ -146,10 +146,9 @@ public class DataInitializer implements CommandLineRunner {
             OfferDto offer = new OfferDto();
             offer.setDescription(faker.lorem().sentence());
             offer.setEngine(Engine.values()[faker.random().nextInt(Engine.values().length)]);
-            offer.setImageUrl(faker.internet().image());
+            offer.setImageUrl("/img/537234-risunok-mashina-4.jpg");
             offer.setMileage(faker.random().nextInt(10000, 100000));
             offer.setPrice(faker.random().nextInt(1000, 10000));
-            offer.setImageUrl(faker.internet().image());
 
             offer.setTransmission(Transmission.values()[faker.random().nextInt(Transmission.values().length)]);
             offer.setYear(faker.random().nextInt(2016, 2020));

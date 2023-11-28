@@ -24,15 +24,15 @@ public class OfferController {
     }
 
     @GetMapping("")
-    public @ResponseBody String getAll(Model model){
+    public String getAll(Model model){
         List<AllOfferWithBrandView> allOffers = offerService.getAllOffersInfo();
         allOffers.forEach(System.out::println);
-        model.addAttribute("allOffers", allOffers);
+        model.addAttribute("offers", allOffers);
         return "all-offers";
     }
 
     @PostMapping("/create-offer")
-    public @ResponseBody String createOffer(@RequestBody CreateOfferFromUser offerInput, Model model){
+    public String createOffer(@RequestBody CreateOfferFromUser offerInput, Model model){
         AllOfferWithBrandView createdOffer = offerService.createOfferByUser(offerInput);
         System.out.println(createdOffer);
         model.addAttribute("createdOffer", createdOffer);
@@ -45,7 +45,7 @@ public class OfferController {
     }
 
     @GetMapping("/filtered")
-    public @ResponseBody String filteredoffers(@RequestParam Optional<String> engine, @RequestParam Optional<String> transm, Model model) {
+    public String filteredoffers(@RequestParam Optional<List<String>> engine, @RequestParam Optional<List<String>> transm, Model model) {
         List<AllOfferWithBrandView> result = offerService.getFilteredOffers(engine, transm);
         result.forEach(System.out::println);
         model.addAttribute("offers", result);

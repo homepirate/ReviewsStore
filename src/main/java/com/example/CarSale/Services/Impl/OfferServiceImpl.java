@@ -171,10 +171,10 @@ public class OfferServiceImpl implements OfferService {
     }
 
 
-    public List<AllOfferWithBrandView> getFilteredOffers(Optional<String> engines, Optional<String> transmissions){
+    public List<AllOfferWithBrandView> getFilteredOffers(Optional<List<String>> engines, Optional<List<String>> transmissions){
         List<Engine> enginesFilters = new ArrayList<>();
         if (engines.isPresent()){
-        for (String engine : engines.get().split("~")) {
+        for (String engine : engines.get()) {
             enginesFilters.add(Engine.valueOf(engine));
         }}
         else {
@@ -182,7 +182,7 @@ public class OfferServiceImpl implements OfferService {
         }
         List<Transmission> transmissionFilters = new ArrayList<>();
         if (transmissions.isPresent()){
-        for (String transmission : transmissions.get().split("~")) {
+        for (String transmission : transmissions.get()) {
             transmissionFilters.add(Transmission.valueOf(transmission));
         }}
         else {
