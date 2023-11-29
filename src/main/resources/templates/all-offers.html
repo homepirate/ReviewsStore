@@ -1,9 +1,9 @@
-<!DOCTYPE html><
+<!DOCTYPE html>
 <html lang="en" class="h-100" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="fragments/head"/>
 <div th:replace="fragments/navbar">Navbar</div>
-<body>
+<body class="d-flex flex-column h-100">
 <main>
     <h2>Offers</h2>
     <div>
@@ -46,8 +46,8 @@
                     <span id="modal-price" th:text="Price + ' ' + ${ o.price } + '$'"></span>
                     <span id="modal-mileage" th:text="Mileage + ' ' + ${ o.mileage } + ' km'"></span>
                     <span id="modal-year" th:text="Year + ${ o.year }"></span>
-                    <span id="modal-engine" th:text="Engine + ${ o.engine }"></span>
-                    <span id="modal-transmission" th:text="Transmission + ${ o.transmission }"></span>
+                    <span id="modal-engine" th:text="Engine +' ' + ${ o.engine }"></span>
+                    <span id="modal-transmission" th:text="Transmission + ' ' + ${ o.transmission }"></span>
                     <div id="modal-user" style="position: absolute; top: 50px; right: 30px;">
                         <span>Owner: </span>
                         <span id="modal-name" th:text="${ o.firstName } + ' '+ ${o.lastName }"></span>

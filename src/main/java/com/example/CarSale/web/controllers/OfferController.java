@@ -39,10 +39,7 @@ public class OfferController {
         return "offer-page";
     }
 
-    @GetMapping("/get-all")
-    public ResponseEntity<List<AllOfferWithBrandView>> getAllInfoOffers(){
-        return ResponseEntity.status(HttpStatus.OK).body(offerService.getAllOffersInfo());
-    }
+
 
     @GetMapping("/filtered")
     public String filteredoffers(@RequestParam Optional<List<String>> engine, @RequestParam Optional<List<String>> transm, Model model) {
@@ -53,6 +50,11 @@ public class OfferController {
 
     }
 
+//
+//    @GetMapping("/get-all")
+//    public ResponseEntity<List<AllOfferWithBrandView>> getAllInfoOffers(){
+//        return ResponseEntity.status(HttpStatus.OK).body(offerService.getAllOffersInfo());
+//    }
 //    @GetMapping("/transmissions/{transm}")
 //    public @ResponseBody String getByTransmission(@PathVariable String transm, Model model){
 //        List<AllOfferWithBrandView> allOfferByTransmission = offerService.getOfferByTransmissionToUser(transm);
