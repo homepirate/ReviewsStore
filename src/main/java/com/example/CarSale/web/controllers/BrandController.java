@@ -40,10 +40,10 @@ public class BrandController {
 
 
 
-//    @GetMapping("/models")
-//    public ResponseEntity<List<ModelBrandView>> getAllModels(@RequestParam String brand){
-//       List<ModelBrandView> models = brandService.getBrandModelsToUser(brand);
-//       return ResponseEntity.status(HttpStatus.OK).body(models);
-//    }
+    @GetMapping("/models")
+    public ResponseEntity<List<ModelBrandView>> getAllModels(@RequestParam String brand){
+       List<ModelBrandView> models = brandService.getBrandModelsToUser(brand);
+       return ResponseEntity.status(HttpStatus.OK).body(models);
+    }
 }
 

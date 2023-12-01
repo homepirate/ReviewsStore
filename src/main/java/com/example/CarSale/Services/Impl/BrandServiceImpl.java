@@ -1,5 +1,6 @@
 package com.example.CarSale.Services.Impl;
 
+import com.example.CarSale.Models.Model;
 import com.example.CarSale.Services.Dtos.BrandDto;
 import com.example.CarSale.Services.Dtos.ModelDto;
 import com.example.CarSale.Models.Brand;
@@ -7,8 +8,8 @@ import com.example.CarSale.Repositories.BrandRepository;
 import com.example.CarSale.Services.BrandService;
 import com.example.CarSale.Views.BrandNameModelCountView;
 import com.example.CarSale.Views.ModelBrandView;
+import com.example.CarSale.Views.BrandView;
 import com.example.CarSale.utils.ValidationUtil;
-import jakarta.validation.Validation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,6 +49,15 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
+    public List<BrandView> getAll() {
+        return brandRepository.findAll().stream()
+                .map(brand -> new BrandView(brand.getName(), brand.getModels().stream()
+                        .map(Model::getName)
+                        .collect(Collectors.toList())))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<BrandNameModelCountView> getBrandAndModelCount() {
         List<Brand> brands = brandRepository.findAll();
         List<BrandNameModelCountView> brandModelCount = new ArrayList<>();
@@ -59,6 +69,7 @@ public class BrandServiceImpl implements BrandService {
         }
         return brandModelCount;
     }
+
 
     @Override
     public List<ModelDto> getBrandModels(String name) {

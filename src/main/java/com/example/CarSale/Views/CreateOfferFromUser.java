@@ -13,9 +13,10 @@ public class CreateOfferFromUser {
 
     private String modelName;
 
+    private String brandName;
     private String transmission;
 
-    public CreateOfferFromUser(String userName, String description, String engine, int mileage, int price, String imageUrl, int year, String modelName, String transmission) {
+    public CreateOfferFromUser(String userName, String description, String engine, int mileage, int price, String imageUrl, int year, String modelName, String brandName, String transmission) {
         this.userName = userName;
         this.description = description;
         this.engine = engine;
@@ -24,6 +25,7 @@ public class CreateOfferFromUser {
         this.imageUrl = imageUrl;
         this.year = year;
         this.modelName = modelName;
+        this.brandName = brandName;
         this.transmission = transmission;
     }
 
@@ -94,13 +96,13 @@ public class CreateOfferFromUser {
         this.modelName = modelName;
     }
 
-//    public String getBrandName() {
-//        return brandName;
-//    }
-//
-//    public void setBrandName(String brandName) {
-//        this.brandName = brandName;
-//    }
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
+    }
 
     public String getTransmission() {
         return transmission;

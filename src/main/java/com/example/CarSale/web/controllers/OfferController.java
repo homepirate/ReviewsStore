@@ -1,8 +1,11 @@
 package com.example.CarSale.web.controllers;
 
+import com.example.CarSale.Services.BrandService;
 import com.example.CarSale.Views.AllOfferWithBrandView;
+import com.example.CarSale.Views.BrandView;
 import com.example.CarSale.Views.CreateOfferFromUser;
 import com.example.CarSale.Services.OfferService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +20,16 @@ import java.util.Optional;
 @RequestMapping("/offers")
 public class OfferController {
     private OfferService offerService;
+    private BrandService brandService;
 
     @Autowired
     public void setOfferService(OfferService offerService) {
         this.offerService = offerService;
+    }
+
+    @Autowired
+    public void setBrandService(BrandService brandService) {
+        this.brandService = brandService;
     }
 
     @GetMapping("")
@@ -32,11 +41,17 @@ public class OfferController {
     }
 
     @PostMapping("/create-offer")
-    public String createOffer(@RequestBody CreateOfferFromUser offerInput, Model model){
+    public String createOffer(@Valid CreateOfferFromUser offerInput, Model model){
         AllOfferWithBrandView createdOffer = offerService.createOfferByUser(offerInput);
         System.out.println(createdOffer);
         model.addAttribute("createdOffer", createdOffer);
-        return "offer-page";
+        return "all-offers";
+    }
+
+    @GetMapping("/create-offer")
+    public String createOffer(Model model){
+        model.addAttribute("Brands", brandService.getAll());
+        return "offer-add";
     }
 
 
