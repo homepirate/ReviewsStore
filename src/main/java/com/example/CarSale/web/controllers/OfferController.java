@@ -42,8 +42,9 @@ public class OfferController {
 
 
     @GetMapping("/filtered")
-    public String filteredoffers(@RequestParam Optional<List<String>> engine, @RequestParam Optional<List<String>> transm, Model model) {
-        List<AllOfferWithBrandView> result = offerService.getFilteredOffers(engine, transm);
+    public String filteredoffers(@RequestParam Optional<List<String>> engine, @RequestParam Optional<List<String>> transm,
+                                 @RequestParam(required = false) String carmodel, Model model) {
+        List<AllOfferWithBrandView> result = offerService.getFilteredOffers(engine, transm, carmodel);
         result.forEach(System.out::println);
         model.addAttribute("offers", result);
         return "all-offers";

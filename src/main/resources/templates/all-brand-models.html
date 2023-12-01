@@ -1,17 +1,40 @@
 <!DOCTYPE html>
 <html lang="en" class="h-100" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/head"/>
-<body>
+<body class="d-flex flex-column h-100">
 <div th:replace="fragments/navbar">Navbar</div>
 <main>
     <h2>All Models</h2>
-    <div th:each="m : ${Allmodels}">
-        <img th:src="${m.imageUrl}" height="200px">
-        <a th:href="@{/models/{name}(name=${m.name})}"><h4 th:text="${m.name}"></h4></a>
-        <h4 th:text="${m.startYear} + ' ' + '-' + ' ' + ${m.endYear}"></h4>
-        <h4 th:text="${m.category}"></h4>
+    <div class="container">
+        <div th:each="m : ${Allmodels}" class="brand-model">
+            <img th:src="${m.imageUrl}" height="250px" width="230px">
+            <a th:href="@{/offers/filtered?carmodel={carmodel}(carmodel=${m.name})}"><h4 th:text="${m.name}"></h4></a>
+            <h4 th:text="${m.startYear} + ' ' + '-' + ' ' + ${m.endYear}"></h4>
+            <h4 th:text="${m.category}"></h4>
+        </div>
     </div>
 </main>
 <footer th:replace="fragments/footer"/>
 </body>
 </html>
+<style>
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+  }
+
+  .brand-model {
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: calc(100% / 3);
+      height: 300px;
+      border: 1px solid #ccc;
+      margin: 10px;
+  }
+</style>

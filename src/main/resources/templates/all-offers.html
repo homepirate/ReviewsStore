@@ -23,6 +23,9 @@
                     <input type="checkbox" th:name="transm" th:text="MANUAL" th:value="MANUAL" th:checked="${param.transm != null && param.transm.contains('MANUAL')}">
                     <input type="checkbox" th:name="transm" th:text="AUTOMATIC" th:value="AUTOMATIC" th:checked="${param.transm != null && param.transm.contains('AUTOMATIC')}">
                 </div>
+                <div class="filters" th:if="${param.carmodel != null}">
+                    <input type="hidden" name="carmodel" th:value="${param.carmodel}">
+                </div>
             </div>
             <button type="submit">Filter</button>
         </form>
@@ -81,7 +84,7 @@
     .filter-form {
   border: 1px solid #ccc;
   padding: 20px;
-  margin-left: 20px;
+  margin-left: 10px;
   max-width: 300px;
 }
 

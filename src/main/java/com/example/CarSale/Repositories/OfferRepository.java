@@ -43,10 +43,12 @@ public interface OfferRepository extends JpaRepository<Offer, UUID> {
             "JOIN m.brand b " +
             "JOIN o.seller u "+
             "WHERE (o.engine IN :engineFilter) AND " +
-            "(o.transmission IN :transmissionFilter)"
+            "(o.transmission IN :transmissionFilter)"  +
+            "AND (:modelFilter IS NULL OR m.name = :modelFilter)"
             )
     List<AllOfferWithBrandView> getFilteredOffers(@Param("engineFilter") List<Engine> engineFilter,
-                                  @Param("transmissionFilter") List<Transmission> transmissionFilter);
+                                  @Param("transmissionFilter") List<Transmission> transmissionFilter,
+                                                  @Param("modelFilter") String model);
 
 
     @Query("SELECT new map(o.created as created, o.modified as modified) FROM Offer o WHERE o.id = :offerId")

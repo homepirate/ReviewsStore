@@ -29,6 +29,6 @@ public interface OfferService  extends GeneralSevice{
     List<AllOfferWithBrandView> getAllOffersInfo();
     List<AllOfferWithBrandView> getOfferByTransmissionToUser(String transmission);
     List<AllOfferWithBrandView> getOfferByEngineToUser(String engine);
-     List<AllOfferWithBrandView> getFilteredOffers(Optional<List<String>> engines, Optional<List<String>> transmissions);
+     List<AllOfferWithBrandView> getFilteredOffers(Optional<List<String>> engines, Optional<List<String>> transmissions, String model);
 
     }
