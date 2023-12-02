@@ -31,33 +31,31 @@
         </form>
     </div>
 <!--    <div class="all-offers" th:with="show=${ false }">-->
-    <div class="all-offers" th:with="show=${ false }">
-        <div th:each="o : ${offers}" class="offer">
+    <div class="all-offers">
+        <div th:each="o, iterStat : ${offers}" class="offer">
             <img th:src="${o.imageUrl}" height="150px" width="150px">
             <span th:text="${o.brandName} + ' ' + ${ o.modelName }"></span>
             <span th:text="Price + ' ' + ${ o.price } + '$'"></span>
             <span th:text="Mileage + ' ' + ${ o.mileage } + ' km'"></span>
-<!--            <button th:onclick="toggle()">More Information</button>-->
-<!--            <div id="modal" class="modal" th:if="${ show }">-->
-                <button th:onclick="openModal()">More Information</button>
-                <div id="modal" class="modal">
+            <button th:onclick="openModal([[${iterStat.count}]])" id="open-btn">More Information</button>
+            <div th:id="modal- + '' + ${iterStat.count}" class="modal">
                 <div class="modal-content">
-<!--                    <span class="close" th:onclick="toggle()">&times;</span>-->
-                    <span class="close" th:onclick="closeModal()">&times;</span>
-                    <img id="modal-image" height="250px" width="250px" th:src="${o.imageUrl}">
-                    <span id="modal-title" th:text="${o.brandName} + ' ' + ${ o.modelName }"></span>
-                    <span id="modal-price" th:text="Price + ' ' + ${ o.price } + '$'"></span>
-                    <span id="modal-mileage" th:text="Mileage + ' ' + ${ o.mileage } + ' km'"></span>
-                    <span id="modal-year" th:text="Year + ${ o.year }"></span>
-                    <span id="modal-engine" th:text="Engine +' ' + ${ o.engine }"></span>
-                    <span id="modal-transmission" th:text="Transmission + ' ' + ${ o.transmission }"></span>
-                    <div id="modal-user" style="position: absolute; top: 50px; right: 30px;">
+                    <span class="close" th:onclick="closeModal([[${iterStat.count}]])" >&times;</span>
+                    <img height="250px" width="250px" th:src="${o.imageUrl}">
+                    <span th:text="${o.brandName} + ' ' + ${ o.modelName }"></span>
+                    <span th:text="Price + ' ' + ${ o.price } + '$'"></span>
+                    <span th:text="Mileage + ' ' + ${ o.mileage } + ' km'"></span>
+                    <span th:text="Year + ${ o.year }"></span>
+                    <span th:text="Engine +' ' + ${ o.engine }"></span>
+                    <span th:text="Transmission + ' ' + ${ o.transmission }"></span>
+                    <div style="position: absolute; top: 50px; right: 30px;">
                         <span>Owner: </span>
-                        <span id="modal-name" th:text="${ o.firstName } + ' '+ ${o.lastName }"></span>
+                        <span th:text="${ o.firstName } + ' '+ ${o.lastName }"></span>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 </main>
 <footer th:replace="fragments/footer"/>
@@ -69,15 +67,16 @@
            // showMessage = !showMessage;
         //    console.log(showMessage);
         //}
-    function openModal() {
-        var modal = document.getElementById('modal');
-        modal.style.display = 'block';
-    }
+   function openModal(index) {
+   console.log(index)
+    var modal = document.getElementById("modal-" + index);
+    modal.style.display = "block";
+}
 
-    function closeModal() {
-        var modal = document.getElementById('modal');
-        modal.style.display = 'none';
-    }
+function closeModal(index) {
+    var modal = document.getElementById("modal-" + index);
+    modal.style.display = "none";
+}
 </script>
 </html>
 <style>
