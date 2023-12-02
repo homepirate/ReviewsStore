@@ -5,6 +5,7 @@ import com.example.CarSale.Views.AllOfferWithBrandView;
 import com.example.CarSale.Views.BrandView;
 import com.example.CarSale.Views.CreateOfferFromUser;
 import com.example.CarSale.Services.OfferService;
+import com.example.CarSale.utils.UtilsForFront;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,12 @@ import java.util.Optional;
 public class OfferController {
     private OfferService offerService;
     private BrandService brandService;
+    private UtilsForFront utilsForFront;
+
+    @Autowired
+    public void setUtilsForFront(UtilsForFront utilsForFront) {
+        this.utilsForFront = utilsForFront;
+    }
 
     @Autowired
     public void setOfferService(OfferService offerService) {
@@ -51,6 +58,8 @@ public class OfferController {
     @GetMapping("/create-offer")
     public String createOffer(Model model){
         model.addAttribute("Brands", brandService.getAll());
+        model.addAttribute("Engines", utilsForFront.getAllEngine());
+        model.addAttribute("Transm", utilsForFront.getAllTransmission());
         return "offer-add";
     }
 

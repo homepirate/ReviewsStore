@@ -1,6 +1,7 @@
 package com.example.CarSale.config;
 
 
+import com.example.CarSale.utils.UtilsForFront;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import org.modelmapper.ModelMapper;
@@ -12,6 +13,11 @@ public class ApplicationBeanConfiguration {
     @Bean
     public Validator validator(){
         return Validation.buildDefaultValidatorFactory().getValidator();
+    }
+
+    @Bean
+    public UtilsForFront utilsForFront(){
+        return new UtilsForFront();
     }
 
     @Bean
