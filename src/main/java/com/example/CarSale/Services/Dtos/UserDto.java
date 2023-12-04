@@ -68,7 +68,7 @@ public class UserDto {
 
     @NotNull
     @NotEmpty
-    @Length(min = 2, message = "FirstName must be minimum two characters!")
+    @Length(min = 2, message = "LastName must be minimum two characters!")
     public String getLastName() {
         return lastName;
     }
@@ -103,7 +103,6 @@ public class UserDto {
 
     @NotNull
     @NotEmpty
-    @Length(min = 8, message = "Password must be minimum eight characters!")
     public String getPassword() {
         return password;
     }
