@@ -7,6 +7,8 @@ build/
 src/main/resources/application.properties
 src/main/resources/static
 
+OffersImg/
+
 ### STS ###
 .apt_generated
 .classpath

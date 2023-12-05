@@ -33,7 +33,7 @@
 <!--    <div class="all-offers" th:with="show=${ false }">-->
     <div class="all-offers">
         <div th:each="o, iterStat : ${offers}" class="offer">
-            <img th:src="${o.imageUrl}" height="150px" width="150px">
+            <img th:src="@{${o.imageUrl}}" height="150px" width="150px">
             <span th:text="${o.brandName} + ' ' + ${ o.modelName }"></span>
             <span th:text="Price + ' ' + ${ o.price } + '$'"></span>
             <span th:text="Mileage + ' ' + ${ o.mileage } + ' km'"></span>

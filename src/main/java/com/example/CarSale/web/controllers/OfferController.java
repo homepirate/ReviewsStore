@@ -66,7 +66,7 @@ public class OfferController {
         }
         AllOfferWithBrandView createdOffer = offerService.createOfferByUser(offerInput);
         System.out.println(createdOffer);
-        model.addAttribute("createdOffer", createdOffer);
+//        model.addAttribute("createdOffer", createdOffer);
         return "redirect:/offers";
     }
 

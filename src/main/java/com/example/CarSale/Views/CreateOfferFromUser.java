@@ -52,9 +52,9 @@ public class CreateOfferFromUser {
     public void setPath() {
         String fileName = imageUrl.getOriginalFilename();
         try {
-            String filePath =  "/img/" + fileName;
+            String filePath =  "/OffersImg/" + fileName;
             String projectPath = System.getProperty("user.dir");
-            String fileSave = projectPath + "/src/main/resources/static/img/" + fileName;
+            String fileSave = projectPath + "/OffersImg/" + fileName;
             imageUrl.transferTo(new File(fileSave));
             this.path = filePath;
         } catch (IOException e) {
@@ -109,6 +109,7 @@ public class CreateOfferFromUser {
     public void setPrice(int price) {
         this.price = price;
     }
+
 
     public MultipartFile getImageUrl() {
         return imageUrl;
