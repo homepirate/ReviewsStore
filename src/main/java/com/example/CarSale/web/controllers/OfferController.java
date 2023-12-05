@@ -12,8 +12,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +45,10 @@ public class OfferController {
         this.brandService = brandService;
     }
 
+
+    @ModelAttribute("createOffer")
+    public CreateOfferFromUser initOffer(){ return new CreateOfferFromUser();}
+
     @GetMapping("")
     public String getAll(Model model){
         List<AllOfferWithBrandView> allOffers = offerService.getAllOffersInfo();
@@ -48,11 +58,16 @@ public class OfferController {
     }
 
     @PostMapping("/create-offer")
-    public String createOffer(@Valid CreateOfferFromUser offerInput, Model model){
+    public String createOffer(@Valid CreateOfferFromUser offerInput, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model){
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("createOffer", offerInput);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.createOffer", bindingResult);
+            return "redirect:/offers/create-offer";
+        }
         AllOfferWithBrandView createdOffer = offerService.createOfferByUser(offerInput);
         System.out.println(createdOffer);
         model.addAttribute("createdOffer", createdOffer);
-        return "all-offers";
+        return "redirect:/offers";
     }
 
     @GetMapping("/create-offer")

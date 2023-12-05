@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @PutMapping("/change-pass")
-    public @ResponseBody String changePass(@RequestBody UserChange userChange, Model model){
+    public  String changePass(@RequestBody UserChange userChange, Model model){
         UserView user = userService.changePassByUser(userChange);
         System.out.println(user);
         model.addAttribute("user", user);
@@ -54,7 +54,7 @@ public class UserController {
     }
 
     @PutMapping("/change-img")
-    public @ResponseBody String changeImgUrl(@RequestBody UserChange userChange, Model model){
+    public String changeImgUrl(@RequestBody UserChange userChange, Model model){
         UserView user = userService.changeImgByUser(userChange);
         System.out.println(user);
         model.addAttribute("user", user);
@@ -62,7 +62,7 @@ public class UserController {
     }
 
     @DeleteMapping("/delete/{username}")
-    public @ResponseBody String deleteUser(@PathVariable String username, Model model){
+    public  String deleteUser(@PathVariable String username, Model model){
         UserView user = userService.deleteUserByUserName(username);
         System.out.println(user);
         model.addAttribute("user", user);

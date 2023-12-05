@@ -11,95 +11,110 @@
                 <div class="justify-content-center">
                     <h1>Add Offer</h1>
                 </div>
-                                <form th:action="@{/employees/add}"
+                                <form th:action="@{/offers/create-offer}"
                       th:method="post"
+                      th:object="${createOffer}"
+                      enctype="multipart/form-data"
                       class="m-md-auto w-50 pb-3">
 
                     <div class="mb-3">
                         <label class="form-label" for="brandName">Brand:</label>
-                        <select id="brandName" name="brandName" th:onchange="fetchModels()" class="form-control text-center">
-<!--                                th:errorclass="is-invalid">-->
+                        <select id="brandName" name="brandName" th:onchange="fetchModels()" class="form-control text-center"
+                                th:errorclass="is-invalid">
+
+                        <!--                                th:field="*{brandName}"-->
                             <option value="" disabled selected hidden>select brand</option>
                             <option th:each="brand : ${Brands}" th:value="${brand.brandName}" th:text="${brand.brandName}">Brand</option>
                         </select>
-<!--                        <small th:if="${#fields.hasErrors('brandName')}" th:errors="*{brandName}" class="text-danger">Error-->
-<!--                            message</small>-->
+                        <small th:if="${#fields.hasErrors('brandName')}" th:errors="*{brandName}" class="text-danger">Error
+                            message</small>
                     </div>
 
                     <div class="mb-3">
                         <label for="modelName">Model:</label>
-                        <select id="modelName" name="modelName" class="form-control text-center">
+                        <select th:field="*{modelName}"
+                                th:errorclass="is-invalid" id="modelName" name="modelName" class="form-control text-center">
                             <option value="" disabled selected hidden>select model</option>
                         </select>
-<!--                        <input th:field="*{modelName}"-->
-<!--                               th:errorclass="is-invalid"-->
-<!--                               type="text" class="form-control text-center"-->
-<!--                               id="modelName" aria-describedby="modelName" name="lastName"/>-->
-<!--                        <small th:if="${#fields.hasErrors('modelName')}" th:errors="*{modelName}" class="text-danger">Error-->
-<!--                            message</small>-->
+                        <small th:if="${#fields.hasErrors('modelName')}" th:errors="*{modelName}" class="text-danger">Error
+                            message</small>
                     </div>
 
                     <div class="mb-3">
                         <label for="engine">Engine:</label>
-                        <select id="engine" name="engine" class="form-control text-center">
-<!--                                th:errorclass="is-invalid">-->
+                        <select id="engine" name="engine" class="form-control text-center"
+                                th:field="*{engine}"
+                                th:errorclass="is-invalid">
                             <option value="" disabled selected hidden>select engine</option>
                             <option th:each="e : ${Engines}" th:value="${e}" th:text="${e}">Engine</option>
                         </select>
-<!--                        <small th:if="${#fields.hasErrors('engine')}" th:errors="*{engine}" class="text-danger">Error-->
-<!--                            message</small>-->
+                        <small th:if="${#fields.hasErrors('engine')}" th:errors="*{engine}" class="text-danger">Error
+                            message</small>
                     </div>
 
                     <div class="mb-3">
                         <label for="transmission">Transmission:</label>
-                        <select id="transmission" name="transmission" class="form-control text-center">
-<!--                                th:errorclass="is-invalid">-->
+                        <select id="transmission" name="transmission" class="form-control text-center"
+                                th:field="*{transmission}"
+                                th:errorclass="is-invalid">
                             <option value="" disabled selected hidden>select transmission</option>
                             <option th:each="t : ${Transm}" th:value="${t}" th:text="${t}">Engine</option>
                         </select>
-<!--                        <small th:if="${#fields.hasErrors('transmission')}" th:errors="*{transmission}" class="text-danger">Error-->
-<!--                            message</small>-->
+                        <small th:if="${#fields.hasErrors('transmission')}" th:errors="*{transmission}" class="text-danger">Error
+                            message</small>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label" for="year">Year</label>
-                        <input type="number" class="form-control text-center"
+                        <input th:field="*{year}"
+                               th:errorclass="is-invalid"
+                                type="number" class="form-control text-center"
                                id="year" aria-describedby="year" name="year" min="1900" max="2023" step="1"/>
-<!--                        <small th:if="${#fields.hasErrors('year')}" th:errors="*{year}" class="text-danger">Error-->
-<!--                            message</small>-->
+                        <small th:if="${#fields.hasErrors('year')}" th:errors="*{year}" class="text-danger">Error
+                            message</small>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label" for="mileage">Mileage</label>
-                        <input type="number" class="form-control text-center"
+                        <input th:field="*{mileage}"
+                               th:errorclass="is-invalid"
+                                type="number" class="form-control text-center"
                                id="mileage" aria-describedby="mileage" name="mileage" min="0" max="1000000" step="1"/>
-                        <!--                        <small th:if="${#fields.hasErrors('year')}" th:errors="*{year}" class="text-danger">Error-->
-                        <!--                            message</small>-->
+                                                <small th:if="${#fields.hasErrors('mileage')}" th:errors="*{mileage}" class="text-danger">Error
+                                                    message</small>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label" for="price">Price</label>
-                        <input type="number" class="form-control text-center"
-                               id="price" aria-describedby="mileage" name="mileage" min="0" max="1000000" step="1"/>
-                        <!--                        <small th:if="${#fields.hasErrors('year')}" th:errors="*{year}" class="text-danger">Error-->
-                        <!--                            message</small>-->
+                        <input th:field="*{price}"
+                               th:errorclass="is-invalid"
+                                type="number" class="form-control text-center"
+                               id="price" aria-describedby="price" name="price" min="0" max="1000000" step="1"/>
+                                                <small th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="text-danger">Error
+                                                    message</small>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label" for="imageUrl">Image</label>
-                        <input type="file" class="form-control text-center"
+                        <input th:field="*{imageUrl}"
+                               th:errorclass="is-invalid"
+                                type="file" class="form-control text-center"
                                id="imageUrl" aria-describedby="imageUrl" name="imageUrl"/>
-                        <!--                        <small th:if="${#fields.hasErrors('year')}" th:errors="*{year}" class="text-danger">Error-->
-                        <!--                            message</small>-->
+                                                <small th:if="${#fields.hasErrors('imageUrl')}" th:errors="*{imageUrl}" class="text-danger">Error
+                                                    message</small>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label" for="description">Description</label>
-                        <textarea class="form-control" placeholder='Enter description...' maxlength='1000'
+                        <textarea th:field="*{description}"
+                                  th:errorclass="is-invalid"
+                                class="form-control" placeholder='Enter description...' maxlength='1000'
                                   id="description" aria-describedby="description" name="description"> </textarea>
-                        <!--                        <small th:if="${#fields.hasErrors('year')}" th:errors="*{year}" class="text-danger">Error-->
-                        <!--                            message</small>-->
+                                                <small th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="text-danger">Error
+                                                    message</small>
                     </div>
+                    <button type="submit" class="btn btn-secondary">Add Offer</button>
+            </form>
 <!--                    <fieldset class="mb-3">-->
 <!--                        <legend>Choose Education Level</legend>-->
 <!--                        <div class="form-check">-->
@@ -174,8 +189,7 @@
 <!--                            message</small>-->
 <!--                    </div>-->
 
-<!--                    <button type="submit" class="btn btn-secondary">Add Offer</button>-->
-<!--                </form>-->
+
             </div>
         </div>
     </div>

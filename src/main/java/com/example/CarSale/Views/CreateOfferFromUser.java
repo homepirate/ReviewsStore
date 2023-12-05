@@ -1,5 +1,16 @@
 package com.example.CarSale.Views;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 public class CreateOfferFromUser {
     private String userName;
     private String description;
@@ -7,7 +18,9 @@ public class CreateOfferFromUser {
     private int mileage;
     private int price;
 
-    private String imageUrl;
+    private MultipartFile imageUrl;
+
+    private String path;
 
     private int year;
 
@@ -16,7 +29,7 @@ public class CreateOfferFromUser {
     private String brandName;
     private String transmission;
 
-    public CreateOfferFromUser(String userName, String description, String engine, int mileage, int price, String imageUrl, int year, String modelName, String brandName, String transmission) {
+    public CreateOfferFromUser(String userName, String description, String engine, int mileage, int price, MultipartFile imageUrl, int year, String modelName, String brandName, String transmission) {
         this.userName = userName;
         this.description = description;
         this.engine = engine;
@@ -30,6 +43,23 @@ public class CreateOfferFromUser {
     }
 
     public CreateOfferFromUser() {
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath() {
+        String fileName = imageUrl.getOriginalFilename();
+        try {
+            String filePath =  "/img/" + fileName;
+            String projectPath = System.getProperty("user.dir");
+            String fileSave = projectPath + "/src/main/resources/static/img/" + fileName;
+            imageUrl.transferTo(new File(fileSave));
+            this.path = filePath;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getUserName() {
@@ -48,6 +78,8 @@ public class CreateOfferFromUser {
         this.description = description;
     }
 
+    @NotEmpty(message = "Engine must not be null or empty!")
+
     public String getEngine() {
         return engine;
     }
@@ -56,6 +88,9 @@ public class CreateOfferFromUser {
         this.engine = engine;
     }
 
+    @NotNull(message = "Please set mileage")
+    @Min(value = 0, message = "Must be > 0")
+    @Max(value = 1000000, message = "Must be < 1000000")
     public int getMileage() {
         return mileage;
     }
@@ -64,6 +99,9 @@ public class CreateOfferFromUser {
         this.mileage = mileage;
     }
 
+    @NotNull(message = "Please set price")
+    @Min(value = 0, message = "Must be > 0")
+    @Max(value = 1000000, message = "Must be < 1000000")
     public int getPrice() {
         return price;
     }
@@ -72,14 +110,27 @@ public class CreateOfferFromUser {
         this.price = price;
     }
 
-    public String getImageUrl() {
+    public MultipartFile getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
+    public void setImageUrl(MultipartFile imageUrl) {
         this.imageUrl = imageUrl;
+        setPath();
     }
 
+
+    //    public String getImageUrl() {
+//        return imageUrl;
+//    }
+//
+//    public void setImageUrl(String imageUrl) {
+//        this.imageUrl = imageUrl;
+//    }
+
+    @NotNull(message = "Please set year")
+    @Min(value = 1900)
+    @Max(value = 2023)
     public int getYear() {
         return year;
     }
@@ -87,6 +138,8 @@ public class CreateOfferFromUser {
     public void setYear(int year) {
         this.year = year;
     }
+
+    @NotEmpty(message = "Model must not be null or empty!")
 
     public String getModelName() {
         return modelName;
@@ -96,6 +149,8 @@ public class CreateOfferFromUser {
         this.modelName = modelName;
     }
 
+    @NotEmpty(message = "Brand must not be null or empty!")
+
     public String getBrandName() {
         return brandName;
     }
@@ -103,6 +158,8 @@ public class CreateOfferFromUser {
     public void setBrandName(String brandName) {
         this.brandName = brandName;
     }
+
+    @NotEmpty(message = "Transmission must not be null or empty!")
 
     public String getTransmission() {
         return transmission;

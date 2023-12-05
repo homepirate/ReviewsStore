@@ -16,8 +16,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import jakarta.validation.ConstraintViolation;
+import org.springframework.web.multipart.MultipartFile;
 
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -137,9 +142,11 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public AllOfferWithBrandView createOfferByUser(CreateOfferFromUser offerModel){
-        UserDto userDto = userService.getByUserName(offerModel.getUserName());
+//        UserDto userDto = userService.getByUserName(offerModel.getUserName());
+        UserDto userDto = userService.getByUserName("evgeniy.loginov");
         ModelDto modelDto = modelService.getModelByName(offerModel.getModelName());
         OfferDto offerDto = modelMapper.map(offerModel, OfferDto.class);
+        offerDto.setImageUrl(offerModel.getPath());
         offerDto.setSeller(userDto);
         offerDto.setModel(modelDto);
         OfferDto offer = this.createOffer(offerDto);

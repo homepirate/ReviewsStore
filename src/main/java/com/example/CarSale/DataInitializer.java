@@ -78,6 +78,21 @@ public class DataInitializer implements CommandLineRunner {
 
             userService.createUser(user_dto);
         }
+
+
+
+        UserDto user_dto = new UserDto();
+        user_dto.setUsername("evgeniy.loginov");
+        user_dto.setPassword(faker.internet().password());
+        user_dto.setFirstName("Evgeniy");
+        user_dto.setLastName("Loginov");
+        user_dto.setActive(Boolean.TRUE);
+        user_dto.setImageUrl(faker.internet().image());
+        user_dto.setRole(roles_dto.get(random.nextInt(2)));
+        userService.createUser(user_dto);
+
+
+
         List<UserDto> admins = userService.findAllByRole("admin");
         List<UserDto> simple_users = userService.findAllByRole("user");
         List<UserDto> list_users = userService.getAll();
@@ -157,21 +172,21 @@ public class DataInitializer implements CommandLineRunner {
             offerService.createOffer(offer);
         }
 
-        List<OfferDto> some_user_offers = userService.getUserOffers(list_users.get(0).getId());
-        System.out.println("User OFFERS: " + some_user_offers.size());
+//        List<OfferDto> some_user_offers = userService.getUserOffers(list_users.get(0).getId());
+//        System.out.println("User OFFERS: " + some_user_offers.size());
+
+//
+//        System.out.println(offerService.getOfferByEngine("GASOLINE"));
+//        System.out.println(modelService.getModelByCategory("car"));
+//
+//        System.out.println(offerService.getOfferByTransmission("manual"));
 
 
-        System.out.println(offerService.getOfferByEngine("GASOLINE"));
-        System.out.println(modelService.getModelByCategory("car"));
-
-        System.out.println(offerService.getOfferByTransmission("manual"));
-
-
-        List<AllOfferWithBrandView> offers_all_info = offerService.getAllOffersInfo();
-        System.out.println(offers_all_info.size());
-        for (AllOfferWithBrandView offer : offers_all_info){
-            System.out.println(offer);
-        }
+//        List<AllOfferWithBrandView> offers_all_info = offerService.getAllOffersInfo();
+//        System.out.println(offers_all_info.size());
+//        for (AllOfferWithBrandView offer : offers_all_info){
+//            System.out.println(offer);
+//        }
 
         UserDto user = (UserDto) userService.changeImgUrl(list_users.get(0).getId(), faker.internet().image());
         System.out.println(list_users.get(0).getImageUrl() + " changed: " + user);
@@ -180,7 +195,7 @@ public class DataInitializer implements CommandLineRunner {
         List<OfferDto> offers = offerService.getAll();
         Map<String, LocalDateTime> offerCMInfo1 = offerService.getCreatedandModifiedInfo(offers.get(1).getId());
 
-        offerService.changeImgUrl(offers.get(0).getId(), faker.internet().image());
+//        offerService.changeImgUrl(offers.get(0).getId(), faker.internet().image());
         Map<String, LocalDateTime> offerCMInfo0 = offerService.getCreatedandModifiedInfo(offers.get(0).getId());
         System.out.println(offerCMInfo1 + " " + offerCMInfo0);
 
