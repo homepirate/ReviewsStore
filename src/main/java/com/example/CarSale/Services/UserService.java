@@ -2,6 +2,7 @@ package com.example.CarSale.Services;
 
 import com.example.CarSale.Services.Dtos.OfferDto;
 import com.example.CarSale.Services.Dtos.UserDto;
+import com.example.CarSale.Views.AllOfferWithBrandView;
 import com.example.CarSale.Views.RegUserView;
 import com.example.CarSale.Views.UserChange;
 import com.example.CarSale.Views.UserView;
@@ -18,7 +19,7 @@ public interface UserService extends GeneralSevice{
 
     List<UserDto> getAll();
 
-    List<OfferDto> getUserOffers(UUID userId);
+//    List<OfferDto> getUserOffers(UUID userId);
 
     UserDto changePassword(UUID userId, String newPass);
 
@@ -31,4 +32,8 @@ public interface UserService extends GeneralSevice{
     UserView registrationNewUser(RegUserView regUserView);
 
     UserView deleteUserByUserName(String username);
+
+    UserView getUserByUsername(String username);
+
+    List<AllOfferWithBrandView> getUserOffers(String username);
 }

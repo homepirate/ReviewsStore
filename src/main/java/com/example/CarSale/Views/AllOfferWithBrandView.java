@@ -15,7 +15,9 @@ public class AllOfferWithBrandView {
     private String firstName;
     private String lastName;
 
-    public AllOfferWithBrandView(String brandName, String modelName, int price, String imageUrl, Engine engine, int mileage, int year, Transmission transmission, String firstName, String lastName) {
+    private String username;
+
+    public AllOfferWithBrandView(String brandName, String modelName, int price, String imageUrl, Engine engine, int mileage, int year, Transmission transmission, String firstName, String lastName, String username) {
         this.brandName = brandName;
         this.modelName = modelName;
         this.price = price;
@@ -26,6 +28,7 @@ public class AllOfferWithBrandView {
         this.transmission = transmission;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.username = username;
     }
 
     public AllOfferWithBrandView() {
@@ -101,6 +104,14 @@ public class AllOfferWithBrandView {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getImageUrl() {

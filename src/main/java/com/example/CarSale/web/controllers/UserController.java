@@ -40,6 +40,13 @@ public class UserController {
         return "user-page";
     }
 
+    @GetMapping("/{username}")
+    public String userPage(@PathVariable String username, Model model){
+        model.addAttribute("user",userService.getUserByUsername(username));
+        model.addAttribute("offers", userService.getUserOffers(username));
+        return "user-page";
+    }
+
     @GetMapping("/reg-new-user")
     public String regNewUSer(){
         return "add-user";
@@ -68,4 +75,5 @@ public class UserController {
         model.addAttribute("user", user);
         return "user-page";
     }
+
 }

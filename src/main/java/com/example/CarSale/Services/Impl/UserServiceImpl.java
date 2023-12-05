@@ -5,6 +5,7 @@ import com.example.CarSale.Services.Dtos.OfferDto;
 import com.example.CarSale.Services.Dtos.UserDto;
 import com.example.CarSale.Services.Dtos.UserRoleDto;
 import com.example.CarSale.Services.UserRoleService;
+import com.example.CarSale.Views.AllOfferWithBrandView;
 import com.example.CarSale.Views.RegUserView;
 import com.example.CarSale.Views.UserChange;
 import com.example.CarSale.Views.UserView;
@@ -90,11 +91,11 @@ public class UserServiceImpl implements UserService {
                 .stream().map((user) -> modelMapper.map(user, UserDto.class)).collect(Collectors.toList());
     }
 
-    @Override
-    public List<OfferDto> getUserOffers(UUID userId) {
-        return userRepository.getOffersByUserId(userId)
-                .stream().map((offer) -> modelMapper.map(offer, OfferDto.class)).collect(Collectors.toList());
-    }
+//    @Override
+//    public List<OfferDto> getUserOffers(UUID userId) {
+//        return userRepository.getOffersByUserId(userId)
+//                .stream().map((offer) -> modelMapper.map(offer, OfferDto.class)).collect(Collectors.toList());
+//    }
 
     @Override
     public UserDto changePassword(UUID userId, String newPass) {
@@ -116,6 +117,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserView getUserByUsername(String username) {
+        return modelMapper.map(this.getByUserName(username), UserView.class);
+    }
+
+    @Override
     public UserView changeImgByUser(UserChange userChange) {
         UserDto userDto = this.getByUserName(userChange.getUsername());
         UserDto userDto_afterChange = this.changeImgUrl(userDto.getId(), userChange.getValue());
@@ -133,7 +139,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserView registrationNewUser(RegUserView regUserView) {
         UserDto userDto = modelMapper.map(regUserView, UserDto.class);
-        userDto.setImageUrl("http:/baseimg.jpg");
+        userDto.setImageUrl("/img/149071.png");
         userDto.setActive(Boolean.TRUE);
         userDto.setRole(userRoleService.getByRole(Role.USER));
         UserDto userDto_afterCreate = this.createUser(userDto);
@@ -158,5 +164,10 @@ public class UserServiceImpl implements UserService {
         else {
             return null;
         }
+    }
+
+    @Override
+    public List<AllOfferWithBrandView> getUserOffers(String username) {
+        return userRepository.getAllUserOffers(username);
     }
 }

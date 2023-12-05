@@ -10,6 +10,8 @@ public class UserView {
     public UserView() {
     }
 
+
+
     public String getUsername() {
         return username;
     }

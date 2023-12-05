@@ -73,7 +73,7 @@ public class DataInitializer implements CommandLineRunner {
             user_dto.setFirstName(faker.name().firstName());
             user_dto.setLastName(faker.name().lastName());
             user_dto.setActive(Boolean.TRUE);
-            user_dto.setImageUrl(faker.internet().image());
+            user_dto.setImageUrl("/img/149071.png");
             user_dto.setRole(roles_dto.get(random.nextInt(2)));
 
             userService.createUser(user_dto);
@@ -87,7 +87,7 @@ public class DataInitializer implements CommandLineRunner {
         user_dto.setFirstName("Evgeniy");
         user_dto.setLastName("Loginov");
         user_dto.setActive(Boolean.TRUE);
-        user_dto.setImageUrl(faker.internet().image());
+        user_dto.setImageUrl("/img/149071.png");
         user_dto.setRole(roles_dto.get(random.nextInt(2)));
         userService.createUser(user_dto);
 

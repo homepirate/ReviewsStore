@@ -23,7 +23,7 @@ public interface OfferRepository extends JpaRepository<Offer, UUID> {
     List<Offer> findByTransmission(Transmission transmission);
 
 
-    @Query("SELECT new com.example.CarSale.Views.AllOfferWithBrandView(b.name, m.name, o.price, o.imageUrl, o.engine, o.mileage, o.year, o.transmission, u.firstName, u.lastName) " +
+    @Query("SELECT new com.example.CarSale.Views.AllOfferWithBrandView(b.name, m.name, o.price, o.imageUrl, o.engine, o.mileage, o.year, o.transmission, u.firstName, u.lastName, u.username) " +
             "FROM Offer o " +
             "JOIN o.model m " +
             "JOIN m.brand b " +
@@ -38,7 +38,7 @@ public interface OfferRepository extends JpaRepository<Offer, UUID> {
     AllOfferWithBrandView getALLInfoOneOffer(@Param("offerId") UUID offerId);
 
 
-    @Query("SELECT new com.example.CarSale.Views.AllOfferWithBrandView(b.name, m.name, o.price, o.imageUrl, o.engine, o.mileage, o.year, o.transmission, u.firstName, u.lastName) FROM Offer o  " +
+    @Query("SELECT new com.example.CarSale.Views.AllOfferWithBrandView(b.name, m.name, o.price, o.imageUrl, o.engine, o.mileage, o.year, o.transmission, u.firstName, u.lastName, u.username) FROM Offer o  " +
             "JOIN o.model m " +
             "JOIN m.brand b " +
             "JOIN o.seller u "+

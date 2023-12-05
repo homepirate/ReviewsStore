@@ -50,7 +50,8 @@
                     <span th:text="Transmission + ' ' + ${ o.transmission }"></span>
                     <div style="position: absolute; top: 50px; right: 30px;">
                         <span>Owner: </span>
-                        <span th:text="${ o.firstName } + ' '+ ${o.lastName }"></span>
+                        <a th:href="@{/users/{name}(name=${o.username})}"><span th:text="${ o.firstName } + ' '+ ${o.lastName }"></span>
+                        </a>
                     </div>
                 </div>
             </div>
