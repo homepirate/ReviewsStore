@@ -16,6 +16,8 @@ import com.example.CarSale.Services.UserService;
 import com.example.CarSale.utils.ValidationUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import jakarta.validation.ConstraintViolation;
 
@@ -32,11 +34,14 @@ public class UserServiceImpl implements UserService {
     private ModelMapper modelMapper;
     private ValidationUtil validationUtil;
 
+    private PasswordEncoder passwordEncoder;
+
 
     @Autowired
-    public UserServiceImpl(ValidationUtil validationUtil, ModelMapper modelMapper) {
+    public UserServiceImpl(ValidationUtil validationUtil, ModelMapper modelMapper, PasswordEncoder passwordEncoder) {
         this.validationUtil = validationUtil;
         this.modelMapper = modelMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Autowired
@@ -141,6 +146,7 @@ public class UserServiceImpl implements UserService {
         UserDto userDto = modelMapper.map(regUserView, UserDto.class);
         userDto.setImageUrl("/img/149071.png");
         userDto.setActive(Boolean.TRUE);
+        userDto.setPassword(passwordEncoder.encode(regUserView.getPassword()));
         userDto.setRole(userRoleService.getByRole(Role.USER));
         UserDto userDto_afterCreate = this.createUser(userDto);
         return modelMapper.map(userDto_afterCreate, UserView.class);
@@ -169,5 +175,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<AllOfferWithBrandView> getUserOffers(String username) {
         return userRepository.getAllUserOffers(username);
+    }
+
+    public User getUser(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username + " was not found!"));
     }
 }

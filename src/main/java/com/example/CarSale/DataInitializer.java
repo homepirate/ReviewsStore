@@ -13,6 +13,7 @@ import com.example.CarSale.Repositories.*;
 import com.example.CarSale.Services.*;
 import com.github.javafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -38,7 +39,10 @@ public class DataInitializer implements CommandLineRunner {
     private OfferRepository offerRepository;
     private OfferService offerService;
 
-    public DataInitializer(UserRepository userRepository, UserService userService, UserRoleRepository userRoleRepository, UserRoleService userRoleService, BrandRepository brandRepository, BrandService brandService, ModelRepositiry modelRepositiry, ModelService modelService, OfferRepository offerRepository, OfferService offerService) {
+    private PasswordEncoder passwordEncoder;
+
+
+    public DataInitializer(UserRepository userRepository, UserService userService, UserRoleRepository userRoleRepository, UserRoleService userRoleService, BrandRepository brandRepository, BrandService brandService, ModelRepositiry modelRepositiry, ModelService modelService, OfferRepository offerRepository, OfferService offerService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userService = userService;
         this.userRoleRepository = userRoleRepository;
@@ -49,6 +53,7 @@ public class DataInitializer implements CommandLineRunner {
         this.modelService = modelService;
         this.offerRepository = offerRepository;
         this.offerService = offerService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -69,7 +74,7 @@ public class DataInitializer implements CommandLineRunner {
         for (int i=0; i<100; i++){
             UserDto user_dto = new UserDto();
             user_dto.setUsername(faker.name().username());
-            user_dto.setPassword(faker.internet().password());
+            user_dto.setPassword(passwordEncoder.encode(faker.internet().password()));
             user_dto.setFirstName(faker.name().firstName());
             user_dto.setLastName(faker.name().lastName());
             user_dto.setActive(Boolean.TRUE);
@@ -83,7 +88,7 @@ public class DataInitializer implements CommandLineRunner {
 
         UserDto user_dto = new UserDto();
         user_dto.setUsername("evgeniy.loginov");
-        user_dto.setPassword(faker.internet().password());
+        user_dto.setPassword(passwordEncoder.encode("1234567890"));
         user_dto.setFirstName("Evgeniy");
         user_dto.setLastName("Loginov");
         user_dto.setActive(Boolean.TRUE);

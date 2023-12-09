@@ -7,11 +7,14 @@ import com.example.CarSale.Views.UserChange;
 import com.example.CarSale.Views.UserView;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.security.Principal;
 
 @Controller
 @RequestMapping("/users")
@@ -41,7 +44,7 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
-    public String userPage(@PathVariable String username, Model model){
+    public String userPage(Principal principal, @PathVariable String username, Model model){
         model.addAttribute("user",userService.getUserByUsername(username));
         model.addAttribute("offers", userService.getUserOffers(username));
         return "user-page";
@@ -51,6 +54,25 @@ public class UserController {
     public String regNewUSer(){
         return "add-user";
     }
+
+
+    @GetMapping("/login")
+    public String login(){
+        return "login";
+    }
+
+
+    @PostMapping("/login-error")
+    public String onFailedLogin(
+            @ModelAttribute(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY) String username,
+            RedirectAttributes redirectAttributes) {
+
+        redirectAttributes.addFlashAttribute(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY, username);
+        redirectAttributes.addFlashAttribute("badCredentials", true);
+
+        return "redirect:/users/login";
+    }
+
 
     @PutMapping("/change-pass")
     public  String changePass(@RequestBody UserChange userChange, Model model){
