@@ -4,6 +4,8 @@ import com.example.CarSale.constants.Enums.Engine;
 import com.example.CarSale.constants.Enums.Transmission;
 
 public class AllOfferWithBrandView {
+
+    private String id;
     private String brandName;
     private String modelName;
     private int price;
@@ -17,7 +19,8 @@ public class AllOfferWithBrandView {
 
     private String username;
 
-    public AllOfferWithBrandView(String brandName, String modelName, int price, String imageUrl, Engine engine, int mileage, int year, Transmission transmission, String firstName, String lastName, String username) {
+    public AllOfferWithBrandView(String id, String brandName, String modelName, int price, String imageUrl, Engine engine, int mileage, int year, Transmission transmission, String firstName, String lastName, String username) {
+        this.id = id;
         this.brandName = brandName;
         this.modelName = modelName;
         this.price = price;
@@ -112,6 +115,14 @@ public class AllOfferWithBrandView {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getImageUrl() {

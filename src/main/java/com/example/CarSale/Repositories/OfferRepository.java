@@ -23,29 +23,19 @@ public interface OfferRepository extends JpaRepository<Offer, UUID> {
     List<Offer> findByTransmission(Transmission transmission);
 
 
-    @Query("SELECT new com.example.CarSale.Views.AllOfferWithBrandView(b.name, m.name, o.price, o.imageUrl, o.engine, o.mileage, o.year, o.transmission, u.firstName, u.lastName, u.username) FROM Offer o  " +
-            "JOIN o.model m " +
-            "JOIN m.brand b " +
-            "JOIN o.seller u ")
-    List<AllOfferWithBrandView> getAllOffersWithInfo();
+    @Query("SELECT o FROM Offer o ")
+    List<Offer> getAllOffersWithInfo();
 
-    @Query("SELECT new com.example.CarSale.Views.AllOfferWithBrandView(b.name, m.name, o.price, o.imageUrl, o.engine, o.mileage, o.year, o.transmission, u.firstName, u.lastName, u.username) " +
-            "FROM Offer o " +
-            "JOIN o.model m " +
-            "JOIN m.brand b " +
-            "JOIN o.seller u WHERE o.id = :offerId")
-    AllOfferWithBrandView getALLInfoOneOffer(@Param("offerId") UUID offerId);
+    @Query("SELECT o FROM Offer o WHERE o.id = :offerId")
+    Offer getALLInfoOneOffer(@Param("offerId") UUID offerId);
 
 
-    @Query("SELECT new com.example.CarSale.Views.AllOfferWithBrandView(b.name, m.name, o.price, o.imageUrl, o.engine, o.mileage, o.year, o.transmission, u.firstName, u.lastName, u.username) FROM Offer o  " +
-            "JOIN o.model m " +
-            "JOIN m.brand b " +
-            "JOIN o.seller u "+
+    @Query("SELECT o FROM Offer o " +
             "WHERE (o.engine IN :engineFilter) AND " +
             "(o.transmission IN :transmissionFilter)"  +
-            "AND (:modelFilter IS NULL OR m.name = :modelFilter)"
+            "AND (:modelFilter IS NULL OR o.model.name = :modelFilter)"
             )
-    List<AllOfferWithBrandView> getFilteredOffers(@Param("engineFilter") List<Engine> engineFilter,
+    List<Offer> getFilteredOffers(@Param("engineFilter") List<Engine> engineFilter,
                                   @Param("transmissionFilter") List<Transmission> transmissionFilter,
                                                   @Param("modelFilter") String model);
 

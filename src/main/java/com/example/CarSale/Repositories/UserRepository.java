@@ -22,11 +22,9 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     List<Offer> getOffersByUserId(@Param("userId") UUID userId);
 
 
-    @Query("SELECT new com.example.CarSale.Views.AllOfferWithBrandView(b.name, m.name, o.price, o.imageUrl, o.engine, o.mileage, o.year, o.transmission, u.firstName, u.lastName, u.username) FROM Offer o  " +
-            "JOIN o.model m " +
-            "JOIN m.brand b " +
-            "JOIN o.seller u WHERE u.username = :username")
-    List<AllOfferWithBrandView> getAllUserOffers(@Param("username") String username);
+
+        @Query("SELECT o FROM Offer o  WHERE o.seller.username = :username")
+    List<Offer> getAllUserOffers(@Param("username") String username);
 
 //    User findUserByUsername(String username);
     Optional<User> findByUsername(String username);

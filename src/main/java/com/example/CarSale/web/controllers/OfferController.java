@@ -10,6 +10,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,8 +22,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/offers")
@@ -65,7 +69,7 @@ public class OfferController {
             return "redirect:/offers/create-offer";
         }
         AllOfferWithBrandView createdOffer = offerService.createOfferByUser(offerInput);
-        System.out.println(createdOffer);
+//        System.out.println(createdOffer);
 //        model.addAttribute("createdOffer", createdOffer);
         return "redirect:/offers";
     }
@@ -88,6 +92,28 @@ public class OfferController {
         model.addAttribute("offers", result);
         return "all-offers";
 
+    }
+
+
+    @DeleteMapping("/delete/{offerId}")
+    public String deleteOffer(@PathVariable UUID offerId, Principal principal) {
+
+        String username=principal.getName();
+        AllOfferWithBrandView offerDetails = offerService.getOfferById(offerId);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
+
+        if (offerDetails.getUsername().equals(username)) {
+            offerService.deleteOffer(offerId);
+            return "redirect:/users/" + username;
+        }else if(isAdmin){
+            offerService.deleteOffer(offerId);
+            return  "redirect:/offers";
+        }
+
+        return "redirect:/error";
     }
 
 //

@@ -1,5 +1,6 @@
 package com.example.CarSale.Services.Impl;
 
+import com.example.CarSale.Models.Offer;
 import com.example.CarSale.Repositories.UserRoleRepository;
 import com.example.CarSale.Services.Dtos.OfferDto;
 import com.example.CarSale.Services.Dtos.UserDto;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import jakarta.validation.ConstraintViolation;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -174,7 +176,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<AllOfferWithBrandView> getUserOffers(String username) {
-        return userRepository.getAllUserOffers(username);
+        List<Offer> offers =  userRepository.getAllUserOffers(username);
+        List<AllOfferWithBrandView> result = new ArrayList<>();
+        for (Offer o : offers){
+            AllOfferWithBrandView offer = modelMapper.map(o, AllOfferWithBrandView.class);
+            offer.setBrandName(o.getModel().getBrand().getName());
+            offer.setFirstName(o.getSeller().getFirstName());
+            offer.setLastName(o.getSeller().getLastName());
+            offer.setUsername(o.getSeller().getUsername());
+            offer.setModelName(o.getModel().getName());
+            offer.setImageUrl(o.getImageUrl());
+            result.add(offer);
+        }
+        return result;
     }
 
     public User getUser(String username) {

@@ -81,6 +81,8 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public List<OfferDto> getAll() {
+
+
         return offerRepository.findAll()
                 .stream().map((offer) -> modelMapper.map(offer, OfferDto.class)).collect(Collectors.toList());
 
@@ -106,7 +108,19 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public List<AllOfferWithBrandView> getAllOffersInfo() {
-        return offerRepository.getAllOffersWithInfo();
+        List<Offer> offers = offerRepository.getAllOffersWithInfo();
+        List<AllOfferWithBrandView> result = new ArrayList<>();
+        for (Offer o : offers){
+            AllOfferWithBrandView offer = modelMapper.map(o, AllOfferWithBrandView.class);
+            offer.setBrandName(o.getModel().getBrand().getName());
+            offer.setFirstName(o.getSeller().getFirstName());
+            offer.setLastName(o.getSeller().getLastName());
+            offer.setUsername(o.getSeller().getUsername());
+            offer.setModelName(o.getModel().getName());
+            offer.setImageUrl(o.getImageUrl());
+            result.add(offer);
+        }
+        return result;
     }
 
     @Override
@@ -150,33 +164,21 @@ public class OfferServiceImpl implements OfferService {
         offerDto.setSeller(userDto);
         offerDto.setModel(modelDto);
         OfferDto offer = this.createOffer(offerDto);
-        return offerRepository.getALLInfoOneOffer(offer.getId());
+        return modelMapper.map(offerRepository.getALLInfoOneOffer(offer.getId()), AllOfferWithBrandView.class);
     }
 
     @Override
-    public List<AllOfferWithBrandView> getOfferByTransmissionToUser(String transmission) {
-        List<OfferDto> offerDtos = this.getOfferByTransmission(transmission);
-        List<AllOfferWithBrandView> allOfferWithBrandViews =  offerDtos.stream().map(offer -> modelMapper.map(offer, AllOfferWithBrandView.class)).collect(Collectors.toList());
-        for (int i=0; i< allOfferWithBrandViews.size(); i++ ){
-            allOfferWithBrandViews.get(i).setFirstName(offerDtos.get(i).getSeller().getFirstName());
-            allOfferWithBrandViews.get(i).setLastName(offerDtos.get(i).getSeller().getLastName());
-            allOfferWithBrandViews.get(i).setBrandName(offerDtos.get(i).getModel().getBrand().getName());
-        }
-        return allOfferWithBrandViews;
+    public AllOfferWithBrandView getOfferById(UUID offerId) {
+        Offer offer = offerRepository.getALLInfoOneOffer(offerId);
+        AllOfferWithBrandView result = modelMapper.map(offer, AllOfferWithBrandView.class);
+        result.setBrandName(offer.getModel().getBrand().getName());
+        result.setFirstName(offer.getSeller().getFirstName());
+        result.setLastName(offer.getSeller().getLastName());
+        result.setUsername(offer.getSeller().getUsername());
+        result.setModelName(offer.getModel().getName());
+        result.setImageUrl(offer.getImageUrl());
+        return result;
     }
-
-
-    public List<AllOfferWithBrandView> getOfferByEngineToUser(String engine) {
-        List<OfferDto> offerDtos = this.getOfferByEngine(engine);
-        List<AllOfferWithBrandView> allOfferWithBrandViews =  offerDtos.stream().map(offer -> modelMapper.map(offer, AllOfferWithBrandView.class)).collect(Collectors.toList());
-        for (int i=0; i< allOfferWithBrandViews.size(); i++ ){
-            allOfferWithBrandViews.get(i).setFirstName(offerDtos.get(i).getSeller().getFirstName());
-            allOfferWithBrandViews.get(i).setLastName(offerDtos.get(i).getSeller().getLastName());
-            allOfferWithBrandViews.get(i).setBrandName(offerDtos.get(i).getModel().getBrand().getName());
-        }
-        return allOfferWithBrandViews;
-    }
-
 
     public List<AllOfferWithBrandView> getFilteredOffers(Optional<List<String>> engines, Optional<List<String>> transmissions, String model){
         List<Engine> enginesFilters = new ArrayList<>();
@@ -195,7 +197,20 @@ public class OfferServiceImpl implements OfferService {
         else {
             transmissionFilters = List.of(Transmission.values());
         }
-        return offerRepository.getFilteredOffers(enginesFilters, transmissionFilters, model);
+
+        List<Offer> offers = offerRepository.getFilteredOffers(enginesFilters, transmissionFilters, model);
+        List<AllOfferWithBrandView> result = new ArrayList<>();
+        for (Offer o : offers){
+            AllOfferWithBrandView offer = modelMapper.map(o, AllOfferWithBrandView.class);
+            offer.setBrandName(o.getModel().getBrand().getName());
+            offer.setFirstName(o.getSeller().getFirstName());
+            offer.setLastName(o.getSeller().getLastName());
+            offer.setUsername(o.getSeller().getUsername());
+            offer.setModelName(o.getModel().getName());
+            offer.setImageUrl(o.getImageUrl());
+            result.add(offer);
+        }
+        return result;
     }
 
 }

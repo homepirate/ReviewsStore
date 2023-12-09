@@ -9,7 +9,7 @@
       <div class="col-md-2"></div>
       <div class="jumbotron text-center rounded col-md-8 align-self-center pt-5">
         <div class="justify-content-center">
-          <h1>Add Company</h1>
+          <h1>Registration</h1>
         </div>
         <form th:action="@{/users/reg-new-user}"
               th:method="post"
@@ -53,7 +53,7 @@
                    type="password" min="0" class="form-control text-center"
                    id="password" aria-describedby="password" name="password"/>
             <small th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
-                   class="text-danger">Budget</small>
+                   class="text-danger">Error message</small>
           </div>
           <button type="submit" class="btn btn-secondary">Register</button>
         </form>

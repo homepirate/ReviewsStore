@@ -27,8 +27,7 @@ public interface OfferService  extends GeneralSevice{
     Map<String, LocalDateTime> getCreatedandModifiedInfo(UUID offerId);
     AllOfferWithBrandView createOfferByUser(CreateOfferFromUser offerModel);
     List<AllOfferWithBrandView> getAllOffersInfo();
-    List<AllOfferWithBrandView> getOfferByTransmissionToUser(String transmission);
-    List<AllOfferWithBrandView> getOfferByEngineToUser(String engine);
+    AllOfferWithBrandView getOfferById(UUID offerId);
      List<AllOfferWithBrandView> getFilteredOffers(Optional<List<String>> engines, Optional<List<String>> transmissions, String model);
 
     }
