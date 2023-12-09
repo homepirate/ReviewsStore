@@ -54,10 +54,11 @@ public class OfferController {
     public CreateOfferFromUser initOffer(){ return new CreateOfferFromUser();}
 
     @GetMapping("")
-    public String getAll(Model model){
+    public String getAll(Model model, Principal principal){
         List<AllOfferWithBrandView> allOffers = offerService.getAllOffersInfo();
         allOffers.forEach(System.out::println);
         model.addAttribute("offers", allOffers);
+        model.addAttribute("principal", principal);
         return "all-offers";
     }
 
@@ -86,10 +87,11 @@ public class OfferController {
 
     @GetMapping("/filtered")
     public String filteredoffers(@RequestParam Optional<List<String>> engine, @RequestParam Optional<List<String>> transm,
-                                 @RequestParam(required = false) String carmodel, Model model) {
+                                 @RequestParam(required = false) String carmodel, Model model, Principal principal) {
         List<AllOfferWithBrandView> result = offerService.getFilteredOffers(engine, transm, carmodel);
         result.forEach(System.out::println);
         model.addAttribute("offers", result);
+        model.addAttribute("principal", principal);
         return "all-offers";
 
     }

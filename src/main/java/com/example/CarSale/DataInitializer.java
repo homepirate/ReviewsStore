@@ -93,9 +93,19 @@ public class DataInitializer implements CommandLineRunner {
         user_dto.setLastName("Loginov");
         user_dto.setActive(Boolean.TRUE);
         user_dto.setImageUrl("/img/149071.png");
-        user_dto.setRole(roles_dto.get(random.nextInt(2)));
+        user_dto.setRole(roles_dto.get(0));
         userService.createUser(user_dto);
 
+
+        user_dto = new UserDto();
+        user_dto.setUsername("admin");
+        user_dto.setPassword(passwordEncoder.encode("1234567890"));
+        user_dto.setFirstName("Admin");
+        user_dto.setLastName("Admin");
+        user_dto.setActive(Boolean.TRUE);
+        user_dto.setImageUrl("/img/149071.png");
+        user_dto.setRole(roles_dto.get(1));
+        userService.createUser(user_dto);
 
 
         List<UserDto> admins = userService.findAllByRole("admin");

@@ -44,9 +44,10 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
-    public String userPage(Principal principal, @PathVariable String username, Model model){
+    public String userPage(@PathVariable String username, Model model, Principal principal){
         model.addAttribute("user",userService.getUserByUsername(username));
         model.addAttribute("offers", userService.getUserOffers(username));
+        model.addAttribute("principal", principal);
         return "user-page";
     }
 
@@ -91,11 +92,9 @@ public class UserController {
     }
 
     @DeleteMapping("/delete/{username}")
-    public  String deleteUser(@PathVariable String username, Model model){
-        UserView user = userService.deleteUserByUserName(username);
-        System.out.println(user);
-        model.addAttribute("user", user);
-        return "user-page";
+    public  String deleteUser(@PathVariable String username, Model model, Principal principal){
+        userService.deleteUserByUserName(username);
+        return "redirect:/";
     }
 
 }

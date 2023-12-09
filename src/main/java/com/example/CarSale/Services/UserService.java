@@ -31,7 +31,7 @@ public interface UserService extends GeneralSevice{
 
     UserView registrationNewUser(RegUserView regUserView);
 
-    UserView deleteUserByUserName(String username);
+    void deleteUserByUserName(String username);
 
     UserView getUserByUsername(String username);
 

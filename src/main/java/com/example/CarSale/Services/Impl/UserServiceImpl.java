@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isPresent()){
             User user = userOptional.get();
-            user.setActive(Boolean.FALSE);
+            user.setIsActive(Boolean.FALSE);
             userRepository.save(user);
         }
     }
@@ -155,10 +155,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserView deleteUserByUserName(String username) {
+    public void deleteUserByUserName(String username) {
         UserDto userDto = this.getByUserName(username);
         this.deleteUser(userDto.getId());
-        return modelMapper.map(this.getByUserName(username), UserView.class);
     }
 
     @Override

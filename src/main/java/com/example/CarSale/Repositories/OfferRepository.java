@@ -23,7 +23,7 @@ public interface OfferRepository extends JpaRepository<Offer, UUID> {
     List<Offer> findByTransmission(Transmission transmission);
 
 
-    @Query("SELECT o FROM Offer o ")
+    @Query("SELECT o FROM Offer o WHERE o.seller.isActive = true")
     List<Offer> getAllOffersWithInfo();
 
     @Query("SELECT o FROM Offer o WHERE o.id = :offerId")
@@ -33,7 +33,7 @@ public interface OfferRepository extends JpaRepository<Offer, UUID> {
     @Query("SELECT o FROM Offer o " +
             "WHERE (o.engine IN :engineFilter) AND " +
             "(o.transmission IN :transmissionFilter)"  +
-            "AND (:modelFilter IS NULL OR o.model.name = :modelFilter)"
+            "AND (:modelFilter IS NULL OR o.model.name = :modelFilter) AND (o.seller.isActive = true)"
             )
     List<Offer> getFilteredOffers(@Param("engineFilter") List<Engine> engineFilter,
                                   @Param("transmissionFilter") List<Transmission> transmissionFilter,
