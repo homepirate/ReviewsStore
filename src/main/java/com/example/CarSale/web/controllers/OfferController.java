@@ -8,20 +8,14 @@ import com.example.CarSale.Services.OfferService;
 import com.example.CarSale.utils.UtilsForFront;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
@@ -76,7 +70,7 @@ public class OfferController {
     }
 
     @GetMapping("/create-offer")
-    public String createOffer(Model model){
+    public String createOffer(Model model, Principal principal){
         model.addAttribute("Brands", brandService.getAll());
         model.addAttribute("Engines", utilsForFront.getAllEngine());
         model.addAttribute("Transm", utilsForFront.getAllTransmission());

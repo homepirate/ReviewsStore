@@ -12,6 +12,8 @@ import com.example.CarSale.Views.BrandView;
 import com.example.CarSale.utils.ValidationUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@EnableCaching
 public class BrandServiceImpl implements BrandService {
     private BrandRepository brandRepository;
     private ModelMapper modelMapper;
@@ -43,6 +46,7 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
+    @Cacheable(value = "brandModelsCache", key = "#brandName")
     public List<ModelBrandView> getBrandModelsToUser(String brandName) {
         return this.getBrandModels(brandName).stream()
                 .map((model) -> modelMapper.map(model, ModelBrandView.class)).collect(Collectors.toList());
@@ -57,6 +61,8 @@ public class BrandServiceImpl implements BrandService {
                 .collect(Collectors.toList());
     }
 
+
+    @Cacheable("brands-model-count")
     @Override
     public List<BrandNameModelCountView> getBrandAndModelCount() {
         List<Brand> brands = brandRepository.findAll();

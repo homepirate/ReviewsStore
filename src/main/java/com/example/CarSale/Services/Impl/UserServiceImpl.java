@@ -17,6 +17,9 @@ import com.example.CarSale.Services.UserService;
 import com.example.CarSale.utils.ValidationUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,6 +33,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@EnableCaching
 public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private UserRoleService userRoleService;
@@ -124,10 +128,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(value = "usersCache", key = "#username")
     public UserView getUserByUsername(String username) {
         return modelMapper.map(this.getByUserName(username), UserView.class);
     }
 
+    @CacheEvict(value = "usersCache", key = "#userChange.username")
     @Override
     public UserView changeImgByUser(UserChange userChange) {
         UserDto userDto = this.getByUserName(userChange.getUsername());
@@ -135,6 +141,7 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(userDto_afterChange, UserView.class);
     }
 
+    @CacheEvict(value = "usersCache", key = "#userChange.username")
     @Override
     public UserView changePassByUser(UserChange userChange) {
         UserDto userDto = this.getByUserName(userChange.getUsername());
@@ -174,6 +181,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(value = "UserOffers", key = "#username")
     public List<AllOfferWithBrandView> getUserOffers(String username) {
         List<Offer> offers =  userRepository.getAllUserOffers(username);
         List<AllOfferWithBrandView> result = new ArrayList<>();

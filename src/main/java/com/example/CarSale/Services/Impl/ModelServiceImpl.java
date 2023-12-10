@@ -9,6 +9,8 @@ import com.example.CarSale.Services.ModelService;
 import com.example.CarSale.utils.ValidationUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 import jakarta.validation.ConstraintViolation;
 
@@ -18,6 +20,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@EnableCaching
 public class ModelServiceImpl  implements ModelService {
     private ModelRepositiry modelRepositiry;
     private ModelMapper modelMapper;
@@ -99,6 +102,7 @@ public class ModelServiceImpl  implements ModelService {
         }
     }
 
+    @Cacheable("top3models")
     @Override
     public List<ModelView> getTopModels() {
         List<Model> models = modelRepositiry.findTopPopularModels();

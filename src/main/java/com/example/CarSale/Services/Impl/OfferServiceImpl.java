@@ -14,6 +14,11 @@ import com.example.CarSale.Services.OfferService;
 import com.example.CarSale.utils.ValidationUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import jakarta.validation.ConstraintViolation;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +33,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@EnableCaching
 public class OfferServiceImpl implements OfferService {
     private OfferRepository offerRepository;
     private BrandService brandService;
@@ -88,6 +94,7 @@ public class OfferServiceImpl implements OfferService {
 
     }
 
+    @CacheEvict(cacheNames = "offers", allEntries = true)
     @Override
     public void deleteOffer(UUID offerId) {
         this.offerRepository.deleteById(offerId);
@@ -106,6 +113,7 @@ public class OfferServiceImpl implements OfferService {
                 .stream().map((offer) -> modelMapper.map(offer, OfferDto.class)).collect(Collectors.toList());
     }
 
+    @Cacheable("offers")
     @Override
     public List<AllOfferWithBrandView> getAllOffersInfo() {
         List<Offer> offers = offerRepository.getAllOffersWithInfo();
@@ -154,10 +162,12 @@ public class OfferServiceImpl implements OfferService {
         }
     }
 
+    @CacheEvict(cacheNames = "offers", allEntries = true)
     @Override
     public AllOfferWithBrandView createOfferByUser(CreateOfferFromUser offerModel){
-//        UserDto userDto = userService.getByUserName(offerModel.getUserName());
-        UserDto userDto = userService.getByUserName("evgeniy.loginov");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDto userDto = userService.getByUserName(authentication.getName());
+//        UserDto userDto = userService.getByUserName("evgeniy.loginov");
         ModelDto modelDto = modelService.getModelByName(offerModel.getModelName());
         OfferDto offerDto = modelMapper.map(offerModel, OfferDto.class);
         offerDto.setImageUrl(offerModel.getPath());
