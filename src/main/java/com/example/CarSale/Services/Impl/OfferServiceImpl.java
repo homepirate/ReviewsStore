@@ -113,7 +113,7 @@ public class OfferServiceImpl implements OfferService {
                 .stream().map((offer) -> modelMapper.map(offer, OfferDto.class)).collect(Collectors.toList());
     }
 
-    @Cacheable("offers")
+    @Cacheable(value = "offers", key = "#root.methodName")
     @Override
     public List<AllOfferWithBrandView> getAllOffersInfo() {
         List<Offer> offers = offerRepository.getAllOffersWithInfo();

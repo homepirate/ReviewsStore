@@ -102,7 +102,7 @@ public class ModelServiceImpl  implements ModelService {
         }
     }
 
-    @Cacheable("top3models")
+    @Cacheable(value = "top3models", key = "#root.methodName")
     @Override
     public List<ModelView> getTopModels() {
         List<Model> models = modelRepositiry.findTopPopularModels();

@@ -62,7 +62,7 @@ public class BrandServiceImpl implements BrandService {
     }
 
 
-    @Cacheable("brands-model-count")
+    @Cacheable(value="brands-model-count", key="#root.methodName")
     @Override
     public List<BrandNameModelCountView> getBrandAndModelCount() {
         List<Brand> brands = brandRepository.findAll();
