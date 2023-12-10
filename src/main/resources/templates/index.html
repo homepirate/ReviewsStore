@@ -4,17 +4,40 @@
 <body class="d-flex flex-column h-100">
 <div th:replace="fragments/navbar">Navbar</div>
 <main class="flex-shrink-0">
+    <h1 class="text-center font-weight-bold">Welcome to my WebPage</h1>
+    <h2 class="text-center">Top 3 popular car models</h2>
     <div class="container">
-        <div class="row">
-            <div class="col-md-2"></div>
-            <div class="jumbotron text-center rounded col-md-8 align-self-center pt-5">
-                <div class="justify-content-center">
-                    <h1>Welcome to My webPage</h1>
-                </div>
-            </div>
+        <div th:each="m : ${models}" class="brand-model">
+            <img th:src="${m.imageUrl}" height="250px" width="230px">
+            <a th:href="@{/offers/filtered?carmodel={carmodel}(carmodel=${m.name})}"><h4 th:text="${m.brandName} + ' ' + ${m.name}"></h4></a>
+            <h4 th:text="${m.startYear} + ' ' + '-' + ' ' + ${m.endYear}"></h4>
+            <h4 th:text="${m.category}"></h4>
+            <h4 th:text="'Offers count' + ' ' + ${m.offersCount}"></h4>
         </div>
     </div>
 </main>
 <footer th:replace="fragments/footer"/>
 </body>
 </html>
+
+<style>
+    .container {
+         display: flex;
+         flex-wrap: wrap;
+         justify-content: center;
+         align-items: center;
+     }
+
+     .brand-model {
+         padding: 15px;
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+         justify-content: center;
+         text-align: center;
+         width: calc(100% / 3);
+         height: 400px;
+         border: 1px solid #ccc;
+         margin: 10px;
+     }
+</style>

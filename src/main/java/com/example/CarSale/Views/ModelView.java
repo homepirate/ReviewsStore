@@ -11,6 +11,8 @@ public class ModelView {
     private int endYear;
     private String imageUrl;
 
+    private int offersCount;
+
     public ModelView() {
     }
 
@@ -62,6 +64,15 @@ public class ModelView {
         this.name = name;
     }
 
+
+    public int getOffersCount() {
+        return offersCount;
+    }
+
+    public void setOffersCount(int offersCount) {
+        this.offersCount = offersCount;
+    }
+
     @Override
     public String toString() {
         return "ModelView{" +
@@ -71,6 +82,7 @@ public class ModelView {
                 ", startYear=" + startYear +
                 ", endYear=" + endYear +
                 ", imageUrl='" + imageUrl + '\'' +
+                ", offersCount=" + offersCount +
                 '}';
     }
 }

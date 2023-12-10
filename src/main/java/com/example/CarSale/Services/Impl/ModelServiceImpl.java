@@ -98,4 +98,18 @@ public class ModelServiceImpl  implements ModelService {
             return null;
         }
     }
+
+    @Override
+    public List<ModelView> getTopModels() {
+        List<Model> models = modelRepositiry.findTopPopularModels();
+        List<ModelView> modelViews = models.stream()
+                .map(model -> {
+                    ModelView modelView = modelMapper.map(model, ModelView.class);
+                    modelView.setBrandName(model.getBrand().getName());
+                    modelView.setOffersCount(model.getOffers().size());
+                    return modelView;
+                })
+                .collect(Collectors.toList());
+        return modelViews;
+    }
 }

@@ -28,8 +28,7 @@
         </div>
 
         <div class="change-pass" sec:authorize="isAuthenticated()" th:if="${#strings.equals(user.username, principal.name)}" style="margin: 10px; padding: 5px;">
-            <form th:action="@{/users/change-pass}" th:method="PUT"
-                  enctype="multipart/form-data">
+            <form th:action="@{/users/change-pass}" th:method="PUT">
                 <input type="hidden" th:name="username" th:value="${user.username}">
                 <input
                         type="password" class="form-control"

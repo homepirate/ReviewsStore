@@ -19,4 +19,6 @@ public interface ModelService extends GeneralSevice{
 
     List<ModelView> getModelsByCategoryToUser(String category);
 
+    List<ModelView> getTopModels();
+
 }
