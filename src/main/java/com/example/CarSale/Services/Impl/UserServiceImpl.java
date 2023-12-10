@@ -138,7 +138,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserView changePassByUser(UserChange userChange) {
         UserDto userDto = this.getByUserName(userChange.getUsername());
-        UserDto userDto_afterChange = this.changePassword(userDto.getId(), userChange.getValue());
+        UserDto userDto_afterChange = this.changePassword(userDto.getId(), passwordEncoder.encode(userChange.getValue()));
         return modelMapper.map(userDto_afterChange, UserView.class);
 
     }

@@ -76,19 +76,19 @@ public class UserController {
 
 
     @PutMapping("/change-pass")
-    public  String changePass(@RequestBody UserChange userChange, Model model){
+    public  String changePass(@ModelAttribute UserChange userChange, Model model){
         UserView user = userService.changePassByUser(userChange);
         System.out.println(user);
         model.addAttribute("user", user);
-        return "user-page";
+        return "redirect:/users/" + user.getUsername();
     }
 
     @PutMapping("/change-img")
-    public String changeImgUrl(@RequestBody UserChange userChange, Model model){
+    public String changeImgUrl(@ModelAttribute UserChange userChange, Model model){
         UserView user = userService.changeImgByUser(userChange);
         System.out.println(user);
         model.addAttribute("user", user);
-        return "user-page";
+        return "redirect:/users/" + user.getUsername();
     }
 
     @DeleteMapping("/delete/{username}")
