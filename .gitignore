@@ -8,6 +8,8 @@ src/main/resources/application.properties
 src/main/resources/static
 
 OffersImg/
+Docker/
+logs/
 
 ### STS ###
 .apt_generated
