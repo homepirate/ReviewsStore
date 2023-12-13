@@ -46,7 +46,7 @@ public class AppSecurityConfiguration {
                                         loginPage("/users/login").
                                         usernameParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY).
                                         passwordParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY).
-                                        defaultSuccessUrl("/").
+                                        defaultSuccessUrl("/offers", true).
                                         failureForwardUrl("/users/login-error")
                 )
                 .logout((logout) ->

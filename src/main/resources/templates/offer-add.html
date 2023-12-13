@@ -14,6 +14,7 @@
                                 <form th:action="@{/offers/create-offer}"
                       th:method="post"
                       th:object="${createOffer}"
+                       onsubmit="return validateForm()"
                       enctype="multipart/form-data"
                       class="m-md-auto w-50 pb-3">
 
@@ -199,6 +200,15 @@
 </html>
 
 <script>
+
+
+    function validateForm() {
+    var imageUrl = document.getElementById("imageUrl").value;
+    if (imageUrl === "") {
+        return false;
+    }
+    return true;
+}
     function fetchModels() {
         var brand = document.getElementById('brandName').value;
         var modelDropdown = document.getElementById('modelName');

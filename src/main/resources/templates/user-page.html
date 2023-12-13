@@ -5,7 +5,7 @@
 <div th:replace="fragments/navbar">Navbar</div>
 <body class="d-flex flex-column h-100">
 <main>
-    <div class="user-card">
+    <div class="user-card" th:if="${user.isActive}">
         <img th:src="${user.imageUrl}" alt="User Image">
         <div>
             <label>Username:</label>
@@ -44,7 +44,7 @@
         </div>
     </div>
 
-    <div class="all-offers">
+    <div th:if="${user.isActive}" class="all-offers">
         <div th:each="o, iterStat : ${offers}" class="offer">
             <img th:src="${o.imageUrl}" height="150px" width="150px">
             <span th:text="${o.brandName} + ' ' + ${ o.modelName }"></span>
@@ -75,6 +75,9 @@
             </div>
         </div>
 
+    </div>
+    <div th:if="${!user.isActive}">
+        <h1 th:text="${user.username} + ' ' + удален"></h1>
     </div>
 </main>
 <footer th:replace="fragments/footer"/>

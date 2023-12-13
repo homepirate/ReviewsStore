@@ -111,6 +111,8 @@ public class CreateOfferFromUser {
     }
 
 
+
+    @NotNull(message = "Set img")
     public MultipartFile getImageUrl() {
         return imageUrl;
     }

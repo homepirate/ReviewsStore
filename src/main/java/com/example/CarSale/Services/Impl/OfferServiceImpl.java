@@ -94,7 +94,7 @@ public class OfferServiceImpl implements OfferService {
 
     }
 
-    @CacheEvict(cacheNames = "offers", allEntries = true)
+    @CacheEvict(cacheNames = {"offers", "UserOffers", "top3models"}, allEntries = true)
     @Override
     public void deleteOffer(UUID offerId) {
         this.offerRepository.deleteById(offerId);
@@ -162,7 +162,7 @@ public class OfferServiceImpl implements OfferService {
         }
     }
 
-    @CacheEvict(cacheNames = "offers", allEntries = true)
+    @CacheEvict(cacheNames = {"offers","UserOffers", "top3models"}, allEntries = true)
     @Override
     public AllOfferWithBrandView createOfferByUser(CreateOfferFromUser offerModel){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

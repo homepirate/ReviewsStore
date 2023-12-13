@@ -162,6 +162,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CacheEvict(value = "usersCache", key = "#username")
     public void deleteUserByUserName(String username) {
         UserDto userDto = this.getByUserName(username);
         this.deleteUser(userDto.getId());

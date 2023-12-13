@@ -4,7 +4,7 @@ public class UserView {
     private String username;
     private String firstName;
     private String lastName;
-    private Boolean isActive;
+    public Boolean isActive;
     private String imageUrl;
 
     public UserView() {
@@ -36,11 +36,11 @@ public class UserView {
         this.lastName = lastName;
     }
 
-    public Boolean getActive() {
+    public Boolean getIsActive() {
         return isActive;
     }
 
-    public void setActive(Boolean active) {
+    public void setIsActive(Boolean active) {
         isActive = active;
     }
 
