@@ -43,7 +43,7 @@ public class Feedback extends Base {
     }
 
     @OneToOne
-    @JoinColumn(name="assignment_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name="assignment_id", referencedColumnName = "id")
     public Assignment getAssignment() {
         return assignment;
     }
