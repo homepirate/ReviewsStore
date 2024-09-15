@@ -1,4 +1,4 @@
-package com.example.ReviewsInTheStore.repository;
+package com.example.ReviewsInTheStore.repositories;
 
 
 import com.example.ReviewsInTheStore.models.Feedback;

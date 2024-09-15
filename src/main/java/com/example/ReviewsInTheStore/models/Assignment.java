@@ -8,12 +8,27 @@ import java.time.LocalDate;
 @Table(name = "assignments")
 public class Assignment extends Base{
 
-    @OneToOne
-    private Feedback feedback;
 
-    @ManyToOne
+    private Feedback feedback;
     private Employee assignedTo;
 
-    private LocalDate assignedDate;
+    @OneToOne
+    @JoinColumn(name="feedback_id", referencedColumnName = "id", nullable = false)
+    public Feedback getFeedback() {
+        return feedback;
+    }
 
+    public void setFeedback(Feedback feedback) {
+        this.feedback = feedback;
+    }
+
+    @ManyToOne
+    @JoinColumn(name="employee_id", referencedColumnName = "id", nullable = false)
+    public Employee getAssignedTo() {
+        return assignedTo;
+    }
+
+    public void setAssignedTo(Employee assignedTo) {
+        this.assignedTo = assignedTo;
+    }
 }
