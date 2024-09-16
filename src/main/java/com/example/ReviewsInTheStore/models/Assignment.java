@@ -1,6 +1,7 @@
 package com.example.ReviewsInTheStore.models;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
 
 import java.time.LocalDate;
 

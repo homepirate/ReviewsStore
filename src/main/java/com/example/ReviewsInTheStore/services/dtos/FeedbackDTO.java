@@ -9,15 +9,15 @@ public class FeedbackDTO {
     private String message;
     private UserDTO submittedBy;
     private Status status;
-    private AssignmentDTO assignment;
+//    private AssignmentDTO assignment;
 
 
-    public FeedbackDTO(UUID id, String message, UserDTO submittedBy, Status status, AssignmentDTO assignment) {
+    public FeedbackDTO(UUID id, String message, UserDTO submittedBy, Status status) {
         this.id = id;
         this.message = message;
         this.submittedBy = submittedBy;
         this.status = status;
-        this.assignment = assignment;
+//        this.assignment = assignment;
     }
 
     public FeedbackDTO() {
@@ -50,11 +50,11 @@ public class FeedbackDTO {
         this.status = status;
     }
 
-    public AssignmentDTO getAssignment() {
-        return assignment;
-    }
-
-    public void setAssignment(AssignmentDTO assignment) {
-        this.assignment = assignment;
-    }
+//    public AssignmentDTO getAssignment() {
+//        return assignment;
+//    }
+//
+//    public void setAssignment(AssignmentDTO assignment) {
+//        this.assignment = assignment;
+//    }
 }

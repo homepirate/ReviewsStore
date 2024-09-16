@@ -2,6 +2,7 @@ package com.example.ReviewsInTheStore.models;
 
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
 
 
 @Entity
@@ -44,6 +45,7 @@ public class Feedback extends Base {
 
     @OneToOne
     @JoinColumn(name="assignment_id", referencedColumnName = "id")
+    @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
     public Assignment getAssignment() {
         return assignment;
     }

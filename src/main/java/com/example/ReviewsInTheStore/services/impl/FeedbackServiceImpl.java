@@ -1,13 +1,19 @@
 package com.example.ReviewsInTheStore.services.impl;
 
+import com.example.ReviewsInTheStore.models.Assignment;
+import com.example.ReviewsInTheStore.models.Employee;
 import com.example.ReviewsInTheStore.models.Feedback;
 import com.example.ReviewsInTheStore.models.User;
+import com.example.ReviewsInTheStore.repositories.AssignmentRepository;
+import com.example.ReviewsInTheStore.repositories.EmployeeRepository;
 import com.example.ReviewsInTheStore.repositories.FeedbackRepository;
 import com.example.ReviewsInTheStore.repositories.UserRepository;
 import com.example.ReviewsInTheStore.services.FeedbackService;
 import com.example.ReviewsInTheStore.services.dtos.FeedbackCreateView;
 import com.example.ReviewsInTheStore.services.dtos.FeedbackDTO;
 import com.example.ReviewsInTheStore.services.dtos.FeedbackView;
+import com.example.ReviewsInTheStore.services.dtos.SetAssignmentView;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,12 +29,17 @@ public class FeedbackServiceImpl implements FeedbackService {
     private ModelMapper modelMapper;
     private FeedbackRepository feedbackRepository;
     private UserRepository userRepository;
+    private EmployeeRepository employeeRepository;
+    private AssignmentRepository assignmentRepository;
 
     @Autowired
-    public FeedbackServiceImpl(FeedbackRepository feedbackRepository, ModelMapper modelMapper, UserRepository userRepository) {
+    public FeedbackServiceImpl(FeedbackRepository feedbackRepository, ModelMapper modelMapper, UserRepository userRepository,
+                               EmployeeRepository employeeRepository, AssignmentRepository assignmentRepository) {
         this.feedbackRepository = feedbackRepository;
         this.modelMapper = modelMapper;
         this.userRepository = userRepository;
+        this.employeeRepository = employeeRepository;
+        this.assignmentRepository = assignmentRepository;
     }
 
     @Override
@@ -40,11 +51,22 @@ public class FeedbackServiceImpl implements FeedbackService {
         }
         feedback.setSubmittedBy(user.get());
         Feedback savedFeedback = feedbackRepository.save(feedback);
-        return modelMapper.map(savedFeedback, FeedbackView.class);
+        FeedbackView feedbackView = modelMapper.map(savedFeedback, FeedbackView.class);
+        feedbackView.setUserId(user.get().getId());
+        return feedbackView;
     }
 
     @Override
+    @Transactional
     public void deleteFeedback(UUID feedbackId) {
+        Optional<Feedback> feedback = feedbackRepository.findById(feedbackId);
+        if (feedback.isEmpty()){
+            return;
+        }
+        Feedback fb = feedback.get();
+        fb.setAssignment(null);
+        feedbackRepository.saveAndFlush(fb);
+        assignmentRepository.deleteAssignmentByFeedbackId(feedbackId);
         feedbackRepository.deleteById(feedbackId);
     }
 
@@ -75,6 +97,26 @@ public class FeedbackServiceImpl implements FeedbackService {
         Feedback feedbackModel = feedback.get();
         FeedbackView feedbackView =  modelMapper.map(feedbackModel, FeedbackView.class);
         feedbackView.setUserId(feedbackModel.getSubmittedBy().getId());
+        return feedbackView;
+    }
+
+    @Override
+    public FeedbackView setAssignment(SetAssignmentView setAssignmentView) {
+        Optional<Employee> employee = employeeRepository.findById(setAssignmentView.getEmployeeId());
+        Optional<Feedback> feedback = feedbackRepository.findById(setAssignmentView.getFeedbackId());
+
+        if (employee.isEmpty() || feedback.isEmpty()){
+            return null;
+        }
+        Assignment assignment = new Assignment();
+        Feedback feedback1 = feedback.get();
+        assignment.setFeedback(feedback1);
+        assignment.setAssignedTo(employee.get());
+        feedback1.setAssignment(assignment);
+        assignmentRepository.save(assignment);
+        feedbackRepository.save(feedback1);
+        FeedbackView feedbackView = modelMapper.map(feedback1, FeedbackView.class);
+        feedbackView.setUserId(feedback1.getSubmittedBy().getId());
         return feedbackView;
     }
 }
