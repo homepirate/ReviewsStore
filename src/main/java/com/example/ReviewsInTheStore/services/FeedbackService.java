@@ -1,6 +1,7 @@
 package com.example.ReviewsInTheStore.services;
 
 
+import com.example.ReviewsInTheStore.services.dtos.FeedbackCreateView;
 import com.example.ReviewsInTheStore.services.dtos.FeedbackDTO;
 import com.example.ReviewsInTheStore.services.dtos.FeedbackView;
 
@@ -9,9 +10,9 @@ import java.util.UUID;
 
 public interface FeedbackService {
 
-    FeedbackDTO createFeedback(FeedbackDTO feedback);
+    FeedbackView createFeedback(FeedbackCreateView feedback);
     void deleteFeedback(UUID feedbackId);
     List<FeedbackDTO> find();
     List<FeedbackView> findAll();
-    FeedbackDTO findById(UUID feedbackId);
+    FeedbackView findById(UUID feedbackId);
 }

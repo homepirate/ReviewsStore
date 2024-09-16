@@ -2,15 +2,17 @@ package com.example.ReviewsInTheStore.services.dtos;
 
 import com.example.ReviewsInTheStore.models.Status;
 
+import java.util.UUID;
+
 public class FeedbackCreateView {
 
     private String message;
-    private UserDTO submittedBy;
+    private UUID userId;
     private String status;
 
-    public FeedbackCreateView(String message, UserDTO submittedBy, String status) {
+    public FeedbackCreateView(String message, UUID userId, String status) {
         this.message = message;
-        this.submittedBy = submittedBy;
+        this.userId = userId;
         this.status = status;
     }
 
@@ -25,12 +27,12 @@ public class FeedbackCreateView {
         this.message = message;
     }
 
-    public UserDTO getSubmittedBy() {
-        return submittedBy;
+    public UUID getUserId() {
+        return userId;
     }
 
-    public void setSubmittedBy(UserDTO submittedBy) {
-        this.submittedBy = submittedBy;
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 
     public String getStatus() {
