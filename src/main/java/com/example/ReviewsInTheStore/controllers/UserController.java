@@ -25,39 +25,42 @@ public class UserController {
         this.userService = userService;
     }
 
-//    @GetMapping
-//    public List<UserView> getAllUsers() {
-//        List<UserView> feedbackList = userService.find();
-//        return feedbackList;
-//    }
-//
-@GetMapping
-public CollectionModel<EntityModel<UserView>> getAllUsers() {
-    List<EntityModel<UserView>> users = userService.find().stream()
-            .map(userView -> EntityModel.of(userView,
-                    WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getUserById(userView.getId())).withSelfRel(),
-                    WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getAllUsers()).withRel("users")))
-            .collect(Collectors.toList());
+    @GetMapping
+    public CollectionModel<EntityModel<UserView>> getAllUsers() {
+        List<EntityModel<UserView>> users = userService.find().stream()
+                .map(userView -> EntityModel.of(userView,
+                        WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getUserById(userView.getId())).withSelfRel(),
+                        WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getAllUsers()).withRel("users"),
+                        WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).updateUserEmail(null)).withRel("updateEmail")))
+                .collect(Collectors.toList());
 
-    return CollectionModel.of(users,
-            WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getAllUsers()).withSelfRel());
-}
+        return CollectionModel.of(users,
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getAllUsers()).withSelfRel());
+    }
 
     @PostMapping
-    public UserView createUser(@RequestBody UserView userView){
-        UserView userView1 = userService.createUser(userView);
-        return userView1;
+    public EntityModel<UserView> createUser(@RequestBody UserView userView) {
+        UserView createdUser = userService.createUser(userView);
+        return EntityModel.of(createdUser,
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getUserById(createdUser.getId())).withSelfRel(),
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getAllUsers()).withRel("users"),
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).updateUserEmail(new UpdateUserView())).withRel("updateEmail"));
     }
 
     @PutMapping
-    public UserView updateUserEmail(@RequestBody UpdateUserView updateUserView){
-        UserView userView = userService.updateUserEmail(updateUserView);
-        return userView;
+    public EntityModel<UserView> updateUserEmail(@RequestBody UpdateUserView updateUserView) {
+        UserView updatedUser = userService.updateUserEmail(updateUserView);
+        return EntityModel.of(updatedUser,
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getUserById(updatedUser.getId())).withSelfRel(),
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getAllUsers()).withRel("users"));
     }
 
     @GetMapping("/{id}")
-    public UserView getUserById(@PathVariable UUID id){
+    public EntityModel<UserView> getUserById(@PathVariable UUID id) {
         UserView userView = userService.getById(id);
-        return userView;
+        return EntityModel.of(userView,
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getUserById(id)).withSelfRel(),
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getAllUsers()).withRel("users"),
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).updateUserEmail(new UpdateUserView(userView.getId(), "base@email.com"))).withRel("updateEmail"));
     }
 }

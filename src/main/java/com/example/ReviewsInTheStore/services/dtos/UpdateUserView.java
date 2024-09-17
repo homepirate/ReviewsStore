@@ -11,6 +11,9 @@ public class UpdateUserView {
         this.email = email;
     }
 
+    public UpdateUserView() {
+    }
+
     public UUID getId() {
         return id;
     }
