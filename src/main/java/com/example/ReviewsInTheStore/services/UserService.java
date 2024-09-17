@@ -11,4 +11,5 @@ public interface UserService {
     void deleteUser(UUID userId);
     List<UserView> find();
     UserView updateUserEmail(UpdateUserView updateUserView);
+    UserView getById(UUID id);
 }

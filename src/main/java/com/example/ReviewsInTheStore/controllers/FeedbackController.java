@@ -2,13 +2,8 @@ package com.example.ReviewsInTheStore.controllers;
 
 import com.example.ReviewsInTheStore.services.FeedbackService;
 import com.example.ReviewsInTheStore.services.dtos.FeedbackCreateView;
-import com.example.ReviewsInTheStore.services.dtos.FeedbackDTO;
 import com.example.ReviewsInTheStore.services.dtos.FeedbackView;
 import com.example.ReviewsInTheStore.services.dtos.SetAssignmentView;
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,10 +14,10 @@ import java.util.UUID;
 @RequestMapping("/api/feedback")
 public class FeedbackController {
 
-    private final FeedbackService feedbackService;
+    private FeedbackService feedbackService;
 
     @Autowired
-    public FeedbackController(FeedbackService feedbackService) {
+    public void setFeedbackService(FeedbackService feedbackService) {
         this.feedbackService = feedbackService;
     }
 
@@ -54,6 +49,10 @@ public class FeedbackController {
         return feedbackService.setAssignment(setAssignmentView);
     }
 
-
+    @PutMapping("/{id}")
+    public FeedbackView changeStatus(@PathVariable UUID id,  @PathVariable String status){
+        FeedbackView feedbackView = feedbackService.changeStatus(id, status);
+        return feedbackView;
+    }
 
 }

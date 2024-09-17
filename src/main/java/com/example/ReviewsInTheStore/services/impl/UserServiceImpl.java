@@ -56,4 +56,14 @@ public class UserServiceImpl implements UserService {
         user.setEmail(updateUserView.getEmail());
         return modelMapper.map(userRepository.save(user), UserView.class);
     }
+
+    @Override
+    public UserView getById(UUID id) {
+        Optional<User> userOp = userRepository.findById(id);
+        if (userOp.isEmpty()){
+            return null;
+        }
+        User user = userOp.get();
+        return modelMapper.map(user, UserView.class);
+    }
 }

@@ -17,4 +17,5 @@ public interface FeedbackService {
     List<FeedbackView> findAll();
     FeedbackView findById(UUID feedbackId);
     FeedbackView setAssignment(SetAssignmentView setAssignmentView);
+    FeedbackView changeStatus(UUID id, String status);
 }

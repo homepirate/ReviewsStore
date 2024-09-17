@@ -1,9 +1,6 @@
 package com.example.ReviewsInTheStore.services.impl;
 
-import com.example.ReviewsInTheStore.models.Assignment;
-import com.example.ReviewsInTheStore.models.Employee;
-import com.example.ReviewsInTheStore.models.Feedback;
-import com.example.ReviewsInTheStore.models.User;
+import com.example.ReviewsInTheStore.models.*;
 import com.example.ReviewsInTheStore.repositories.AssignmentRepository;
 import com.example.ReviewsInTheStore.repositories.EmployeeRepository;
 import com.example.ReviewsInTheStore.repositories.FeedbackRepository;
@@ -118,5 +115,21 @@ public class FeedbackServiceImpl implements FeedbackService {
         FeedbackView feedbackView = modelMapper.map(feedback1, FeedbackView.class);
         feedbackView.setUserId(feedback1.getSubmittedBy().getId());
         return feedbackView;
+    }
+
+    @Override
+    public FeedbackView changeStatus(UUID id, String status) {
+        Optional<Feedback> feedbackOpt = feedbackRepository.findById(id);
+        Status newStatus;
+        try {
+            newStatus = Status.valueOf(status.toUpperCase());
+        }
+        catch (IllegalArgumentException e){
+            return null;
+        }
+        Feedback feedback = feedbackOpt.get();
+        feedback.setStatus(newStatus);
+        Feedback feedback1 = feedbackRepository.saveAndFlush(feedback);
+        return modelMapper.map(feedback1, FeedbackView.class);
     }
 }
