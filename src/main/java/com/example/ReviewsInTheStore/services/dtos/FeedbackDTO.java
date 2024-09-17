@@ -7,12 +7,12 @@ import java.util.UUID;
 public class FeedbackDTO {
     private UUID id;
     private String message;
-    private UserDTO submittedBy;
+    private UserView submittedBy;
     private Status status;
 //    private AssignmentDTO assignment;
 
 
-    public FeedbackDTO(UUID id, String message, UserDTO submittedBy, Status status) {
+    public FeedbackDTO(UUID id, String message, UserView submittedBy, Status status) {
         this.id = id;
         this.message = message;
         this.submittedBy = submittedBy;
@@ -34,11 +34,11 @@ public class FeedbackDTO {
         this.message = message;
     }
 
-    public UserDTO getSubmittedBy() {
+    public UserView getSubmittedBy() {
         return submittedBy;
     }
 
-    public void setSubmittedBy(UserDTO submittedBy) {
+    public void setSubmittedBy(UserView submittedBy) {
         this.submittedBy = submittedBy;
     }
 
