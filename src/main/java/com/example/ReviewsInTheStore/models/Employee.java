@@ -10,7 +10,7 @@ import java.util.List;
 public class Employee extends Base{
 
     private String name;
-    private String role;
+    private Role role;
     private List<Assignment> assignments;
 
     @Column(name="name", nullable = false)
@@ -23,11 +23,11 @@ public class Employee extends Base{
     }
 
     @Column(name="role", nullable = false)
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 

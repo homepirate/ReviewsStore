@@ -1,12 +1,16 @@
 package com.example.ReviewsInTheStore.services.impl;
 
+import com.example.ReviewsInTheStore.models.Assignment;
 import com.example.ReviewsInTheStore.models.Employee;
 import com.example.ReviewsInTheStore.repositories.EmployeeRepository;
 import com.example.ReviewsInTheStore.services.EmployeeService;
+import com.example.ReviewsInTheStore.services.dtos.AssignmentView;
+import com.example.ReviewsInTheStore.services.dtos.EmployeeView;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -31,14 +35,33 @@ public class EmployeeServiceImpl implements EmployeeService {
 //    }
 
     @Override
+    public EmployeeView createEmployee(EmployeeView employeeView) {
+        Employee employee = modelMapper.map(employeeView, Employee.class);
+        Employee savedEmployee = employeeRepository.saveAndFlush(employee);
+        return modelMapper.map(savedEmployee, EmployeeView.class);
+    }
+
+    @Override
     public void deleteEmployee(UUID employeeId) {
         employeeRepository.deleteById(employeeId);
     }
 
-//    @Override
-//    public List<EmployeeDTO> find() {
-//        return employeeRepository.findAll().stream()
-//                .map(employee -> modelMapper.map(employee, EmployeeDTO.class))
-//                .collect(Collectors.toList());
-//    }
+    @Override
+    public List<EmployeeView> findAll() {
+
+        List<Employee> employees = employeeRepository.findAll();
+        List<EmployeeView> employeeViews = new ArrayList<>();
+        for (Employee employee : employees){
+            EmployeeView employeeView = modelMapper.map(employee, EmployeeView.class);
+            List<AssignmentView> assignmentViews = new ArrayList<>();
+            List<Assignment> assignments = employee.getAssignments();
+            for (Assignment assignment: assignments){
+                assignmentViews.add(new AssignmentView(assignment.getId(),
+                        assignment.getFeedback().getId(), assignment.getAssignedTo().getId()));
+            }
+            employeeView.setAssignmentViewList(assignmentViews);
+            employeeViews.add(employeeView);
+        }
+        return employeeViews;
+    }
 }

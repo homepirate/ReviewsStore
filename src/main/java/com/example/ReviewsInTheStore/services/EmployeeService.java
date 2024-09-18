@@ -1,11 +1,14 @@
 package com.example.ReviewsInTheStore.services;
 
+import com.example.ReviewsInTheStore.models.Employee;
+import com.example.ReviewsInTheStore.services.dtos.EmployeeView;
+
 import java.util.List;
 import java.util.UUID;
 
 public interface EmployeeService {
 
-//    EmployeeDTO createEmployee(EmployeeDTO employeeDto);
+    EmployeeView createEmployee(EmployeeView employeeView);
     void deleteEmployee(UUID employeeId);
-//    List<EmployeeDTO> find();
+    List<EmployeeView> findAll();
 }

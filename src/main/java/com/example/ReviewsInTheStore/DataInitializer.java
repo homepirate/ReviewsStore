@@ -5,6 +5,7 @@ import com.example.ReviewsInTheStore.repositories.AssignmentRepository;
 import com.example.ReviewsInTheStore.repositories.EmployeeRepository;
 import com.example.ReviewsInTheStore.repositories.FeedbackRepository;
 import com.example.ReviewsInTheStore.repositories.UserRepository;
+import com.example.ReviewsInTheStore.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,7 @@ public class DataInitializer implements CommandLineRunner {
     private UserRepository userRepository;
 
     @Autowired
-    public DataInitializer(FeedbackRepository feedbackRepository, EmployeeRepository employeeRepository, AssignmentRepository assignmentRepository, UserRepository userRepository) {
+    public DataInitializer(FeedbackRepository feedbackRepository, EmployeeRepository employeeRepository, AssignmentRepository assignmentRepository, UserRepository userRepository, EmployeeService employeeService) {
         this.feedbackRepository = feedbackRepository;
         this.employeeRepository = employeeRepository;
         this.assignmentRepository = assignmentRepository;
@@ -45,12 +46,12 @@ public class DataInitializer implements CommandLineRunner {
         // Creating Employees
         Employee employee1 = new Employee();
         employee1.setName("Charlie");
-        employee1.setRole("Reviewer");
+        employee1.setRole(Role.REVIEWER);
         employeeRepository.save(employee1);
 
         Employee employee2 = new Employee();
         employee2.setName("Diana");
-        employee2.setRole("Manager");
+        employee2.setRole(Role.MANAGER);
         employeeRepository.save(employee2);
 
         // Creating Feedback

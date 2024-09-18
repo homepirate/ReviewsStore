@@ -80,6 +80,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         for (FeedbackDTO feedbackDTO : find()) {
             FeedbackView feedbackView = modelMapper.map(feedbackDTO, FeedbackView.class);
             feedbackView.setUserId(feedbackDTO.getSubmittedBy().getId());
+            feedbackView.setAssignmentId(feedbackDTO.getAssignment().getId());
             feedbackViews.add(feedbackView);
         }
         return feedbackViews;

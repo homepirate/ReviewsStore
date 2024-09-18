@@ -1,6 +1,5 @@
 package com.example.ReviewsInTheStore.controllers;
 
-import com.example.ReviewsInTheStore.models.User;
 import com.example.ReviewsInTheStore.services.UserService;
 import com.example.ReviewsInTheStore.services.dtos.UpdateUserView;
 import com.example.ReviewsInTheStore.services.dtos.UserView;
@@ -50,17 +49,23 @@ public class UserController {
     @PutMapping
     public EntityModel<UserView> updateUserEmail(@RequestBody UpdateUserView updateUserView) {
         UserView updatedUser = userService.updateUserEmail(updateUserView);
+        if (updatedUser != null){
         return EntityModel.of(updatedUser,
                 WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getUserById(updatedUser.getId())).withSelfRel(),
                 WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getAllUsers()).withRel("users"));
+    }
+    return null;
     }
 
     @GetMapping("/{id}")
     public EntityModel<UserView> getUserById(@PathVariable UUID id) {
         UserView userView = userService.getById(id);
+        if (userView != null){
         return EntityModel.of(userView,
                 WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getUserById(id)).withSelfRel(),
                 WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getAllUsers()).withRel("users"),
                 WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).updateUserEmail(new UpdateUserView(userView.getId(), "base@email.com"))).withRel("updateEmail"));
+    }
+    return null;
     }
 }
