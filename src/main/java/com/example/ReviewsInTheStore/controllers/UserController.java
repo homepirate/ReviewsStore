@@ -3,14 +3,16 @@ package com.example.ReviewsInTheStore.controllers;
 import com.example.ReviewsInTheStore.services.UserService;
 import com.example.ReviewsInTheStore.services.dtos.UpdateUserView;
 import com.example.ReviewsInTheStore.services.dtos.UserView;
+import com.example.ReviewsInTheStore.services.dtos.UserViewResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -25,47 +27,69 @@ public class UserController {
     }
 
     @GetMapping
-    public CollectionModel<EntityModel<UserView>> getAllUsers() {
+    public ResponseEntity<CollectionModel<EntityModel<UserView>>> getAllUsers() {
         List<EntityModel<UserView>> users = userService.find().stream()
-                .map(userView -> EntityModel.of(userView,
-                        WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getUserById(userView.getId())).withSelfRel(),
-                        WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getAllUsers()).withRel("users"),
-                        WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).updateUserEmail(null)).withRel("updateEmail")))
+                .map(userView -> createUserResource(userView))
                 .collect(Collectors.toList());
 
-        return CollectionModel.of(users,
-                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getAllUsers()).withSelfRel());
+        return ResponseEntity.ok(
+                CollectionModel.of(users,
+                        WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getAllUsers()).withSelfRel()));
     }
 
     @PostMapping
-    public EntityModel<UserView> createUser(@RequestBody UserView userView) {
+    public ResponseEntity<EntityModel<UserView>> createUser(@RequestBody UserView userView) {
         UserView createdUser = userService.createUser(userView);
-        return EntityModel.of(createdUser,
-                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getUserById(createdUser.getId())).withSelfRel(),
-                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getAllUsers()).withRel("users"),
-                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).updateUserEmail(new UpdateUserView())).withRel("updateEmail"));
+        EntityModel<UserView> resource = createUserResource(createdUser);
+
+        return ResponseEntity.created(resource.getRequiredLink("self").toUri()).body(resource);
     }
 
     @PutMapping
-    public EntityModel<UserView> updateUserEmail(@RequestBody UpdateUserView updateUserView) {
+    public ResponseEntity<EntityModel<UserView>> updateUserEmail(@RequestBody UpdateUserView updateUserView) {
         UserView updatedUser = userService.updateUserEmail(updateUserView);
-        if (updatedUser != null){
-        return EntityModel.of(updatedUser,
-                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getUserById(updatedUser.getId())).withSelfRel(),
-                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getAllUsers()).withRel("users"));
-    }
-    return null;
+        if (updatedUser != null) {
+            EntityModel<UserView> resource = createUserResource(updatedUser);
+            return ResponseEntity.ok(resource);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/{id}")
-    public EntityModel<UserView> getUserById(@PathVariable UUID id) {
+    public ResponseEntity<EntityModel<UserView>> getUserById(@PathVariable UUID id) {
         UserView userView = userService.getById(id);
-        if (userView != null){
-        return EntityModel.of(userView,
-                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getUserById(id)).withSelfRel(),
-                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getAllUsers()).withRel("users"),
-                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).updateUserEmail(new UpdateUserView(userView.getId(), "base@email.com"))).withRel("updateEmail"));
+        if (userView != null) {
+            EntityModel<UserView> resource = createUserResource(userView);
+            return ResponseEntity.ok(resource);
+        }
+        return ResponseEntity.notFound().build();
     }
-    return null;
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
+        boolean isDeleted = userService.deleteUser(id);
+        if (isDeleted) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
+
+    private UserViewResource createUserResource(UserView userView) {
+        Map<String, Object> actions = Map.of(
+                "update", Map.of(
+                        "href", WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).updateUserEmail(new UpdateUserView(userView.getId(), ""))).toUri().toString(),
+                        "method", "PUT",
+                        "accept", "application/json"
+                ),
+                "delete", Map.of(
+                        "href", WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).deleteUser(userView.getId())).toUri().toString(),
+                        "method", "DELETE"
+                )
+        );
+
+        return (UserViewResource) new UserViewResource(userView, actions)
+                .add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getUserById(userView.getId())).withSelfRel(),
+                        WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getAllUsers()).withRel("users"));
+    }
+
 }

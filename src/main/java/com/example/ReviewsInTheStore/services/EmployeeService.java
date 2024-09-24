@@ -11,4 +11,5 @@ public interface EmployeeService {
     EmployeeView createEmployee(EmployeeView employeeView);
     void deleteEmployee(UUID employeeId);
     List<EmployeeView> findAll();
+    EmployeeView findById(UUID id);
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -63,5 +64,23 @@ public class EmployeeServiceImpl implements EmployeeService {
             employeeViews.add(employeeView);
         }
         return employeeViews;
+    }
+
+    @Override
+    public EmployeeView findById(UUID id){
+        Optional<Employee> employeeOpt = employeeRepository.findById(id);
+        if (employeeOpt.isEmpty()){
+            return null;
+        }
+        Employee employee = employeeOpt.get();
+        EmployeeView employeeView = modelMapper.map(employee, EmployeeView.class);
+        List<AssignmentView> assignmentViews = new ArrayList<>();
+        List<Assignment> assignments = employee.getAssignments();
+        for (Assignment assignment: assignments){
+            assignmentViews.add(new AssignmentView(assignment.getId(),
+                    assignment.getFeedback().getId(), assignment.getAssignedTo().getId()));
+        }
+        employeeView.setAssignmentViewList(assignmentViews);
+        return employeeView;
     }
 }
