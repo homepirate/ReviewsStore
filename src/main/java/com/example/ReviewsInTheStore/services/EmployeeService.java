@@ -9,7 +9,8 @@ import java.util.UUID;
 public interface EmployeeService {
 
     EmployeeView createEmployee(EmployeeView employeeView);
-    void deleteEmployee(UUID employeeId);
+    String deleteEmployee(UUID employeeId);
     List<EmployeeView> findAll();
     EmployeeView findById(UUID id);
+    EmployeeView changeRole(UUID id, String newRole);
 }
