@@ -1,0 +1,51 @@
+type Feedback {
+    id: ID!
+    message: String!
+    userId: ID
+    status: Status!
+    assignmentId: ID
+    }
+
+type User {
+    id: ID!
+    name: String!
+    email: String!
+    feedbacks: [Feedback!]!
+}
+
+type Employee {
+    id: ID!
+    name: String!
+    role: Role!
+    assignments: [Assignment!]!
+}
+
+type Assignment {
+    id: ID!
+    feedback: Feedback
+    assignedTo: Employee!
+}
+
+enum Status {
+    PENDING
+    ASSIGNED
+    RESOLVED
+    CLOSED
+}
+
+enum Role {
+    MANAGER
+    REVIEWER
+    CASHIER
+}
+
+type Query {
+    allFeedbacks: [Feedback!]!
+    feedbackById(id: ID!): Feedback
+    allUsers: [User!]!
+    userById(id: ID!): User
+    allEmployees: [Employee!]!
+    employeeById(id: ID!): Employee
+    allAssignments: [Assignment!]!
+    assignmentById(id: ID!): Assignment
+}
