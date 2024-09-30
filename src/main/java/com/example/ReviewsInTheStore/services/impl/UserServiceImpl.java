@@ -1,14 +1,18 @@
 package com.example.ReviewsInTheStore.services.impl;
 
+import com.example.ReviewsInTheStore.models.Feedback;
 import com.example.ReviewsInTheStore.models.User;
 import com.example.ReviewsInTheStore.repositories.UserRepository;
+import com.example.ReviewsInTheStore.services.FeedbackService;
 import com.example.ReviewsInTheStore.services.UserService;
+import com.example.ReviewsInTheStore.services.dtos.FeedbackView;
 import com.example.ReviewsInTheStore.services.dtos.UpdateUserView;
 import com.example.ReviewsInTheStore.services.dtos.UserView;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -19,12 +23,14 @@ public class UserServiceImpl implements UserService {
 
     private ModelMapper modelMapper;
     private UserRepository userRepository;
+    private FeedbackService feedbackService;
 
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, FeedbackService feedbackService) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
+        this.feedbackService = feedbackService;
     }
 
     @Override
@@ -46,9 +52,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserView> find() {
-        return userRepository.findAll().stream()
-                .map(user -> modelMapper.map(user, UserView.class))
-                .collect(Collectors.toList());
+        List<UserView> userViews = new ArrayList<>();
+        List<User> users =  userRepository.findAll();
+
+        for (User user:  users){
+            List<FeedbackView> feedbackViews = new ArrayList<>();
+            UserView userView = modelMapper.map(user, UserView.class);
+            for (Feedback feedback: user.getFeedbacks()){
+                feedbackViews.add(feedbackService.findById(feedback.getId()));
+            }
+            userView.setFeedbacks(feedbackViews);
+            userViews.add(userView);
+        }
+        return userViews;
     }
 
     @Override

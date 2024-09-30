@@ -22,7 +22,6 @@ public class FeedbackDataFetcher {
     @DgsQuery
     public List<FeedbackView> allFeedbacks() {
         List<FeedbackView> feedbackViews = feedbackService.findAll();
-        System.out.println(feedbackViews);
         return feedbackViews;
 
     }

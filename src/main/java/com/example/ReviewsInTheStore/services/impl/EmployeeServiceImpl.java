@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -54,7 +53,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         List<EmployeeView> employeeViews = new ArrayList<>();
         for (Employee employee : employees){
             EmployeeView employeeView = modelMapper.map(employee, EmployeeView.class);
-            employeeView.setAssignmentViewList(getEmployeeAssignments(employee));
+            employeeView.setAssignments(getEmployeeAssignments(employee));
             employeeViews.add(employeeView);
         }
         return employeeViews;
@@ -68,7 +67,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         Employee employee = employeeOpt.get();
         EmployeeView employeeView = modelMapper.map(employee, EmployeeView.class);
-        employeeView.setAssignmentViewList(getEmployeeAssignments(employee));
+        employeeView.setAssignments(getEmployeeAssignments(employee));
         return employeeView;
     }
 
@@ -87,7 +86,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
         EmployeeView employeeView = modelMapper.map(employeeRepository.saveAndFlush(employee), EmployeeView.class);
-        employeeView.setAssignmentViewList(getEmployeeAssignments(employee));
+        employeeView.setAssignments(getEmployeeAssignments(employee));
         return employeeView;
     }
 

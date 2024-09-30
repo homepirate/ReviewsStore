@@ -10,7 +10,7 @@ public class EmployeeView {
     private UUID id;
     private String name;
     private Role role;
-    private List<AssignmentView> assignmentViewList;
+    private List<AssignmentView> assignments;
 
     public EmployeeView(String name, Role role) {
         this.name = name;
@@ -21,7 +21,7 @@ public class EmployeeView {
         this.id = id;
         this.name = name;
         this.role = role;
-        this.assignmentViewList = assignmentViewList;
+        this.assignments = assignmentViewList;
     }
 
     public EmployeeView() {
@@ -51,11 +51,11 @@ public class EmployeeView {
         this.role = role;
     }
 
-    public List<AssignmentView> getAssignmentViewList() {
-        return assignmentViewList;
+    public List<AssignmentView> getAssignments() {
+        return assignments;
     }
 
-    public void setAssignmentViewList(List<AssignmentView> assignmentViewList) {
-        this.assignmentViewList = assignmentViewList;
+    public void setAssignments(List<AssignmentView> assignments) {
+        this.assignments = assignments;
     }
 }

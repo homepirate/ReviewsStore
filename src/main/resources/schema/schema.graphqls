@@ -22,8 +22,8 @@ type Employee {
 
 type Assignment {
     id: ID!
-    feedback: Feedback
-    assignedTo: Employee!
+    feedbackId: ID
+    employerId: ID
 }
 
 enum Status {
