@@ -39,6 +39,17 @@ enum Role {
     CASHIER
 }
 
+input SetAssignmentInput {
+    employeeId: ID!
+    feedbackId: ID!
+}
+
+input FeedbackCreateInput {
+    message: String!
+    userId: ID!
+    status: String!
+}
+
 type Query {
     allFeedbacks: [Feedback!]!
     feedbackById(id: ID!): Feedback
@@ -48,4 +59,10 @@ type Query {
     employeeById(id: ID!): Employee
     allAssignments: [Assignment!]!
     assignmentById(id: ID!): Assignment
+}
+
+type Mutation {
+    changeStatus(id: ID!, status: String!): Feedback!
+    setAssignment(setAssignmentView: SetAssignmentInput!): Feedback!
+    createFeedback(feedbackCreateView: FeedbackCreateInput!): Feedback!
 }

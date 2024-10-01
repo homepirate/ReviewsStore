@@ -131,6 +131,9 @@ public class FeedbackServiceImpl implements FeedbackService {
         Feedback feedback = feedbackOpt.get();
         feedback.setStatus(newStatus);
         Feedback feedback1 = feedbackRepository.saveAndFlush(feedback);
-        return modelMapper.map(feedback1, FeedbackView.class);
+        FeedbackView feedbackView = modelMapper.map(feedback1, FeedbackView.class);
+        feedbackView.setUserId(feedback1.getSubmittedBy().getId());
+        feedbackView.setAssignmentId(feedback.getAssignment().getId());
+        return feedbackView;
     }
 }
