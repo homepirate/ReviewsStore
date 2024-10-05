@@ -10,14 +10,14 @@ type User {
     id: ID!
     name: String!
     email: String!
-    feedbacks: [Feedback!]!
+    feedbacks: [Feedback!]
 }
 
 type Employee {
     id: ID!
     name: String!
     role: Role!
-    assignments: [Assignment!]!
+    assignments: [Assignment!]
 }
 
 type Assignment {
@@ -50,6 +50,22 @@ input FeedbackCreateInput {
     status: String!
 }
 
+
+input UserView {
+    name: String!
+    email: String!
+}
+
+input UpdateUserView {
+    id: ID!
+    email: String!
+}
+
+input EmployeeView {
+    name: String!
+    role: String!
+}
+
 type Query {
     allFeedbacks: [Feedback!]!
     feedbackById(id: ID!): Feedback
@@ -65,4 +81,8 @@ type Mutation {
     changeStatus(id: ID!, status: String!): Feedback!
     setAssignment(setAssignmentView: SetAssignmentInput!): Feedback!
     createFeedback(feedbackCreateView: FeedbackCreateInput!): Feedback!
+    createUser(userView: UserView!): User!
+    updateUserEmail(updateUserView: UpdateUserView): User!
+    createEmployee(employeeView: EmployeeView!): Employee!
+    changeRole(id: ID!, role: String!): Employee!
 }

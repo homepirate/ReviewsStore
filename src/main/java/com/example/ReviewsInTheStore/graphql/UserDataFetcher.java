@@ -3,8 +3,10 @@ package com.example.ReviewsInTheStore.graphql;
 import com.example.ReviewsInTheStore.services.FeedbackService;
 import com.example.ReviewsInTheStore.services.UserService;
 import com.example.ReviewsInTheStore.services.dtos.FeedbackView;
+import com.example.ReviewsInTheStore.services.dtos.UpdateUserView;
 import com.example.ReviewsInTheStore.services.dtos.UserView;
 import com.netflix.graphql.dgs.DgsComponent;
+import com.netflix.graphql.dgs.DgsMutation;
 import com.netflix.graphql.dgs.DgsQuery;
 import com.netflix.graphql.dgs.InputArgument;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,6 @@ import java.util.List;
 import java.util.UUID;
 
 @DgsComponent
-
 public class UserDataFetcher {
 
 
@@ -35,6 +36,18 @@ public class UserDataFetcher {
     public UserView userById(@InputArgument String id) {
         UUID userId = UUID.fromString(id);
         return userService.getById(userId);
+    }
+
+    @DgsMutation
+    public UserView createUser(@InputArgument UserView userView) {
+        UserView createdUser = userService.createUser(userView);
+        return createdUser;
+    }
+
+    @DgsMutation
+    public UserView updateUserEmail(@InputArgument UpdateUserView updateUserView) {
+        UserView updatedUser = userService.updateUserEmail(updateUserView);
+        return updatedUser;
     }
 }
 
