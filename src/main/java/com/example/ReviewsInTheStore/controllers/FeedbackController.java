@@ -1,9 +1,11 @@
 package com.example.ReviewsInTheStore.controllers;
 
+import com.example.ReviewsInTheStore.config.RabbitMQConfiguration;
 import com.example.ReviewsInTheStore.services.FeedbackService;
 import com.example.ReviewsInTheStore.services.dtos.FeedbackCreateView;
 import com.example.ReviewsInTheStore.services.dtos.FeedbackView;
 import com.example.ReviewsInTheStore.services.dtos.SetAssignmentView;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -19,10 +21,12 @@ import java.util.stream.Collectors;
 public class FeedbackController {
 
     private FeedbackService feedbackService;
+    private RabbitTemplate rabbitTemplate;
 
     @Autowired
-    public void setFeedbackService(FeedbackService feedbackService) {
+    public void setFeedbackService(FeedbackService feedbackService, RabbitTemplate rabbitTemplate) {
         this.feedbackService = feedbackService;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
 //    @PostMapping
@@ -34,6 +38,10 @@ public class FeedbackController {
     @PostMapping
     public EntityModel<FeedbackView> createFeedback(@RequestBody FeedbackCreateView feedbackCreateView) {
         FeedbackView createdFeedback = feedbackService.createFeedback(feedbackCreateView);
+
+        rabbitTemplate.convertAndSend(RabbitMQConfiguration.exchangeName, "my.key",
+                createdFeedback);
+
         return EntityModel.of(createdFeedback,
                 WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).getFeedbackById(createdFeedback.getId())).withSelfRel(),
                 WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).getAllFeedback()).withRel("feedbacks"),
