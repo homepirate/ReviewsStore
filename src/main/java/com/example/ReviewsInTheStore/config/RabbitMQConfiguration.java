@@ -7,21 +7,36 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.amqp.core.*;
 
-
 @Configuration
 public class RabbitMQConfiguration {
-    static final String queueName = "firstQueue";
+
+    static final String feedbackQueue = "feedbackQueue";
+    static final String assignmentQueue = "assignmentQueue";
     public static final String exchangeName = "testExchange";
 
     @Bean
-    public Queue myQueue(){return new Queue(queueName, false);}
+    public Queue feedbackQueue() {
+        return new Queue(feedbackQueue, false);
+    }
 
     @Bean
-    Exchange exchange() {return new TopicExchange(exchangeName, false, false);}
+    public Queue assignmentQueue() {
+        return new Queue(assignmentQueue, false);
+    }
 
     @Bean
-    Binding binding(Queue queue, Exchange exchange){
-        return BindingBuilder.bind(queue).to(exchange).with("my.key").noargs();
+    Exchange exchange() {
+        return new TopicExchange(exchangeName, false, false);
+    }
+
+    @Bean
+    Binding feedbackBinding(Queue feedbackQueue, Exchange exchange) {
+        return BindingBuilder.bind(feedbackQueue).to(exchange).with("feedback.#").noargs();
+    }
+
+    @Bean
+    Binding assignmentBinding(Queue assignmentQueue, Exchange exchange) {
+        return BindingBuilder.bind(assignmentQueue).to(exchange).with("assignment.#").noargs();
     }
 
     @Bean
@@ -31,3 +46,4 @@ public class RabbitMQConfiguration {
         return rabbitTemplate;
     }
 }
+

@@ -43,7 +43,6 @@ dependencyManagement {
 
 generateJava {
 	schemaPaths = ["${projectDir}/src/main/resources/schema"]
-//	packageName = 'com.example.demo.codegen'
 	generateClient = true
 }
 

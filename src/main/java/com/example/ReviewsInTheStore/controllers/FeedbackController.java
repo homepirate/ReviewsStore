@@ -39,7 +39,7 @@ public class FeedbackController {
     public EntityModel<FeedbackView> createFeedback(@RequestBody FeedbackCreateView feedbackCreateView) {
         FeedbackView createdFeedback = feedbackService.createFeedback(feedbackCreateView);
 
-        rabbitTemplate.convertAndSend(RabbitMQConfiguration.exchangeName, "my.key",
+        rabbitTemplate.convertAndSend(RabbitMQConfiguration.exchangeName, "feedback.created",
                 createdFeedback);
 
         return EntityModel.of(createdFeedback,
@@ -113,6 +113,10 @@ public class FeedbackController {
     @PutMapping("/{id}")
     public EntityModel<FeedbackView> changeStatus(@PathVariable UUID id, @RequestParam String status) {
         FeedbackView updatedFeedback = feedbackService.changeStatus(id, status);
+
+        rabbitTemplate.convertAndSend(RabbitMQConfiguration.exchangeName, "feedback.statusChanged",
+                updatedFeedback);
+
         return EntityModel.of(updatedFeedback,
                 WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).getFeedbackById(id)).withSelfRel(),
                 WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).getAllFeedback()).withRel("feedbacks"),

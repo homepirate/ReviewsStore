@@ -8,12 +8,16 @@ public class FeedbackCreateView {
 
     private String message;
     private UUID userId;
-    private String status;
 
-    public FeedbackCreateView(String message, UUID userId, String status) {
-        this.message = message;
+//    public FeedbackCreateView(String message, UUID userId, String status) {
+//        this.message = message;
+//        this.userId = userId;
+//        this.status = status;
+//    }
+
+    public FeedbackCreateView(UUID userId, String message) {
         this.userId = userId;
-        this.status = status;
+        this.message = message;
     }
 
     public FeedbackCreateView() {
@@ -35,11 +39,4 @@ public class FeedbackCreateView {
         this.userId = userId;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 }

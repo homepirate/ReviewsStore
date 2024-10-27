@@ -51,9 +51,8 @@ public class FeedbackDataFetcher {
 
     @DgsMutation
     public FeedbackView createFeedback(@InputArgument FeedbackCreateView feedbackCreateView) {
-        FeedbackCreateView createView = new FeedbackCreateView(feedbackCreateView.getMessage(),
-                feedbackCreateView.getUserId(),
-                feedbackCreateView.getStatus());
+        FeedbackCreateView createView = new FeedbackCreateView(feedbackCreateView.getUserId(),
+                feedbackCreateView.getMessage());
         return feedbackService.createFeedback(createView);
     }
 

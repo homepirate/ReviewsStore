@@ -1,17 +1,16 @@
 package com.example.ReviewsInTheStore.services.impl;
 
+import com.example.ReviewsInTheStore.config.RabbitMQConfiguration;
 import com.example.ReviewsInTheStore.models.*;
 import com.example.ReviewsInTheStore.repositories.AssignmentRepository;
 import com.example.ReviewsInTheStore.repositories.EmployeeRepository;
 import com.example.ReviewsInTheStore.repositories.FeedbackRepository;
 import com.example.ReviewsInTheStore.repositories.UserRepository;
 import com.example.ReviewsInTheStore.services.FeedbackService;
-import com.example.ReviewsInTheStore.services.dtos.FeedbackCreateView;
-import com.example.ReviewsInTheStore.services.dtos.FeedbackDTO;
-import com.example.ReviewsInTheStore.services.dtos.FeedbackView;
-import com.example.ReviewsInTheStore.services.dtos.SetAssignmentView;
+import com.example.ReviewsInTheStore.services.dtos.*;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,14 +28,19 @@ public class FeedbackServiceImpl implements FeedbackService {
     private EmployeeRepository employeeRepository;
     private AssignmentRepository assignmentRepository;
 
+    private RabbitTemplate rabbitTemplate;
+
+
     @Autowired
     public FeedbackServiceImpl(FeedbackRepository feedbackRepository, ModelMapper modelMapper, UserRepository userRepository,
-                               EmployeeRepository employeeRepository, AssignmentRepository assignmentRepository) {
+                               EmployeeRepository employeeRepository, AssignmentRepository assignmentRepository,
+                                RabbitTemplate rabbitTemplate) {
         this.feedbackRepository = feedbackRepository;
         this.modelMapper = modelMapper;
         this.userRepository = userRepository;
         this.employeeRepository = employeeRepository;
         this.assignmentRepository = assignmentRepository;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     @Override
@@ -47,6 +51,7 @@ public class FeedbackServiceImpl implements FeedbackService {
             return null;
         }
         feedback.setSubmittedBy(user.get());
+        feedback.setStatus(Status.PENDING);
         Feedback savedFeedback = feedbackRepository.save(feedback);
         FeedbackView feedbackView = modelMapper.map(savedFeedback, FeedbackView.class);
         feedbackView.setUserId(user.get().getId());
@@ -113,6 +118,12 @@ public class FeedbackServiceImpl implements FeedbackService {
         feedback1.setAssignment(assignment);
         assignmentRepository.save(assignment);
         feedbackRepository.save(feedback1);
+
+        AssignmentView assignmentView = modelMapper.map(assignment, AssignmentView.class);
+        assignmentView.setEmployerId(employee.get().getId());
+        assignmentView.setFeedbackId(feedback1.getId());
+        rabbitTemplate.convertAndSend(RabbitMQConfiguration.exchangeName, "assignment.created", assignmentView);
+
         FeedbackView feedbackView = modelMapper.map(feedback1, FeedbackView.class);
         feedbackView.setUserId(feedback1.getSubmittedBy().getId());
         return feedbackView;

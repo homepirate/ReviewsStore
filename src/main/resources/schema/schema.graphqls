@@ -47,7 +47,6 @@ input SetAssignmentInput {
 input FeedbackCreateInput {
     message: String!
     userId: ID!
-    status: String!
 }
 
 
