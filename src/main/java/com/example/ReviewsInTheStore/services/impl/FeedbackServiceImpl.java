@@ -147,4 +147,11 @@ public class FeedbackServiceImpl implements FeedbackService {
         feedbackView.setAssignmentId(feedback.getAssignment().getId());
         return feedbackView;
     }
+
+    @Override
+    public FeedbackMessage getMessageForRabbit(FeedbackView feedbackView){
+        FeedbackMessage feedbackMessage = modelMapper.map(feedbackView, FeedbackMessage.class);
+        feedbackMessage.setEmail(userRepository.findById(feedbackView.getUserId()).get().getEmail());
+        return feedbackMessage;
+    }
 }

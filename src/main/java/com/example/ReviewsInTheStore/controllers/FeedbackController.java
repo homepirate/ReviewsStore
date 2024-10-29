@@ -39,8 +39,9 @@ public class FeedbackController {
     public EntityModel<FeedbackView> createFeedback(@RequestBody FeedbackCreateView feedbackCreateView) {
         FeedbackView createdFeedback = feedbackService.createFeedback(feedbackCreateView);
 
+
         rabbitTemplate.convertAndSend(RabbitMQConfiguration.exchangeName, "feedback.created",
-                createdFeedback);
+                feedbackService.getMessageForRabbit(createdFeedback));
 
         return EntityModel.of(createdFeedback,
                 WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).getFeedbackById(createdFeedback.getId())).withSelfRel(),
@@ -115,7 +116,7 @@ public class FeedbackController {
         FeedbackView updatedFeedback = feedbackService.changeStatus(id, status);
 
         rabbitTemplate.convertAndSend(RabbitMQConfiguration.exchangeName, "feedback.statusChanged",
-                updatedFeedback);
+                feedbackService.getMessageForRabbit(updatedFeedback));
 
         return EntityModel.of(updatedFeedback,
                 WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).getFeedbackById(id)).withSelfRel(),

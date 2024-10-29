@@ -35,12 +35,12 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
         User user1 = new User();
         user1.setName("Alice");
-        user1.setEmail("alice@example.com");
+        user1.setEmail("gfgfga@rambler.ru");
         userRepository.save(user1);
 
         User user2 = new User();
         user2.setName("Bob");
-        user2.setEmail("bob@example.com");
+        user2.setEmail("gfgfga@rambler.ru");
         userRepository.save(user2);
 
         // Creating Employees
