@@ -1,1 +1,4 @@
 rootProject.name = 'ReviewsStore'
+include ':contract-first'
+project(':contract-first').projectDir = file('/home/evgeniy/IdeaProjects/contract-first')
+

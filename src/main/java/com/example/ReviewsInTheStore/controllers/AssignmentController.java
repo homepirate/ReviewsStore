@@ -2,6 +2,10 @@ package com.example.ReviewsInTheStore.controllers;
 
 import com.example.ReviewsInTheStore.services.AssignmentService;
 import com.example.ReviewsInTheStore.services.dtos.AssignmentView;
+import com.example.ReviewsInTheStore.services.dtos.FeedbackDTO;
+import com.example.contract_first.controllers.interfacies.AssignmentAPI;
+import com.example.contract_first.dto.AssignmentResponse;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -17,20 +21,25 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/assignments")
-public class AssignmentController {
+public class AssignmentController implements AssignmentAPI {
 
     private AssignmentService assignmentService;
+    private ModelMapper modelMapper;
+
 
     @Autowired
-    public void setAssignmentService(AssignmentService assignmentService) {
+    public void setAssignmentService(AssignmentService assignmentService, ModelMapper modelMapper) {
         this.assignmentService = assignmentService;
+        this.modelMapper = modelMapper;
     }
 
     @GetMapping
-    public CollectionModel<EntityModel<AssignmentView>> getAllAssignments(){
-        List<EntityModel<AssignmentView>> assignments = assignmentService.findAll().stream()
+    public CollectionModel<EntityModel<AssignmentResponse>> getAllAssignments(){
+        List<AssignmentResponse> assignmentResponses = assignmentService.findAll().stream().map(assignments -> modelMapper.map(assignments, AssignmentResponse.class))
+                .collect(Collectors.toList());
+        List<EntityModel<AssignmentResponse>> assignments = assignmentResponses.stream()
                 .map(assignment -> EntityModel.of(assignment,
-                        WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(AssignmentController.class).getAssignmentById(assignment.getId())).withSelfRel(),
+                        WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(AssignmentController.class).getAssignmentById(assignment.id())).withSelfRel(),
                         WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(AssignmentController.class).getAllAssignments()).withRel("assignments")))
                 .collect(Collectors.toList());
 
@@ -39,9 +48,10 @@ public class AssignmentController {
     }
 
     @GetMapping("/{id}")
-    public EntityModel<AssignmentView> getAssignmentById(@PathVariable UUID id) {
-        AssignmentView assignmentView = assignmentService.findById(id);
-        return EntityModel.of(assignmentView,
+    public EntityModel<AssignmentResponse> getAssignmentById(@PathVariable UUID id) {
+
+        AssignmentResponse assignmentResponse = modelMapper.map(assignmentService.findById(id), AssignmentResponse.class);
+        return EntityModel.of(assignmentResponse,
                 WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(AssignmentController.class).getAssignmentById(id)).withSelfRel(),
                 WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(AssignmentController.class).getAllAssignments()).withRel("assignments"));
     }

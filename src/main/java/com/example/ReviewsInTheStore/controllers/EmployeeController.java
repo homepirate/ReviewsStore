@@ -3,6 +3,7 @@ package com.example.ReviewsInTheStore.controllers;
 import com.example.ReviewsInTheStore.services.EmployeeService;
 import com.example.ReviewsInTheStore.services.dtos.EmployeeView;
 import com.example.ReviewsInTheStore.services.dtos.EmployeeViewResource;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -21,10 +22,13 @@ import java.util.stream.Collectors;
 public class EmployeeController {
 
     private EmployeeService employeeService;
+    private ModelMapper modelMapper;
+
 
     @Autowired
-    public void setEmployeeService(EmployeeService employeeService) {
+    public void setEmployeeService(EmployeeService employeeService, ModelMapper modelMapper) {
         this.employeeService = employeeService;
+        this.modelMapper = modelMapper;
     }
 
     @GetMapping

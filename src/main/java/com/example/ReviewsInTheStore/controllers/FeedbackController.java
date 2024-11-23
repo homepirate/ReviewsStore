@@ -5,6 +5,7 @@ import com.example.ReviewsInTheStore.services.FeedbackService;
 import com.example.ReviewsInTheStore.services.dtos.FeedbackCreateView;
 import com.example.ReviewsInTheStore.services.dtos.FeedbackView;
 import com.example.ReviewsInTheStore.services.dtos.SetAssignmentView;
+import org.modelmapper.ModelMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -22,11 +23,13 @@ public class FeedbackController {
 
     private FeedbackService feedbackService;
     private RabbitTemplate rabbitTemplate;
+    private ModelMapper modelMapper;
 
     @Autowired
-    public void setFeedbackService(FeedbackService feedbackService, RabbitTemplate rabbitTemplate) {
+    public void setFeedbackService(FeedbackService feedbackService, RabbitTemplate rabbitTemplate, ModelMapper modelMapper) {
         this.feedbackService = feedbackService;
         this.rabbitTemplate = rabbitTemplate;
+        this.modelMapper = modelMapper;
     }
 
 //    @PostMapping
