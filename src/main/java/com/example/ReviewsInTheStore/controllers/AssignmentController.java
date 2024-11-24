@@ -35,7 +35,10 @@ public class AssignmentController implements AssignmentAPI {
 
     @GetMapping
     public CollectionModel<EntityModel<AssignmentResponse>> getAllAssignments(){
-        List<AssignmentResponse> assignmentResponses = assignmentService.findAll().stream().map(assignments -> modelMapper.map(assignments, AssignmentResponse.class))
+        List<AssignmentResponse> assignmentResponses = assignmentService.findAll().stream().map(assignment
+                        ->new AssignmentResponse(assignment.getId(),
+                        assignment.getFeedbackId(),
+                        assignment.getEmployerId()))
                 .collect(Collectors.toList());
         List<EntityModel<AssignmentResponse>> assignments = assignmentResponses.stream()
                 .map(assignment -> EntityModel.of(assignment,
@@ -49,8 +52,8 @@ public class AssignmentController implements AssignmentAPI {
 
     @GetMapping("/{id}")
     public EntityModel<AssignmentResponse> getAssignmentById(@PathVariable UUID id) {
-
-        AssignmentResponse assignmentResponse = modelMapper.map(assignmentService.findById(id), AssignmentResponse.class);
+        AssignmentView assignment = assignmentService.findById(id);
+        AssignmentResponse assignmentResponse = new AssignmentResponse(assignment.getId(), assignment.getFeedbackId(), assignment.getEmployerId());
         return EntityModel.of(assignmentResponse,
                 WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(AssignmentController.class).getAssignmentById(id)).withSelfRel(),
                 WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(AssignmentController.class).getAllAssignments()).withRel("assignments"));

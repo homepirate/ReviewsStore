@@ -2,9 +2,15 @@ package com.example.ReviewsInTheStore.controllers;
 
 import com.example.ReviewsInTheStore.config.RabbitMQConfiguration;
 import com.example.ReviewsInTheStore.services.FeedbackService;
+import com.example.ReviewsInTheStore.services.dtos.AssignmentView;
 import com.example.ReviewsInTheStore.services.dtos.FeedbackCreateView;
 import com.example.ReviewsInTheStore.services.dtos.FeedbackView;
 import com.example.ReviewsInTheStore.services.dtos.SetAssignmentView;
+import com.example.contract_first.controllers.interfacies.FeedbackAPI;
+import com.example.contract_first.dto.AssignmentResponse;
+import com.example.contract_first.dto.FeedbackCreateRequest;
+import com.example.contract_first.dto.FeedbackResponse;
+import com.example.contract_first.dto.SetAssignmentRequest;
 import org.modelmapper.ModelMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +25,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/feedback")
-public class FeedbackController {
+public class FeedbackController implements FeedbackAPI {
 
     private FeedbackService feedbackService;
     private RabbitTemplate rabbitTemplate;
@@ -39,17 +45,19 @@ public class FeedbackController {
 //    }
 
     @PostMapping
-    public EntityModel<FeedbackView> createFeedback(@RequestBody FeedbackCreateView feedbackCreateView) {
+    public EntityModel<FeedbackResponse> createFeedback(@RequestBody FeedbackCreateRequest request) {
+        FeedbackCreateView feedbackCreateView= modelMapper.map(request, FeedbackCreateView.class);
         FeedbackView createdFeedback = feedbackService.createFeedback(feedbackCreateView);
-
 
         rabbitTemplate.convertAndSend(RabbitMQConfiguration.exchangeName, "feedback.created",
                 feedbackService.getMessageForRabbit(createdFeedback));
 
-        return EntityModel.of(createdFeedback,
-                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).getFeedbackById(createdFeedback.getId())).withSelfRel(),
+        FeedbackResponse feedbackResponse = mapViewToResponse(createdFeedback);
+
+        return EntityModel.of(feedbackResponse,
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).getFeedbackById(feedbackResponse.id())).withSelfRel(),
                 WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).getAllFeedback()).withRel("feedbacks"),
-                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).changeStatus(createdFeedback.getId(), null)).withRel("changeStatus"),
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).changeStatus(feedbackResponse.id(), null)).withRel("changeStatus"),
                 WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).setAssignment(null)).withRel("setAssignment"));
     }
 
@@ -60,9 +68,10 @@ public class FeedbackController {
 //    }
 
     @GetMapping("/{id}")
-    public EntityModel<FeedbackView> getFeedbackById(@PathVariable UUID id) {
+    public EntityModel<FeedbackResponse> getFeedbackById(@PathVariable UUID id) {
         FeedbackView feedbackView = feedbackService.findById(id);
-        return EntityModel.of(feedbackView,
+        FeedbackResponse feedbackResponse = mapViewToResponse(feedbackView);
+        return EntityModel.of(feedbackResponse,
                 WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).getFeedbackById(id)).withSelfRel(),
                 WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).getAllFeedback()).withRel("feedbacks"),
                 WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).changeStatus(id, null)).withRel("changeStatus"),
@@ -81,12 +90,15 @@ public class FeedbackController {
 //    }
 
     @GetMapping
-    public CollectionModel<EntityModel<FeedbackView>> getAllFeedback() {
-        List<EntityModel<FeedbackView>> feedbackList = feedbackService.findAll().stream()
-                .map(feedbackView -> EntityModel.of(feedbackView,
-                        WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).getFeedbackById(feedbackView.getId())).withSelfRel(),
+    public CollectionModel<EntityModel<FeedbackResponse>> getAllFeedback() {
+        List<FeedbackView> feedbackViewList = feedbackService.findAll();
+        List<FeedbackResponse> feedbackResponses = feedbackViewList.stream().map(this::mapViewToResponse).toList();
+
+        List<EntityModel<FeedbackResponse>> feedbackList = feedbackResponses.stream()
+                .map(feedback -> EntityModel.of(feedback,
+                        WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).getFeedbackById(feedback.id())).withSelfRel(),
                         WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).getAllFeedback()).withRel("feedbacks"),
-                        WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).changeStatus(feedbackView.getId(), null)).withRel("changeStatus"),
+                        WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).changeStatus(feedback.id(), null)).withRel("changeStatus"),
                         WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).setAssignment(null)).withRel("setAssignment")))
                 .collect(Collectors.toList());
 
@@ -100,12 +112,14 @@ public class FeedbackController {
 //    }
 
     @PutMapping("/set-assignment")
-    public EntityModel<FeedbackView> setAssignment(@RequestBody SetAssignmentView setAssignmentView) {
+    public EntityModel<FeedbackResponse> setAssignment(@RequestBody SetAssignmentRequest request) {
+        SetAssignmentView setAssignmentView = modelMapper.map(request, SetAssignmentView.class);
         FeedbackView assignedFeedback = feedbackService.setAssignment(setAssignmentView);
-        return EntityModel.of(assignedFeedback,
-                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).getFeedbackById(assignedFeedback.getId())).withSelfRel(),
+        FeedbackResponse feedbackResponse = mapViewToResponse(assignedFeedback);
+        return EntityModel.of(feedbackResponse,
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).getFeedbackById(feedbackResponse.id())).withSelfRel(),
                 WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).getAllFeedback()).withRel("feedbacks"),
-                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).changeStatus(assignedFeedback.getId(), null)).withRel("changeStatus"));
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).changeStatus(feedbackResponse.id(), null)).withRel("changeStatus"));
     }
 
 //    @PutMapping("/{id}")
@@ -115,16 +129,32 @@ public class FeedbackController {
 //    }
 
     @PutMapping("/{id}")
-    public EntityModel<FeedbackView> changeStatus(@PathVariable UUID id, @RequestParam String status) {
+    public EntityModel<FeedbackResponse> changeStatus(@PathVariable UUID id, @RequestParam String status) {
         FeedbackView updatedFeedback = feedbackService.changeStatus(id, status);
 
         rabbitTemplate.convertAndSend(RabbitMQConfiguration.exchangeName, "feedback.statusChanged",
                 feedbackService.getMessageForRabbit(updatedFeedback));
 
-        return EntityModel.of(updatedFeedback,
+        FeedbackResponse feedbackResponse = mapViewToResponse(updatedFeedback);
+
+        return EntityModel.of(feedbackResponse,
                 WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).getFeedbackById(id)).withSelfRel(),
                 WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).getAllFeedback()).withRel("feedbacks"),
                 WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).setAssignment(null)).withRel("setAssignment"));
+    }
+
+    AssignmentResponse mapAssignmentViewToResponse(AssignmentView assignmentView){
+        return new AssignmentResponse(assignmentView.getId(), assignmentView.getFeedbackId(), assignmentView.getEmployerId());
+    }
+
+    FeedbackResponse mapViewToResponse(FeedbackView feedbackView){
+        return new FeedbackResponse(
+                feedbackView.getMessage(),
+                feedbackView.getUserId(),
+                feedbackView.getId(),
+                feedbackView.getAssignmentId(),
+                feedbackView.getStatus()
+        );
     }
 
 }

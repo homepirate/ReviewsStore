@@ -39,30 +39,12 @@ public class UserController implements UserAPI {
     public ResponseEntity<CollectionModel<EntityModel<UserResponse>>> getAllUsers() {
         List<UserView> userViews = userService.find();
 
-        // Создаем список UserResponse
         List<UserResponse> usersResp = userViews.stream()
-                .map(userView -> {
-                    List<FeedbackResponse> feedbackResponses = new ArrayList<>();
-                    for (FeedbackView feedbackView : userView.getFeedbacks()) {
-                        feedbackResponses.add(new FeedbackResponse(
-                                feedbackView.getMessage(),
-                                feedbackView.getUserId(),
-                                feedbackView.getId(),
-                                feedbackView.getAssignmentId(),
-                                feedbackView.getStatus()
-                        ));
-                    }
-                    return new UserResponse(
-                            userView.getId(),
-                            userView.getName(),
-                            userView.getEmail(),
-                            feedbackResponses
-                    );
-                })
-                .collect(Collectors.toList());
+                .map(this::mapViewToResponse)
+                .toList();
 
         List<EntityModel<UserResponse>> users = usersResp.stream()
-                .map(userResp -> createUserResource(userResp))
+                .map(this::createUserResource)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(
@@ -80,7 +62,7 @@ public class UserController implements UserAPI {
                 createdUser.getId(),
                 createdUser.getName(),
                 createdUser.getEmail(),
-                null);
+                new ArrayList<>());
         
         EntityModel<UserResponse> resource = createUserResource(userResponse);
 
@@ -96,22 +78,8 @@ public class UserController implements UserAPI {
 
         UserView updatedUser = userService.updateUserEmail(updateUserView);
 
-        List<FeedbackResponse> feedbackResponses = new ArrayList<>();
-        for (FeedbackView feedbackView : updatedUser.getFeedbacks()) {
-            feedbackResponses.add(new FeedbackResponse(
-                    feedbackView.getMessage(),
-                    feedbackView.getUserId(),
-                    feedbackView.getId(),
-                    feedbackView.getAssignmentId(),
-                    feedbackView.getStatus()
-                    ));
-        }
-        UserResponse userResponse = new UserResponse(
-                updatedUser.getId(),
-                updatedUser.getName(),
-                updatedUser.getEmail(),
-                feedbackResponses
-        );
+        UserResponse userResponse = mapViewToResponse(updatedUser);
+
         if (userResponse != null) {
             EntityModel<UserResponse> resource = createUserResource(userResponse);
             return ResponseEntity.ok(resource);
@@ -122,22 +90,7 @@ public class UserController implements UserAPI {
     @GetMapping("/{id}")
     public ResponseEntity<EntityModel<UserResponse>> getUserById(@PathVariable UUID id) {
         UserView userView = userService.getById(id);
-        List<FeedbackResponse> feedbackResponses = new ArrayList<>();
-        for (FeedbackView feedbackView : userView.getFeedbacks()) {
-            feedbackResponses.add(new FeedbackResponse(
-                    feedbackView.getMessage(),
-                    feedbackView.getUserId(),
-                    feedbackView.getId(),
-                    feedbackView.getAssignmentId(),
-                    feedbackView.getStatus()
-                    ));
-        }
-        UserResponse userResponse = new UserResponse(
-                userView.getId(),
-                userView.getName(),
-                userView.getEmail(),
-                feedbackResponses
-        );
+        UserResponse userResponse = mapViewToResponse(userView);
         if (userResponse != null) {
             EntityModel<UserResponse> resource = createUserResource(userResponse);
             return ResponseEntity.ok(resource);
@@ -170,6 +123,28 @@ public class UserController implements UserAPI {
         return (UserViewResource) new UserViewResource(userResponse, actions)
                 .add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getUserById(userResponse.id())).withSelfRel(),
                         WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getAllUsers()).withRel("users"));
+    }
+
+    UserResponse mapViewToResponse(UserView userView){
+        List<FeedbackResponse> feedbackResponses = new ArrayList<>();
+        if (userView.getFeedbacks() != null) {
+            for (FeedbackView feedbackView : userView.getFeedbacks()) {
+                feedbackResponses.add(new FeedbackResponse(
+                        feedbackView.getMessage(),
+                        feedbackView.getUserId(),
+                        feedbackView.getId(),
+                        feedbackView.getAssignmentId(),
+                        feedbackView.getStatus()
+                ));
+            }
+        }
+        UserResponse userResponse = new UserResponse(
+                userView.getId(),
+                userView.getName(),
+                userView.getEmail(),
+                feedbackResponses
+        );
+        return userResponse;
     }
 
 }

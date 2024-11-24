@@ -1,17 +1,20 @@
 package com.example.ReviewsInTheStore.controllers;
 
 import com.example.ReviewsInTheStore.services.EmployeeService;
+import com.example.ReviewsInTheStore.services.dtos.AssignmentView;
 import com.example.ReviewsInTheStore.services.dtos.EmployeeView;
 import com.example.ReviewsInTheStore.services.dtos.EmployeeViewResource;
+import com.example.contract_first.controllers.interfacies.EmployeeAPI;
+import com.example.contract_first.dto.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -19,7 +22,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/employees")
-public class EmployeeController {
+public class EmployeeController implements EmployeeAPI {
 
     private EmployeeService employeeService;
     private ModelMapper modelMapper;
@@ -32,8 +35,12 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public ResponseEntity<CollectionModel<EntityModel<EmployeeView>>> getAllEmployees() {
-        List<EntityModel<EmployeeView>> employees = employeeService.findAll().stream()
+    public ResponseEntity<CollectionModel<EntityModel<EmployeeResponse>>> getAllEmployees() {
+        List<EmployeeView> employeesView = employeeService.findAll();
+        List<EmployeeResponse> employeeResponses = employeesView.stream()
+                .map(this::mapViewToResponse)
+                .toList();
+        List<EntityModel<EmployeeResponse>> employees = employeeResponses.stream()
                 .map(this::createEmployeeResource)
                 .collect(Collectors.toList());
 
@@ -43,31 +50,29 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity<EntityModel<EmployeeView>> createEmployee(@RequestBody EmployeeView employeeView) {
+    public ResponseEntity<EntityModel<EmployeeResponse>> createEmployee(@RequestBody EmployeeRequest employeeRequest) {
+        EmployeeView employeeView = modelMapper.map(employeeRequest, EmployeeView.class);
         EmployeeView createdEmployee = employeeService.createEmployee(employeeView);
-        EntityModel<EmployeeView> resource = createEmployeeResource(createdEmployee);
+        EmployeeResponse employeeResponse = mapViewToResponse(createdEmployee);
 
+        EntityModel<EmployeeResponse> resource = createEmployeeResource(employeeResponse);
         return ResponseEntity.created(resource.getRequiredLink("self").toUri()).body(resource);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EntityModel<EmployeeView>> getEmployeeById(@PathVariable UUID id) {
+    public ResponseEntity<EntityModel<EmployeeResponse>> getEmployeeById(@PathVariable UUID id) {
         EmployeeView employeeView = employeeService.findById(id);
-        if (employeeView != null) {
-            EntityModel<EmployeeView> resource = createEmployeeResource(employeeView);
-            return ResponseEntity.ok(resource);
-        }
-        return ResponseEntity.notFound().build();
+        EmployeeResponse employeeResponse = mapViewToResponse(employeeView);
+        EntityModel<EmployeeResponse> resource = createEmployeeResource(employeeResponse);
+        return ResponseEntity.ok(resource);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EntityModel<EmployeeView>> changeRole(@PathVariable UUID id, @RequestParam String role) {
+    public ResponseEntity<EntityModel<EmployeeResponse>> changeRole(@PathVariable UUID id, @RequestParam String role) {
         EmployeeView updatedEmployee = employeeService.changeRole(id, role);
-        if (updatedEmployee != null) {
-            EntityModel<EmployeeView> resource = createEmployeeResource(updatedEmployee);
-            return ResponseEntity.ok(resource);
-        }
-        return ResponseEntity.notFound().build();
+        EmployeeResponse employeeResponse = mapViewToResponse(updatedEmployee);
+        EntityModel<EmployeeResponse> resource = createEmployeeResource(employeeResponse);
+        return ResponseEntity.ok(resource);
     }
 
     @DeleteMapping("/{id}")
@@ -79,21 +84,59 @@ public class EmployeeController {
         return ResponseEntity.ok(result);
     }
 
-    private EmployeeViewResource createEmployeeResource(EmployeeView employeeView) {
+    private EmployeeViewResource createEmployeeResource(EmployeeResponse employeeResponse) {
         Map<String, Object> actions = Map.of(
                 "changeRole", Map.of(
-                        "href", WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EmployeeController.class).changeRole(employeeView.getId(), "")).toUri().toString(),
+                        "href", WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EmployeeController.class).changeRole(employeeResponse.id(), "")).toUri().toString(),
                         "method", "PUT",
                         "accept", "application/json"
                 ),
                 "delete", Map.of(
-                        "href", WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EmployeeController.class).deleteEmployee(employeeView.getId())).toUri().toString(),
+                        "href", WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EmployeeController.class).deleteEmployee(employeeResponse.id())).toUri().toString(),
                         "method", "DELETE"
                 )
         );
 
-        return (EmployeeViewResource) new EmployeeViewResource(employeeView, actions)
-                .add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EmployeeController.class).getEmployeeById(employeeView.getId())).withSelfRel(),
+        return (EmployeeViewResource) new EmployeeViewResource(employeeResponse, actions)
+                .add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EmployeeController.class).getEmployeeById(employeeResponse.id())).withSelfRel(),
                         WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EmployeeController.class).getAllEmployees()).withRel("employees"));
+    }
+
+    private EmployeeResponse mapViewToResponse(EmployeeView employeeView){
+        List<AssignmentResponse> assignmentResponses = new ArrayList<>();
+        if (employeeView.getAssignments() != null) {
+            for (AssignmentView assignmentView : employeeView.getAssignments()) {
+                assignmentResponses.add(new AssignmentResponse(
+                        assignmentView.getId(),
+                        assignmentView.getFeedbackId(),
+                        assignmentView.getEmployerId()
+                ));
+            }
+        }
+        EmployeeResponse employeeResponse = new EmployeeResponse(
+                employeeView.getId(),
+                employeeView.getName(),
+                mapRole(employeeView.getRole()),
+                assignmentResponses
+        );
+        return employeeResponse;
+
+    }
+
+    Role mapRole(com.example.ReviewsInTheStore.models.Role role){
+        switch (role) {
+            case MANAGER -> {
+                return Role.MANAGER;
+            }
+            case CASHIER -> {
+                return Role.CASHIER;
+            }
+            case REVIEWER -> {
+                return Role.REVIEWER;
+            }
+            default -> {
+                return null;
+            }
+        }
     }
 }
