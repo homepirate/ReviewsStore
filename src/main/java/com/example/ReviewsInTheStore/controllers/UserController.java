@@ -22,7 +22,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/users")
 public class UserController implements UserAPI {
 
     private UserService userService;
@@ -35,7 +34,6 @@ public class UserController implements UserAPI {
         this.modelMapper = modelMapper;
     }
 
-    @GetMapping
     public ResponseEntity<CollectionModel<EntityModel<UserResponse>>> getAllUsers() {
         List<UserView> userViews = userService.find();
 
@@ -52,7 +50,6 @@ public class UserController implements UserAPI {
                         WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getAllUsers()).withSelfRel()));
     }
 
-    @PostMapping
     public ResponseEntity<EntityModel<UserResponse>> createUser(@RequestBody UserRequest request) {
 
         UserView userView = modelMapper.map(request, UserView.class);
@@ -71,7 +68,6 @@ public class UserController implements UserAPI {
 
 
 
-    @PutMapping
     public ResponseEntity<EntityModel<UserResponse>> updateUserEmail(@RequestBody UserUpdateRequest request) {
 
         UpdateUserView updateUserView = modelMapper.map(request, UpdateUserView.class);
@@ -87,7 +83,6 @@ public class UserController implements UserAPI {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/{id}")
     public ResponseEntity<EntityModel<UserResponse>> getUserById(@PathVariable UUID id) {
         UserView userView = userService.getById(id);
         UserResponse userResponse = mapViewToResponse(userView);
@@ -98,7 +93,6 @@ public class UserController implements UserAPI {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
         boolean isDeleted = userService.deleteUser(id);
         if (isDeleted) {
