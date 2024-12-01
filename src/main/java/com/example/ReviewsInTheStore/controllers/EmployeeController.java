@@ -21,7 +21,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/employees")
 public class EmployeeController implements EmployeeAPI {
 
     private EmployeeService employeeService;
@@ -34,7 +33,6 @@ public class EmployeeController implements EmployeeAPI {
         this.modelMapper = modelMapper;
     }
 
-    @GetMapping
     public ResponseEntity<CollectionModel<EntityModel<EmployeeResponse>>> getAllEmployees() {
         List<EmployeeView> employeesView = employeeService.findAll();
         List<EmployeeResponse> employeeResponses = employeesView.stream()
@@ -49,7 +47,6 @@ public class EmployeeController implements EmployeeAPI {
                         WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EmployeeController.class).getAllEmployees()).withSelfRel()));
     }
 
-    @PostMapping
     public ResponseEntity<EntityModel<EmployeeResponse>> createEmployee(@RequestBody EmployeeRequest employeeRequest) {
         EmployeeView employeeView = modelMapper.map(employeeRequest, EmployeeView.class);
         EmployeeView createdEmployee = employeeService.createEmployee(employeeView);
@@ -59,7 +56,6 @@ public class EmployeeController implements EmployeeAPI {
         return ResponseEntity.created(resource.getRequiredLink("self").toUri()).body(resource);
     }
 
-    @GetMapping("/{id}")
     public ResponseEntity<EntityModel<EmployeeResponse>> getEmployeeById(@PathVariable UUID id) {
         EmployeeView employeeView = employeeService.findById(id);
         EmployeeResponse employeeResponse = mapViewToResponse(employeeView);
@@ -67,7 +63,6 @@ public class EmployeeController implements EmployeeAPI {
         return ResponseEntity.ok(resource);
     }
 
-    @PutMapping("/{id}")
     public ResponseEntity<EntityModel<EmployeeResponse>> changeRole(@PathVariable UUID id, @RequestParam String role) {
         EmployeeView updatedEmployee = employeeService.changeRole(id, role);
         EmployeeResponse employeeResponse = mapViewToResponse(updatedEmployee);
@@ -75,7 +70,6 @@ public class EmployeeController implements EmployeeAPI {
         return ResponseEntity.ok(resource);
     }
 
-    @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteEmployee(@PathVariable UUID id) {
         String result = employeeService.deleteEmployee(id);
         if (result == null || result.isEmpty()) {

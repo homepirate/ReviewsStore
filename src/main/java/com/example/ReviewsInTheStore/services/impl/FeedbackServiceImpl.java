@@ -8,12 +8,14 @@ import com.example.ReviewsInTheStore.repositories.FeedbackRepository;
 import com.example.ReviewsInTheStore.repositories.UserRepository;
 import com.example.ReviewsInTheStore.services.FeedbackService;
 import com.example.ReviewsInTheStore.services.dtos.*;
+import com.example.ReviewsInTheStore.services.dtos.MessageForNotification;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -113,6 +115,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         if (employee.isEmpty() || feedback.isEmpty()){
             return null;
         }
+
         Assignment assignment = new Assignment();
         Feedback feedback1 = feedback.get();
         assignment.setFeedback(feedback1);
@@ -124,10 +127,16 @@ public class FeedbackServiceImpl implements FeedbackService {
         AssignmentView assignmentView = modelMapper.map(assignment, AssignmentView.class);
         assignmentView.setEmployerId(employee.get().getId());
         assignmentView.setFeedbackId(feedback1.getId());
-        rabbitTemplate.convertAndSend(RabbitMQConfiguration.exchangeName, "assignment.created", assignmentView);
 
         FeedbackView feedbackView = modelMapper.map(feedback1, FeedbackView.class);
         feedbackView.setUserId(feedback1.getSubmittedBy().getId());
+
+
+        MessageForNotification notificationMessage = mapToMessage(assignmentView, employee.get(),
+                feedbackView, LocalDateTime.now());
+
+        rabbitTemplate.convertAndSend(RabbitMQConfiguration.exchangeName, "assignment.created", notificationMessage.toString());
+
         return feedbackView;
     }
 
@@ -155,5 +164,20 @@ public class FeedbackServiceImpl implements FeedbackService {
         FeedbackMessage feedbackMessage = modelMapper.map(feedbackView, FeedbackMessage.class);
         feedbackMessage.setEmail(userRepository.findById(feedbackView.getUserId()).get().getEmail());
         return feedbackMessage;
+    }
+
+    public MessageForNotification mapToMessage(AssignmentView assignment, Employee employee, FeedbackView feedback,
+                                               LocalDateTime time) {
+        MessageForNotification message = new MessageForNotification();
+
+        message.setAssignmentId(assignment.getId());
+        message.setEmployeeName(employee.getName());
+        message.setEmployeeId(employee.getId());
+        message.setFeedbackId(feedback.getId());
+        message.setFeedbackMessage(feedback.getMessage());
+        message.setCreatedAt(time);
+        message.setNotificationType("ASSIGNMENT_CREATED");
+
+        return message;
     }
 }
