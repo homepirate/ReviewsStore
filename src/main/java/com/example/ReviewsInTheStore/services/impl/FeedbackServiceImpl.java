@@ -1,6 +1,7 @@
 package com.example.ReviewsInTheStore.services.impl;
 
 import com.example.ReviewsInTheStore.config.RabbitMQConfiguration;
+import com.example.ReviewsInTheStore.grpc.SpamCheckClient;
 import com.example.ReviewsInTheStore.models.*;
 import com.example.ReviewsInTheStore.repositories.AssignmentRepository;
 import com.example.ReviewsInTheStore.repositories.EmployeeRepository;
@@ -10,6 +11,7 @@ import com.example.ReviewsInTheStore.services.FeedbackService;
 import com.example.ReviewsInTheStore.services.dtos.*;
 import com.example.ReviewsInTheStore.services.dtos.MessageForNotification;
 import jakarta.transaction.Transactional;
+import org.example.FeedbackCheckResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +54,13 @@ public class FeedbackServiceImpl implements FeedbackService {
         if (user.isEmpty()) {
             return null;
         }
+
+        FeedbackCheckResponse response = SpamCheckClient.checkFeedbackIsSpam(feedback.getMessage());
+        if (response.getIsSpam()) {
+            System.out.println("Forbidden words: " + response.getForbiddenWordsList());
+            throw new IllegalArgumentException("Feedback message contains prohibited words.");
+        }
+
         feedback.setSubmittedBy(user.get());
         feedback.setStatus(Status.PENDING);
         Feedback savedFeedback = feedbackRepository.save(feedback);

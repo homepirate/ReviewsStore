@@ -11,12 +11,16 @@ import com.example.contract_first.dto.AssignmentResponse;
 import com.example.contract_first.dto.FeedbackCreateRequest;
 import com.example.contract_first.dto.FeedbackResponse;
 import com.example.contract_first.dto.SetAssignmentRequest;
+import com.example.contract_first.exception.InvalidArgumentException;
+import com.example.contract_first.exception.ResourceNotFoundException;
+import com.example.contract_first.exception.StatusResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,22 +48,7 @@ public class FeedbackController implements FeedbackAPI {
 //        return createdFeedback;
 //    }
 
-    @PostMapping
-    public EntityModel<FeedbackResponse> createFeedback(@RequestBody FeedbackCreateRequest request) {
-        FeedbackCreateView feedbackCreateView= modelMapper.map(request, FeedbackCreateView.class);
-        FeedbackView createdFeedback = feedbackService.createFeedback(feedbackCreateView);
 
-        rabbitTemplate.convertAndSend(RabbitMQConfiguration.exchangeName, "feedback.created",
-                feedbackService.getMessageForRabbit(createdFeedback));
-
-        FeedbackResponse feedbackResponse = mapViewToResponse(createdFeedback);
-
-        return EntityModel.of(feedbackResponse,
-                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).getFeedbackById(feedbackResponse.id())).withSelfRel(),
-                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).getAllFeedback()).withRel("feedbacks"),
-                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).changeStatus(feedbackResponse.id(), null)).withRel("changeStatus"),
-                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).setAssignment(null)).withRel("setAssignment"));
-    }
 
 //    @GetMapping("/{id}")
 //    public FeedbackView getFeedbackById(@PathVariable UUID id) {
@@ -75,6 +64,33 @@ public class FeedbackController implements FeedbackAPI {
                 WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).getFeedbackById(id)).withSelfRel(),
                 WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).getAllFeedback()).withRel("feedbacks"),
                 WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).changeStatus(id, null)).withRel("changeStatus"),
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).setAssignment(null)).withRel("setAssignment"));
+    }
+
+    @Override
+    @PostMapping
+    public EntityModel<FeedbackResponse> createFeedback(FeedbackCreateRequest request) {
+        FeedbackCreateView feedbackCreateView= modelMapper.map(request, FeedbackCreateView.class);
+        FeedbackView createdFeedback = null;
+        try {
+            createdFeedback = feedbackService.createFeedback(feedbackCreateView);
+        } catch (IllegalArgumentException e) {
+            throw new InvalidArgumentException("Invalid feedback data: " + e.getMessage());
+        }
+
+        if (createdFeedback == null) {
+            throw new ResourceNotFoundException("Feedback could not be created.");
+        }
+
+        rabbitTemplate.convertAndSend(RabbitMQConfiguration.exchangeName, "feedback.created",
+                feedbackService.getMessageForRabbit(createdFeedback));
+
+        FeedbackResponse feedbackResponse = mapViewToResponse(createdFeedback);
+
+        return EntityModel.of(feedbackResponse,
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).getFeedbackById(feedbackResponse.id())).withSelfRel(),
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).getAllFeedback()).withRel("feedbacks"),
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).changeStatus(feedbackResponse.id(), null)).withRel("changeStatus"),
                 WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FeedbackController.class).setAssignment(null)).withRel("setAssignment"));
     }
 
@@ -156,5 +172,4 @@ public class FeedbackController implements FeedbackAPI {
                 feedbackView.getStatus()
         );
     }
-
 }
